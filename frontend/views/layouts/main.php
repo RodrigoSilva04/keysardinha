@@ -47,6 +47,7 @@ AppAsset::register($this);
         ['label' => 'Contact', 'url' => ['/site/contact']],
         ['label' => 'Jogos', 'url' => ['/produto/index']],
         ['label' => 'Favoritos', 'url' => ['/favoritos/index']],
+        ['label' => 'Favoritos', 'url' => ['/favoritos/index']],
     ];
 
     echo Nav::widget([
