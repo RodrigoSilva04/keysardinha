@@ -5,12 +5,6 @@
 $this->title = 'My Yii Application';
 ?>
 
-<?php
-//Ir buscar a role se for guest redireciona para login
-if(Yii::$app->user->isGuest){
-    return Yii::$app->response->redirect(['site/login']);
-}
-?>
 
 <div class="site-index">
     <div class="p-5 mb-4 bg-transparent rounded-3">

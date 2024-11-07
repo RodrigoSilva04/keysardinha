@@ -37,7 +37,7 @@ AppAsset::register($this);
         'brandLabel' => Html::img('@web/logokeysardinha.webp', ['alt' => 'Logo', 'class' => 'logo']),
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar navbar-expand-md navbar-dark fixed-top',
+            'class' => 'navbar navbar-expand-md navbar-dark navbar-sticky',
         ],
     ]);
 
@@ -64,10 +64,19 @@ AppAsset::register($this);
     echo Html::submitButton('Buscar', ['class' => 'btn btn-light']);
     echo Html::endForm();
 
+     // Se o usuário for um guest, exibe login e signup
     if (Yii::$app->user->isGuest) {
-        echo Html::tag('div', Html::a('Login', ['/site/login'], ['class' => ['btn btn-link login text-decoration-none']]), ['class' => ['d-flex']]);
+        echo Html::tag('div',
+            Html::a('Login', ['/site/login'], ['class' => ['btn btn-link login text-decoration-none']]),
+            ['class' => 'd-flex ms-3']
+        );
+        echo Html::tag('div',
+            Html::a('Signup', ['/site/signup'], ['class' => ['btn btn-link signup text-decoration-none']]),
+            ['class' => 'd-flex ms-2']
+        );
     } else {
-        echo Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex'])
+        // Se o usuário estiver logado, exibe o botão de logout com nome
+        echo Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex ms-3'])
             . Html::submitButton(
                 'Logout (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout text-decoration-none']
