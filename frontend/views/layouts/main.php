@@ -42,15 +42,15 @@ AppAsset::register($this);
     ]);
 
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/produto/index']],
-        ['label' => 'About', 'url' => ['/site/about']],
-        ['label' => 'Contact', 'url' => ['/site/contact']],
-        ['label' => 'Jogos', 'url' => ['/produto/index']],
-        ['label' => 'Favoritos', 'url' => ['/favoritos/index']],
+        ['label' => 'Home', 'url' => ['/produto/index'], 'linkOptions' => ['class' => 'btn btn-primary buttonNavbar']],
+        ['label' => 'About', 'url' => ['/site/about'], 'linkOptions' => ['class' => 'btn btn-secondary buttonNavbar']],
+        ['label' => 'Contact', 'url' => ['/site/contact'], 'linkOptions' => ['class' => 'btn btn-info buttonNavbar']],
+        ['label' => 'Jogos', 'url' => ['/produto/index'], 'linkOptions' => ['class' => 'btn btn-warning buttonNavbar']],
+        ['label' => 'Favoritos', 'url' => ['/favoritos/index'], 'linkOptions' => ['class' => 'btn btn-success buttonNavbar']],
     ];
 
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
+        'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0 buttons-container'],
         'items' => $menuItems,
     ]);
     ?>
@@ -59,27 +59,31 @@ AppAsset::register($this);
     <?php
 
     // Barra de pesquisa
-    echo Html::beginForm(['produto/search'], 'get', ['class' => 'search-form']);
-    echo Html::textInput('query', null, ['class' => 'form-control', 'placeholder' => 'Pesquisar jogos...']);
+    echo Html::beginForm(['produto/search'], 'get', ['class' => 'search-form d-flex']);
+    echo Html::textInput('query', null, ['class' => 'form-control me-2', 'placeholder' => 'Pesquisar jogos...']);
     echo Html::submitButton('Buscar', ['class' => 'btn btn-light']);
     echo Html::endForm();
 
-     // Se o usuário for um guest, exibe login e signup
+
+    // Se o usuário for um guest, exibe login e signup
     if (Yii::$app->user->isGuest) {
+        // Botão de Login
         echo Html::tag('div',
-            Html::a('Login', ['/site/login'], ['class' => ['btn btn-link login text-decoration-none']]),
+            Html::a('Login', ['/site/login'], ['class' => ['button-login btn']]),
             ['class' => 'd-flex ms-3']
         );
+
+        // Botão de Signup
         echo Html::tag('div',
-            Html::a('Signup', ['/site/signup'], ['class' => ['btn btn-link signup text-decoration-none']]),
+            Html::a('Signup', ['/site/signup'], ['class' => ['btn btn-outline-success signup text-decoration-none rounded-pill px-4']]),
             ['class' => 'd-flex ms-2']
         );
     } else {
-        // Se o usuário estiver logado, exibe o botão de logout com nome
+        // Botão de Logout
         echo Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex ms-3'])
             . Html::submitButton(
                 'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout text-decoration-none']
+                ['class' => 'btn btn-outline-danger logout text-decoration-none rounded-pill px-4']
             )
             . Html::endForm();
     }

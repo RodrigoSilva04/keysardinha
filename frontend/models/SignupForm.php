@@ -5,6 +5,7 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use common\models\Utilizadorperfil;
 
 /**
  * Signup form
@@ -48,7 +49,7 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
+
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
@@ -56,8 +57,28 @@ class SignupForm extends Model
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
 
-        return $user->save() && $this->sendEmail($user);
+        // Salva o usuário e verifica se a operação foi bem-sucedida
+        if ($user->save()) {
+            // Cria um novo registro na tabela utilizador_perfil com o mesmo ID do usuário
+            $utilizadorPerfil = new UtilizadorPerfil();
+            $utilizadorPerfil->id = $user->id; // Define o mesmo ID do usuário
+            $utilizadorPerfil->nome = null; // Supondo que o nome vem do formulário
+            $utilizadorPerfil->dataregisto = date('Y-m-d H:i:s'); // Define a data atual como data de registro
+            $utilizadorPerfil->pontosacumulados = 0; // Inicia os pontos acumulados como 0
+            $utilizadorPerfil->carrinho_id = null; // Define como nulo ou atribua um ID de carrinho, se aplicável
+
+            //Atribui usando o RBAC a role de client
+            $auth = Yii::$app->authManager;
+            $role = $auth->getRole('client');
+            $auth->assign($role, $user->id);
+
+            // Salva o perfil e envia o e-mail de verificação se tudo foi bem-sucedido
+            return $utilizadorPerfil->save() && $this->sendEmail($user);
+        }
+
+        return null;
     }
+
 
     /**
      * Sends confirmation email to user

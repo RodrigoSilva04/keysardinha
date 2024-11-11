@@ -109,5 +109,6 @@ class RbacController extends Controller
         $auth->assign($admin, 2); // Atribuindo a role Administrator ao usuário com ID 1
         $auth->assign($client, 3); // Atribuindo a role Client ao usuário com ID 3
 
+
     }
 }

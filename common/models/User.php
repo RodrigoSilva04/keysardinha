@@ -218,4 +218,9 @@ class User extends ActiveRecord implements IdentityInterface
         $roles = $auth->getRolesByUser($this->id);
         return !empty($roles) ? key($roles) : null; // Retorna o nome da primeira role
     }
+    public function getPerfil()
+    {
+        return Utilizadorperfil::findOne(['id' => $this->id]);
+    }
+
 }

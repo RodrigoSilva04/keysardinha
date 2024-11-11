@@ -5,62 +5,40 @@ use yii\bootstrap4\Breadcrumbs;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-// Definindo as opções de cards disponíveis para cada role
 $cards = [
     'admin' => [
         [
             'title' => 'Gerir Utilizadores',
             'url' => Url::to(['user/index']),
-            'image' => 'path/to/user-image.jpg', // Substitua pelo caminho da imagem
+            'image' => 'path/to/user-image.jpg',
             'description' => 'Gerencie os utilizadores do sistema.',
-            'permission' => 'manageUsers', // Nome da permissão do RBAC
+            'permission' => 'manageUsers',
         ],
         [
             'title' => 'Gerir Produtos',
             'url' => Url::to(['product/index']),
-            'image' => 'path/to/product-image.jpg', // Substitua pelo caminho da imagem
+            'image' => 'path/to/product-image.jpg',
             'description' => 'Adicione, edite ou remova produtos.',
-            'permission' => 'manageProducts', // Nome da permissão do RBAC
+            'permission' => 'manageProducts',
         ],
     ],
     'colaborador' => [
         [
             'title' => 'Gerir Jogos',
             'url' => Url::to(['game/index']),
-            'image' => 'path/to/game-image.jpg', // Substitua pelo caminho da imagem
+            'image' => 'path/to/game-image.jpg',
             'description' => 'Adicione, edite ou remova jogos.',
-            'permission' => 'manageGames', // Nome da permissão do RBAC
+            'permission' => 'manageGames',
         ],
-        [
-            'title' => 'Gerir Promoções',
-            'url' => Url::to(['promotion/index']),
-            'image' => 'path/to/promotion-image.jpg', // Substitua pelo caminho da imagem
-            'description' => 'Crie e gerencie promoções para os jogos.',
-            'permission' => 'managePromotions', // Nome da permissão do RBAC
-        ],
-        [
-            'title' => 'Gerir Categorias',
-            'url' => Url::to(['category/index']),
-            'image' => 'path/to/category-image.jpg', // Substitua pelo caminho da imagem
-            'description' => 'Adicione, edite ou remova categorias de jogos.',
-            'permission' => 'manageCategories', // Nome da permissão do RBAC
-        ],
-        [
-            'title' => 'Ver Estatísticas de Vendas',
-            'url' => Url::to(['sales/index']),
-            'image' => 'path/to/sales-image.jpg', // Substitua pelo caminho da imagem
-            'description' => 'Visualize as estatísticas de vendas.',
-            'permission' => 'viewSalesStatistics', // Nome da permissão do RBAC
-        ],
+        // Adicione outros cards conforme necessário
     ],
 ];
 
-// Obtendo as permissões do usuário logado
 $auth = Yii::$app->authManager;
-$userPermissions = $auth->getPermissionsByUser(Yii::$app->user->id);
+$roles = $auth->getRolesByUser(Yii::$app->user->id);
 $userRole = !empty($roles) ? key($roles) : null;
+$userPermissions = array_keys($auth->getPermissionsByUser(Yii::$app->user->id));
 
-// Verificando se a role do usuário está nas opções de cards
 $availableCards = $cards[$userRole] ?? [];
 
 ?>
@@ -70,9 +48,7 @@ $availableCards = $cards[$userRole] ?? [];
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">
-                        <?= Html::encode($this->title ?? $this->context->id) ?>
-                    </h1>
+                    <h1 class="m-0"><?= Html::encode($this->title ?? $this->context->id) ?></h1>
                 </div>
                 <div class="col-sm-6">
                     <?= Breadcrumbs::widget([
@@ -87,9 +63,14 @@ $availableCards = $cards[$userRole] ?? [];
     <div class="content">
         <div class="container-fluid">
             <div class="row">
-                <?php if (!empty($availableCards)): ?>
+                <?php
+                // Verificar se estamos na página do dashboard ou outras páginas do backoffice
+                if ($this->context->id === 'site' && $this->context->action->id === 'index'):
+                    ?>
+                    <!-- Exibe os cards no dashboard -->
+                    <?php if (!empty($availableCards)): ?>
                     <?php foreach ($availableCards as $card): ?>
-                        <?php if (in_array($card['permission'], array_keys($userPermissions))): ?>
+                        <?php if (in_array($card['permission'], $userPermissions)): ?>
                             <div class="card" style="width: 18rem; margin: 10px;">
                                 <img src="<?= Html::encode($card['image']) ?>" class="card-img-top" alt="<?= Html::encode($card['title']) ?>">
                                 <div class="card-body">
@@ -104,6 +85,10 @@ $availableCards = $cards[$userRole] ?? [];
                     <div class="alert alert-warning" role="alert">
                         Não há opções disponíveis para a sua role.
                     </div>
+                <?php endif; ?>
+                <?php else: ?>
+                    <!-- Aqui vai renderizar o conteúdo das outras páginas (por exemplo, a listagem de usuários em user/index) -->
+                    <?= $content ?>
                 <?php endif; ?>
             </div>
         </div>

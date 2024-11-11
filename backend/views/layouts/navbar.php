@@ -22,6 +22,9 @@ use yii\helpers\Html;
         <li class="nav-item d-none d-sm-inline-block">
             <a href="#" class="nav-link">Jogos</a>
         </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="<?= \yii\helpers\Url::to(['user/index']) ?>" class="nav-link">UserManage</a>
+        </li>
         <li class="nav-item dropdown">
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Dropdown</a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
