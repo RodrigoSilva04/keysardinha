@@ -50,7 +50,7 @@ AppAsset::register($this);
     ];
 
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0 buttons-container'],
+        'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
         'items' => $menuItems,
     ]);
     ?>
@@ -59,31 +59,27 @@ AppAsset::register($this);
     <?php
 
     // Barra de pesquisa
-    echo Html::beginForm(['produto/search'], 'get', ['class' => 'search-form d-flex']);
-    echo Html::textInput('query', null, ['class' => 'form-control me-2', 'placeholder' => 'Pesquisar jogos...']);
+    echo Html::beginForm(['produto/search'], 'get', ['class' => 'search-form']);
+    echo Html::textInput('query', null, ['class' => 'form-control', 'placeholder' => 'Pesquisar jogos...']);
     echo Html::submitButton('Buscar', ['class' => 'btn btn-light']);
     echo Html::endForm();
 
-
-    // Se o usuário for um guest, exibe login e signup
+     // Se o usuário for um guest, exibe login e signup
     if (Yii::$app->user->isGuest) {
-        // Botão de Login
         echo Html::tag('div',
-            Html::a('Login', ['/site/login'], ['class' => ['button-login btn']]),
+            Html::a('Login', ['/site/login'], ['class' => ['btn btn-link login text-decoration-none']]),
             ['class' => 'd-flex ms-3']
         );
-
-        // Botão de Signup
         echo Html::tag('div',
-            Html::a('Signup', ['/site/signup'], ['class' => ['btn btn-outline-success signup text-decoration-none rounded-pill px-4']]),
+            Html::a('Signup', ['/site/signup'], ['class' => ['btn btn-link signup text-decoration-none']]),
             ['class' => 'd-flex ms-2']
         );
     } else {
-        // Botão de Logout
+        // Se o usuário estiver logado, exibe o botão de logout com nome
         echo Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex ms-3'])
             . Html::submitButton(
                 'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-outline-danger logout text-decoration-none rounded-pill px-4']
+                ['class' => 'btn btn-link logout text-decoration-none']
             )
             . Html::endForm();
     }
