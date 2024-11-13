@@ -72,15 +72,23 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
         // Defina o layout a ser usado
         $this->layout = 'main-login';
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            $auth = Yii::$app->authManager;
+            $roles = $auth->getRolesByUser(Yii::$app->user->id);
+
+            if (isset($roles['client'])) {
+                // Desloga o usuário e redireciona ao frontend caso ele seja "client"
+                Yii::$app->user->logout();
+                //Manda o httprequest invalid e manda para o frontend passado 5s
+
+                Yii::$app->session->setFlash('error', 'Usuário não autorizado a acessar o backoffice.');
+            }
+
+            // Se o usuário não for "client", permite o acesso ao backend
             return $this->goBack();
         }
 

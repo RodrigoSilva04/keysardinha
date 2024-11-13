@@ -11,6 +11,7 @@ class RbacController extends Controller
     {
         $auth = Yii::$app->authManager;
 
+        //Sempre que for executado para adicionar alguma permissao
         $auth->removeAll(); // Limpar todas as atribuições
         $auth->removeAllPermissions(); // Limpar todas as permissões
 
@@ -56,6 +57,10 @@ class RbacController extends Controller
         $viewSalesStatistics->description = 'View sales statistics';
         $auth->add($viewSalesStatistics);
 
+        $acessBackend = $auth->createPermission('acessBackend');
+        $acessBackend->description = 'Acess to backend';
+        $auth->add($acessBackend);
+
         // Adicionar permissões para o Administrador
         $manageUsers = $auth->createPermission('manageUsers');
         $manageUsers->description = 'Manage users';
@@ -95,6 +100,7 @@ class RbacController extends Controller
         $auth->addChild($collaborator, $managePromotions);
         $auth->addChild($collaborator, $manageCategories);
         $auth->addChild($collaborator, $viewSalesStatistics);
+        $auth->addChild($collaborator, $acessBackend);
 
         $auth->addChild($admin, $manageUsers);
         $auth->addChild($admin, $viewOrders);
