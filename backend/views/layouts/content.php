@@ -5,34 +5,80 @@ use yii\bootstrap4\Breadcrumbs;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+// Defina os cards para o colaborador
+// Definição dos cards para as roles 'colaborador' e 'admin' no backoffice
 $cards = [
-    'admin' => [
-        [
-            'title' => 'Gerir Utilizadores',
-            'url' => Url::to(['user/index']),
-            'image' => 'path/to/user-image.jpg',
-            'description' => 'Gerencie os utilizadores do sistema.',
-            'permission' => 'manageUsers',
-        ],
-        [
-            'title' => 'Gerir Produtos',
-            'url' => Url::to(['product/index']),
-            'image' => 'path/to/product-image.jpg',
-            'description' => 'Adicione, edite ou remova produtos.',
-            'permission' => 'manageProducts',
-        ],
-    ],
     'colaborador' => [
         [
             'title' => 'Gerir Jogos',
             'url' => Url::to(['game/index']),
-            'image' => 'path/to/game-image.jpg',
+            'image' => '../web/imagens/managegames.png',
             'description' => 'Adicione, edite ou remova jogos.',
             'permission' => 'manageGames',
         ],
-        // Adicione outros cards conforme necessário
+        [
+            'title' => 'Gerir chave de jogos',
+            'url' => Url::to(['game/index']),
+            'image' => '../web/imagens/gerirchavejogo.png',
+            'description' => 'Adicione, edite ou remova chaves de jogos.',
+            'permission' => 'manageGamesKey',
+        ],
+        [
+            'title' => 'Gerir Promoções',
+            'url' => Url::to(['promotions/index']),
+            'image' => '../web/imagens/gerirpromocoes.png',
+            'description' => 'Gerencie promoções e ofertas especiais.',
+            'permission' => 'managePromotions',
+        ],
+        [
+            'title' => 'Gerir Categorias',
+            'url' => Url::to(['categories/index']),
+            'image' => '../web/imagens/gerircategorias.png',
+            'description' => 'Gerencie categorias de jogos.',
+            'permission' => 'manageCategories',
+        ],
+        [
+            'title' => 'Visualizar Estatísticas de Vendas',
+            'url' => Url::to(['sales-statistics/index']),
+            'image' => '../web/imagens/gerirestatsticas.png',
+            'description' => 'Veja as estatísticas de vendas.',
+            'permission' => 'viewSalesStatistics',
+        ],
+
     ],
 ];
+
+// Cards para o admin que herdam os cards do colaborador
+$cards['admin'] = array_merge($cards['colaborador'], [
+    [
+        'title' => 'Gerir Utilizadores',
+        'url' => Url::to(['user/index']),
+        'image' => '../web/imagens/usermanageicon.png',
+        'description' => 'Gere as roles de cada utilizador registado no nosso sistema.',
+        'permission' => 'manageUsers',
+    ],
+    [
+        'title' => 'Gerir Encomendas',
+        'url' => Url::to(['orders/index']),
+        'image' => '../web/imagens/gestaodeencomendas.png',
+        'description' => 'Verifique as encomendas realizadas.',
+        'permission' => 'viewOrders',
+    ],
+    [
+        'title' => 'Gerir Métodos de Pagamento',
+        'url' => Url::to(['payment-methods/index']),
+        'image' => '../web/imagens/gerirmetodos.png',
+        'description' => 'Gerencie os métodos de pagamento disponíveis.',
+        'permission' => 'managePaymentMethods',
+    ],
+    [
+        'title' => 'Gerar Relatórios',
+        'url' => Url::to(['reports/index']),
+        'image' => '../web/imagens/gerirrelatorios.png',
+        'description' => 'Gere relatórios de vendas e outros dados.',
+        'permission' => 'generateReports',
+    ],
+]);
 
 $auth = Yii::$app->authManager;
 $roles = $auth->getRolesByUser(Yii::$app->user->id);

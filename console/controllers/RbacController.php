@@ -45,6 +45,10 @@ class RbacController extends Controller
         $manageGames->description = 'Manage games';
         $auth->add($manageGames);
 
+        $manageGamesKey = $auth->createPermission('manageGamesKey');
+        $manageGamesKey->description = 'Manage games key';
+        $auth->add($manageGamesKey);
+
         $managePromotions = $auth->createPermission('managePromotions');
         $managePromotions->description = 'Manage promotions';
         $auth->add($managePromotions);
@@ -101,6 +105,7 @@ class RbacController extends Controller
         $auth->addChild($collaborator, $manageCategories);
         $auth->addChild($collaborator, $viewSalesStatistics);
         $auth->addChild($collaborator, $acessBackend);
+        $auth->addChild($collaborator, $manageGamesKey);
 
         $auth->addChild($admin, $manageUsers);
         $auth->addChild($admin, $viewOrders);

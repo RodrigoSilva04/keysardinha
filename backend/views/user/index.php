@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function($model) {
                     // Chama o método para buscar o perfil
                     $perfil = $model->getPerfil();
-                    return $perfil ? $perfil->dataregisto : 'Não atribuio nome';
+                    return $perfil ? $perfil->dataregisto : 'Não atribuio data de registo';
                 },
             ],
             [
@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function($model) {
                     // Chama o método para buscar o perfil
                     $perfil = $model->getPerfil();
-                    return $perfil ? $perfil->pontosacumulados : 'Não atribuio nome';
+                    return $perfil ? $perfil->pontosacumulados : 'Não atribuio pontos acumulados';
                 },
             ],
             [
@@ -60,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function($model) {
                     // Chama o método para buscar o perfil
                     $perfil = $model->getPerfil();
-                    return $perfil ? $perfil->carrinho_id : 'Não atribuio nome';
+                    return $perfil ? $perfil->carrinho_id : 'Não tem carrinho atribuido';
                 },
             ],
             [
@@ -73,6 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return !empty($roles) ? key($roles) : 'Não tem role atribuida'; // Pega o nome da role
                 },
             ],
+            'status',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, User $model, $key, $index, $column) {
