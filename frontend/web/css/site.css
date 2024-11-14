@@ -11,7 +11,7 @@ main > .container, main > .container-fluid
     background-color: #2596be;
 }
 /*Altera o estilo do butao de login para aquela animação branca a sobrepor o butao https://codepen.io/t_afif/pen/abKyJNJ  */
-.button-login {
+.button-login, .button-signup {
     --c:  #fff; /* the color*/
 
     box-shadow: 0 0 0 .1em inset var(--c);
@@ -26,24 +26,27 @@ main > .container, main > .container-fluid
     transition: background-size .4s, background-position 0s .4s;
 }
 
-.button-login:hover {
+.button-login:hover , .button-signup:hover {
     --_p: 100%;
     transition: background-position .4s, background-size 0s;
 }
 
-.button-login:active {
+.button-login:active , .button-signup:active {
     box-shadow: 0 0 9px 9px inset #0009;
     background-color: var(--c);
     color: #fff;
 }
 
-.button-login {
+
+.button-login , .button-signup{
     font-family: system-ui, sans-serif;
     font-size: 1.5rem;  /* Tamanho do texto reduzido */
     cursor: pointer;
-    padding: .1em .6em;
+    padding: 1em 2em;
+    margin-right: 10px;
     font-weight: bold;
     border: none;
+    padding: 10px 20px;
 }
 
 
@@ -89,6 +92,40 @@ main > .container, main > .container-fluid
     border-bottom-left-radius: var(--radius);
     border-bottom-right-radius: var(--radius);
 }
+.button-logout {
+    --c:  #ff4d4d; /* Cor vermelha */
+
+    box-shadow: 0 0 0 .1em inset var(--c);
+    --_g: linear-gradient(var(--c) 0 0) no-repeat;
+    background:
+            var(--_g) calc(var(--_p,0%) - 100%) 0%,
+            var(--_g) calc(200% - var(--_p,0%)) 0%,
+            var(--_g) calc(var(--_p,0%) - 100%) 100%,
+            var(--_g) calc(200% - var(--_p,0%)) 100%;
+    background-size: 50.5% calc(var(--_p,0%)/2 + .5%);
+    outline-offset: .1em;
+    transition: background-size .4s, background-position 0s .4s;
+    font-family: system-ui, sans-serif;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: 10px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px; /* Arredondando os cantos para manter o estilo consistente */
+}
+
+.button-logout:hover {
+    --_p: 100%;
+    transition: background-position .4s, background-size 0s;
+    background-color: #ff1a1a; /* Cor mais escura para o efeito hover */
+}
+
+.button-logout:active {
+    box-shadow: 0 0 9px 9px inset #0009;
+    background-color: var(--c);
+    color: #fff;
+}
+
 
 .footer {
     background-color: #f5f5f5;

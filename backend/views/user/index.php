@@ -63,27 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $perfil ? $perfil->carrinho_id : 'Não tem carrinho atribuido';
                 },
             ],
-            [
-                'attribute' => 'role',
-                'label' => 'Role',
-                'format' => 'raw',
-                'value' => function($model) {
-                    $auth = Yii::$app->authManager;
-                    $roles = $auth->getRoles();
-                    $userRoles = $auth->getRolesByUser($model->id);
-
-                    // Cria o dropdown com as roles disponíveis
-                    $dropdown = Html::dropDownList('role',
-                        key($userRoles), // valor da role atual
-                        array_combine(array_keys($roles), array_keys($roles)), // lista de roles
-                        [
-                            'class' => 'form-control change-role',
-                            'data-user-id' => $model->id,
-                        ]
-                    );
-                    return $dropdown;
-                },
-            ],
+            'role',
             'status',
             [
                 'class' => ActionColumn::className(),

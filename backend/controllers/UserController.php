@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\User;
 use common\models\UtilizadorPerfil;
 use yii\data\ActiveDataProvider;
@@ -101,6 +102,33 @@ class UserController extends Controller
             $perfilModel->load($this->request->post());
             $perfilModel->save();
 
+            // Atribuir a nova role (caso tenha sido alterada)
+            $auth = Yii::$app->authManager;
+
+            // Recuperar a nova role do formulário
+            $role = $this->request->post('User')['role'];  // Acessar a role corretamente
+            Yii::debug('Received role: ' . $role);  // Exibir o valor recebido
+
+            if ($role) {
+                // Procurar pela role no sistema de RBAC
+                $roleToAssign = $auth->getRole($role);
+                if ($roleToAssign) {
+                    Yii::debug('Assigning role: ' . $role);  // Exibir a role que será atribuída
+
+                    // Revogar todas as roles anteriores
+                    $auth->revokeAll($userModel->id);
+
+                    // Atribuir a nova role ao usuário
+                    $auth->assign($roleToAssign, $userModel->id);
+                } else {
+                    Yii::error('Role not found: ' . $role);  // Role não encontrada
+                }
+            }
+
+            // Verificar as roles atribuídas após a operação
+            $assignedRoles = $auth->getAssignments($userModel->id);
+            Yii::debug('Assigned roles after: ' . json_encode($assignedRoles));  // Exibir as roles atribuídas
+
             return $this->redirect(['view', 'id' => $userModel->id]);
         }
 
@@ -109,6 +137,9 @@ class UserController extends Controller
             'perfilModel' => $perfilModel,
         ]);
     }
+
+
+
 
     /**
      * Deletes an existing User model.

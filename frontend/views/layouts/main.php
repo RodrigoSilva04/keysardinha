@@ -21,7 +21,7 @@ AppAsset::register($this);
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="<?= Yii::getAlias('@web/css/navbar.css') ?>">
+    <link rel="stylesheet" href="<?= Yii::getAlias('@web/css/site.css') ?>">
 
     <?php $this->head() ?>
     <style>
@@ -54,39 +54,33 @@ AppAsset::register($this);
         'items' => $menuItems,
     ]);
     ?>
-    <!-- Seção para centralizar o texto KeySardinha -->
 
-    <?php
+    <!-- Barra de pesquisa ajustada -->
+    <div class="search-container ">
+        <?php
+        echo Html::beginForm(['produto/search'], 'get', ['class' => 'd-flex search-form']);
+        echo Html::textInput('query', null, ['class' => 'form-control search-input', 'placeholder' => 'Pesquisar jogos...']);
+        echo Html::submitButton('Buscar', ['class' => 'btn btn-light search-btn']);
+        echo Html::endForm();
+        ?>
+    </div>
 
-    // Barra de pesquisa
-    echo Html::beginForm(['produto/search'], 'get', ['class' => 'search-form']);
-    echo Html::textInput('query', null, ['class' => 'form-control', 'placeholder' => 'Pesquisar jogos...']);
-    echo Html::submitButton('Buscar', ['class' => 'btn btn-light']);
-    echo Html::endForm();
+    <!-- Se o usuário for um guest, exibe login e signup -->
+    <?php if (Yii::$app->user->isGuest): ?>
+        <div class="d-flex ms-5">
+            <?= Html::a('Login', ['/site/login'], ['class' => ['btn button-login']]) ?>
+            <?= Html::a('Signup', ['/site/signup'], ['class' => ['btn button-signup']]) ?>
+        </div>
+    <?php else: ?>
+        <!-- Se o usuário estiver logado, exibe o botão de logout com nome -->
+        <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex ms-3']) ?>
+        <?= Html::submitButton('Logout (' . Yii::$app->user->identity->username . ')', ['class' => 'btn button-logout text-decoration-none']) ?>
+        <?= Html::endForm() ?>
+    <?php endif; ?>
 
-     // Se o usuário for um guest, exibe login e signup
-    if (Yii::$app->user->isGuest) {
-        echo Html::tag('div',
-            Html::a('Login', ['/site/login'], ['class' => ['btn btn-link login text-decoration-none']]),
-            ['class' => 'd-flex ms-3']
-        );
-        echo Html::tag('div',
-            Html::a('Signup', ['/site/signup'], ['class' => ['btn btn-link signup text-decoration-none']]),
-            ['class' => 'd-flex ms-2']
-        );
-    } else {
-        // Se o usuário estiver logado, exibe o botão de logout com nome
-        echo Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex ms-3'])
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout text-decoration-none']
-            )
-            . Html::endForm();
-    }
-
-    NavBar::end();
-    ?>
+    <?php NavBar::end(); ?>
 </header>
+
 
 <main role="main" class="flex-shrink-0">
     <div class="container">
