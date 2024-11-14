@@ -8,7 +8,7 @@ use yii\helpers\Url;
 // Defina os cards para o colaborador
 // Definição dos cards para as roles 'colaborador' e 'admin' no backoffice
 $cards = [
-    'colaborador' => [
+    'collaborator' => [
         [
             'title' => 'Gerir Jogos',
             'url' => Url::to(['game/index']),
@@ -49,7 +49,7 @@ $cards = [
 ];
 
 // Cards para o admin que herdam os cards do colaborador
-$cards['admin'] = array_merge($cards['colaborador'], [
+$cards['admin'] = array_merge($cards['collaborator'], [
     [
         'title' => 'Gerir Utilizadores',
         'url' => Url::to(['user/index']),

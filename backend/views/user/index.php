@@ -65,12 +65,23 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'role',
-                'label' => 'Role', // Título da coluna
+                'label' => 'Role',
+                'format' => 'raw',
                 'value' => function($model) {
-                    // Supondo que você tenha configurado RBAC e o `user` tenha uma relação com a role
                     $auth = Yii::$app->authManager;
-                    $roles = $auth->getRolesByUser($model->id);
-                    return !empty($roles) ? key($roles) : 'Não tem role atribuida'; // Pega o nome da role
+                    $roles = $auth->getRoles();
+                    $userRoles = $auth->getRolesByUser($model->id);
+
+                    // Cria o dropdown com as roles disponíveis
+                    $dropdown = Html::dropDownList('role',
+                        key($userRoles), // valor da role atual
+                        array_combine(array_keys($roles), array_keys($roles)), // lista de roles
+                        [
+                            'class' => 'form-control change-role',
+                            'data-user-id' => $model->id,
+                        ]
+                    );
+                    return $dropdown;
                 },
             ],
             'status',
