@@ -26,6 +26,11 @@ $this->title = 'Login';
             <div class="form-group">
                 <?= Html::submitButton('Login', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
             </div>
+        <?php
+        foreach (Yii::$app->session->getAllFlashes() as $key => $message) {
+            echo Html::tag('div', Html::encode($message), ['class' => 'alert alert-' . $key]);
+        }
+        ?>
 
         <?php ActiveForm::end(); ?>
     </div>
