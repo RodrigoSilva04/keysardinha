@@ -61,7 +61,7 @@ main > .container, main > .container-fluid
 .buttonNavbar {
     padding: 0px;
     font-size: 2rem;
-    background: #2596be; /* Cor inicial ajustada */
+        background: #2596be; /* Cor inicial ajustada */
     color: hsl(190deg, 10%, 95%); /* Cor do texto */
     box-shadow: 0 0px 0px hsla(190deg, 15%, 5%, .2);
     transform: translateY(0);
