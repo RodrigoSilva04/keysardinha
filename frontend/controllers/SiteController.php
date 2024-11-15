@@ -78,6 +78,7 @@ class SiteController extends Controller
         $produtos = \common\models\Produto::find()->all();
 
         return $this->render('index' , ['produtos' => $produtos]);
+
     }
 
     /**
