@@ -94,14 +94,12 @@ input[type="radio"] {
 }
 .container-fluid.bg-light-blue {
     background-color: #6db2ff;
-    width: 100%; /* Garantir que a largura ocupe 100% da janela */
-    height: calc(20vh - 10px); /* Ajusta a altura para preencher o restante da tela após a nav-bar */
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0; /* Remove margens extras */
-    padding: 0; /* Remove padding extra */
-    position: relative;
+    margin: 0;
+    padding: 0;
 }
 
 .box-container {
