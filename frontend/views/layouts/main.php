@@ -34,7 +34,7 @@ AppAsset::register($this);
 <header>
     <?php
     NavBar::begin([
-        'brandLabel' => Html::img('@web/logokeysardinha.webp', ['alt' => 'Logo', 'class' => 'logo']),
+        'brandLabel' => Html::img('@web/logokeysardinha.webp', ['alt' => 'Logo', 'class' => 'logo ms-auto d-flex']),
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar navbar-expand-md navbar-dark navbar-sticky',
@@ -56,15 +56,28 @@ AppAsset::register($this);
     ?>
 
     <!-- Barra de pesquisa ajustada -->
-    <div class="search-container ">
-        <?php
-        echo Html::beginForm(['produto/search'], 'get', ['class' => 'd-flex search-form']);
-        echo Html::textInput('query', null, ['class' => 'form-control search-input', 'placeholder' => 'Pesquisar jogos...']);
-        echo Html::submitButton('Buscar', ['class' => 'btn btn-light search-btn']);
-        echo Html::endForm();
-        ?>
-    </div>
+        <!-- Barra de pesquisa ajustada com apenas a lupa -->
+        <div class="search-container">
+            <?php
+            echo Html::beginForm(['produto/search'], 'get', ['class' => 'input-group search-form']);
+            ?>
+            <div class="form-outline position-relative">
+                <?php
+                echo Html::textInput('query', null, [
+                    'class' => 'form-control search-input',
+                    'id' => 'form1',
+                    'placeholder' => 'Pesquisar jogos...',
+                ]);
+                ?>
+                <i class="fas fa-search position-absolute"
+                   style="top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;"></i>
+            </div>
+            <?php
+            echo Html::endForm();
+            ?>
+        </div>
 
+    <div class="opcoes-login"
     <!-- Se o usuário for um guest, exibe login e signup -->
     <?php if (Yii::$app->user->isGuest): ?>
         <div class="d-flex ms-5">
@@ -72,11 +85,34 @@ AppAsset::register($this);
             <?= Html::a('Signup', ['/site/signup'], ['class' => ['btn button-signup']]) ?>
         </div>
     <?php else: ?>
-        <!-- Se o usuário estiver logado, exibe o botão de logout com nome -->
-        <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex ms-3']) ?>
-        <?= Html::submitButton('Logout (' . Yii::$app->user->identity->username . ')', ['class' => 'btn button-logout text-decoration-none']) ?>
-        <?= Html::endForm() ?>
+        <!-- Se o usuário estiver logado, exibe um dropdown com nome e logout -->
+        <li class="nav-item dropdown">
+            <!-- Botão branco com o nome do usuário -->
+            <?= Html::a(
+                Yii::$app->user->identity->username, // Nome do utilizador
+                '#', // URL do link
+                [
+                    'class' => 'btn btn-light dropdown-toggle profile-name', // Botão branco (classe 'btn-light' para fundo branco)
+                    'id' => 'navbarDropdown',
+                    'role' => 'button',
+                    'data-bs-toggle' => 'dropdown',
+                    'aria-expanded' => 'false',
+                ]
+            ) ?>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><?= Html::a('Perfil', ['/site/profile'], ['class' => 'dropdown-item']) ?></li>
+                <li><?= Html::a('Carrinho', ['/site/carrinho'], ['class' => 'dropdown-item']) ?></li>
+                <li><?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex ms-3']) .
+                    Html::submitButton('Logout', ['class' => 'dropdown-item text-decoration-none']) .
+                    Html::endForm() ?>
+                </li>
+            </ul>
+        </li>
+
+        </ul>
+        </li>
     <?php endif; ?>
+    </div>
 
     <?php NavBar::end(); ?>
 </header>

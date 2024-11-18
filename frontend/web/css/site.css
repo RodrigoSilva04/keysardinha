@@ -2,7 +2,29 @@
 .logo {
     width: 150px;   /* Defina a largura desejada */
     height: auto;   /* A altura será ajustada automaticamente para manter a proporção */
+    border-radius: 25%;
 }
+.main-content{
+    background: #abfbfb;
+}
+#content-promoçoes{
+    background: #03c8c8;
+}
+.profile-name {
+    font-family: 'Arial', sans-serif; /* Or any sans-serif font you prefer */
+    font-size: 1.5rem;  /* Tamanho do texto reduzido */
+    border-radius: 10%;
+}
+
+
+ul {
+    list-style-type: none; /* Remove o marcador */
+    padding-left: 0; /* Remove o espaço à esquerda */
+}
+ul li::marker {
+    display: none; /* Remove o marcador se for usado o pseudo-elemento */
+}
+
 .navbar{
     background-color: #2596be;
 }
@@ -221,3 +243,20 @@ a.desc:after {
 {
     text-decoration: none;
 }
+/* Garante que a container-fluid preenche toda a largura */
+.container-fluid {
+    padding-left: 0;   /* Remove o padding à esquerda */
+    padding-right: 0;  /* Remove o padding à direita */
+    margin-left: 0;    /* Remove a margem à esquerda */
+    margin-right: 0;   /* Remove a margem à direita */
+}
+
+/* Especificamente para o fundo azul, garante que preenche a tela inteira */
+.container-fluid.bg-light-blue {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;   /* Faz com que ocupe toda a largura */
+}
+
