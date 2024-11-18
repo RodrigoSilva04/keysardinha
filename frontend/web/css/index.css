@@ -142,25 +142,25 @@ input[type="radio"] {
     z-index: 1;
 }
 /* Top Recomendações Carousel */
-#top-recomendacoes-item-1:checked ~ .carousel-cards top-recomendacoes-card-1,
-#top-recomendacoes-item-2:checked ~ .carousel-cards top-recomendacoes-card-2,
-#top-recomendacoes-item-3:checked ~ .carousel-cards top-recomendacoes-card-3 {
+#top-recomendacoes-item-1:checked ~ .carousel-cards #top-recomendacoes-card-1,
+#top-recomendacoes-item-2:checked ~ .carousel-cards #top-recomendacoes-card-2,
+#top-recomendacoes-item-3:checked ~ .carousel-cards #top-recomendacoes-card-3 {
     transform: translateX(0) scale(1);
     opacity: 1;
     z-index: 2;
 }
 
-#top-recomendacoes-item-1:checked ~ .carousel-cards top-recomendacoes-card-2,
-#top-recomendacoes-item-2:checked ~ .carousel-cards top-recomendacoes-card-3,
-#top-recomendacoes-item-3:checked ~ .carousel-cards top-recomendacoes-card-1 {
+#top-recomendacoes-item-1:checked ~ .carousel-cards #top-recomendacoes-card-2,
+#top-recomendacoes-item-2:checked ~ .carousel-cards #top-recomendacoes-card-3,
+#top-recomendacoes-item-3:checked ~ .carousel-cards #top-recomendacoes-card-1 {
     transform: translateX(40%) scale(0.8);
     opacity: 0.5;
     z-index: 1;
 }
 
-#top-recomendacoes-item-1:checked ~ .carousel-cards top-recomendacoes-card-3,
-#top-recomendacoes-item-2:checked ~ .carousel-cards top-recomendacoes-card-1,
-#top-recomendacoes-item-3:checked ~ .carousel-cards top-recomendacoes-card-2 {
+#top-recomendacoes-item-1:checked ~ .carousel-cards #top-recomendacoes-card-3,
+#top-recomendacoes-item-2:checked ~ .carousel-cards #top-recomendacoes-card-1,
+#top-recomendacoes-item-3:checked ~ .carousel-cards #top-recomendacoes-card-2 {
     transform: translateX(-40%) scale(0.8);
     opacity: 0.5;
     z-index: 1;
