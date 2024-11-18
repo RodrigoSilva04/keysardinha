@@ -32,7 +32,7 @@ $this->registerCssFile('@web/css/index.css');
                 <div class="carousel-cards">
                     <?php foreach ($produtos as $index => $produto): ?>
                         <label class="carousel-card" for="top-vendas-item-<?= $index + 1 ?>" id="top-vendas-card-<?= $index + 1 ?>">
-                            <img src="<?= $produto->imagem ?>" alt="<?= $produto->nome ?>" class="card-image">
+                            <img src="<?= Yii::getAlias('@web') ?>/imagensjogos/<?= $produto->imagem ?>" alt="<?= $produto->nome ?>" class="card-image">
                             <div class="card-info">
                                 <h5 class="card-title"><?= $produto->nome ?></h5>
                                 <p class="card-description"><?= $produto->descricao ?></p>
@@ -68,7 +68,7 @@ $this->registerCssFile('@web/css/index.css');
                 <div class="carousel-cards">
                     <?php foreach ($produtos as $index => $produto): ?>
                         <label class="carousel-card" for="top-promocoes-item-<?= $index + 1 ?>" id="top-promocoes-card-<?= $index + 1 ?>">
-                            <img src="<?= $produto->imagem ?>" alt="<?= $produto->nome ?>" class="card-image">
+                            <img src="<?= Yii::getAlias('@web') ?>/imagensjogos/<?= $produto->imagem ?>" alt="<?= $produto->nome ?>" class="card-image">
                             <div class="card-info">
                                 <h5 class="card-title"><?= $produto->nome ?></h5>
                                 <p class="card-description"><?= $produto->descricao ?></p>
@@ -102,7 +102,7 @@ $this->registerCssFile('@web/css/index.css');
                 <div class="carousel-cards">
                     <?php foreach ($produtos as $index => $produto): ?>
                         <label class="carousel-card" for="top-recomendacoes-item-<?= $index + 1 ?>" id="top-recomendacoes-card-<?= $index + 1 ?>">
-                            <img src="<?= $produto->imagem ?>" alt="<?= $produto->nome ?>" class="card-image">
+                            <img src="<?= Yii::getAlias('@web') ?>/imagensjogos/<?= $produto->imagem ?>" alt="<?= $produto->nome ?>" class="card-image">
                             <div class="card-info">
                                 <h5 class="card-title"><?= $produto->nome ?></h5>
                                 <p class="card-description"><?= $produto->descricao ?></p>
