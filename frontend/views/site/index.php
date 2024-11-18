@@ -22,12 +22,12 @@ $this->registerCssFile('@web/css/index.css');
         <div class="carousel-container">
             <?php if (!empty($produtos)): ?>
                 <?php foreach ($produtos as $index => $produto): ?>
-                    <input type="radio" name="slider" id="item-<?= $index + 1 ?>" <?= $index === 0 ? 'checked' : '' ?>>
+                    <input type="radio" name="slider-top-vendas" id="top-vendas-item-<?= $index + 1 ?>" <?= $index === 0 ? 'checked' : '' ?>>
                 <?php endforeach; ?>
 
                 <div class="carousel-cards">
                     <?php foreach ($produtos as $index => $produto): ?>
-                        <label class="carousel-card" for="item-<?= $index + 1 ?>" id="card-<?= $index + 1 ?>">
+                        <label class="carousel-card" for="top-vendas-item-<?= $index + 1 ?>" id="top-vendas-card-<?= $index + 1 ?>">
                             <img src="<?= $produto->imagem ?>" alt="<?= $produto->nome ?>" class="card-image">
                             <div class="card-info">
                                 <h5 class="card-title"><?= $produto->nome ?></h5>
@@ -54,12 +54,12 @@ $this->registerCssFile('@web/css/index.css');
         <div class="carousel-container">
             <?php if (!empty($produtos)): ?>
                 <?php foreach ($produtos as $index => $produto): ?>
-                    <input type="radio" name="slider" id="item-<?= $index + 1 ?>" <?= $index === 0 ? 'checked' : '' ?>>
+                    <input type="radio" name="slider-top-promocoes" id="top-promocoes-item-<?= $index + 1 ?>" <?= $index === 0 ? 'checked' : '' ?>>
                 <?php endforeach; ?>
 
                 <div class="carousel-cards">
                     <?php foreach ($produtos as $index => $produto): ?>
-                        <label class="carousel-card" for="item-<?= $index + 1 ?>" id="card-<?= $index + 1 ?>">
+                        <label class="carousel-card" for="top-promocoes-item-<?= $index + 1 ?>" id="top-promocoes-card-<?= $index + 1 ?>">
                             <img src="<?= $produto->imagem ?>" alt="<?= $produto->nome ?>" class="card-image">
                             <div class="card-info">
                                 <h5 class="card-title"><?= $produto->nome ?></h5>
@@ -73,7 +73,6 @@ $this->registerCssFile('@web/css/index.css');
                 <p>No products available.</p>
             <?php endif; ?>
         </div>
-
     </div>
     <div class="main-content">
         <div class="p-3 mb-4 bg-transparent rounded-3">
@@ -85,12 +84,12 @@ $this->registerCssFile('@web/css/index.css');
         <div class="carousel-container">
             <?php if (!empty($produtos)): ?>
                 <?php foreach ($produtos as $index => $produto): ?>
-                    <input type="radio" name="slider" id="item-<?= $index + 1 ?>" <?= $index === 0 ? 'checked' : '' ?>>
+                    <input type="radio" name="slider" id="top-recomendacoes-item-<?= $index + 1 ?>" <?= $index === 0 ? 'checked' : '' ?>>
                 <?php endforeach; ?>
 
                 <div class="carousel-cards">
                     <?php foreach ($produtos as $index => $produto): ?>
-                        <label class="carousel-card" for="item-<?= $index + 1 ?>" id="card-<?= $index + 1 ?>">
+                        <label class="carousel-card" for="top-recomendacoes-item-<?= $index + 1 ?>" id="top-recomendacoes-card-<?= $index + 1 ?>">
                             <img src="<?= $produto->imagem ?>" alt="<?= $produto->nome ?>" class="card-image">
                             <div class="card-info">
                                 <h5 class="card-title"><?= $produto->nome ?></h5>

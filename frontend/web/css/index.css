@@ -70,29 +70,6 @@ input[type="radio"] {
     border-radius: 5px;
 }
 
-#item-1:checked ~ .carousel-cards #card-1,
-#item-2:checked ~ .carousel-cards #card-2,
-#item-3:checked ~ .carousel-cards #card-3 {
-    transform: translateX(0) scale(1);
-    opacity: 1;
-    z-index: 2;
-}
-
-#item-1:checked ~ .carousel-cards #card-2,
-#item-2:checked ~ .carousel-cards #card-3,
-#item-3:checked ~ .carousel-cards #card-1 {
-    transform: translateX(40%) scale(0.8);
-    opacity: 0.5;
-    z-index: 1;
-}
-
-#item-1:checked ~ .carousel-cards #card-3,
-#item-2:checked ~ .carousel-cards #card-1,
-#item-3:checked ~ .carousel-cards #card-2 {
-    transform: translateX(-40%) scale(0.8);
-    opacity: 0.5;
-    z-index: 1;
-}
 .container-fluid.bg-light-blue {
     background-color: #6db2ff;
     width: 100%;
@@ -116,3 +93,75 @@ input[type="radio"] {
     font-size: 1.2rem; /* Small text size */
 }
 
+/* Top Vendas Carousel */
+#top-vendas-item-1:checked ~ .carousel-cards #top-vendas-card-1,
+#top-vendas-item-2:checked ~ .carousel-cards #top-vendas-card-2,
+#top-vendas-item-3:checked ~ .carousel-cards #top-vendas-card-3 {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 2;
+}
+
+#top-vendas-item-1:checked ~ .carousel-cards #top-vendas-card-2,
+#top-vendas-item-2:checked ~ .carousel-cards #top-vendas-card-3,
+#top-vendas-item-3:checked ~ .carousel-cards #top-vendas-card-1 {
+    transform: translateX(40%) scale(0.8);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+#top-vendas-item-1:checked ~ .carousel-cards #top-vendas-card-3,
+#top-vendas-item-2:checked ~ .carousel-cards #top-vendas-card-1,
+#top-vendas-item-3:checked ~ .carousel-cards #top-vendas-card-2 {
+    transform: translateX(-40%) scale(0.8);
+    opacity: 0.5;
+    z-index: 1;
+}
+/* Top Promoções Carousel */
+#top-promocoes-item-1:checked ~ .carousel-cards #top-promocoes-card-1,
+#top-promocoes-item-2:checked ~ .carousel-cards #top-promocoes-card-2,
+#top-promocoes-item-3:checked ~ .carousel-cards #top-promocoes-card-3 {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 2;
+}
+
+#top-promocoes-item-1:checked ~ .carousel-cards #top-promocoes-card-2,
+#top-promocoes-item-2:checked ~ .carousel-cards #top-promocoes-card-3,
+#top-promocoes-item-3:checked ~ .carousel-cards #top-promocoes-card-1 {
+    transform: translateX(40%) scale(0.8);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+#top-promocoes-item-1:checked ~ .carousel-cards #top-promocoes-card-3,
+#top-promocoes-item-2:checked ~ .carousel-cards #top-promocoes-card-1,
+#top-promocoes-item-3:checked ~ .carousel-cards #top-promocoes-card-2 {
+    transform: translateX(-40%) scale(0.8);
+    opacity: 0.5;
+    z-index: 1;
+}
+/* Top Recomendações Carousel */
+#top-recomendacoes-item-1:checked ~ .carousel-cards top-recomendacoes-card-1,
+#top-recomendacoes-item-2:checked ~ .carousel-cards top-recomendacoes-card-2,
+#top-recomendacoes-item-3:checked ~ .carousel-cards top-recomendacoes-card-3 {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 2;
+}
+
+#top-recomendacoes-item-1:checked ~ .carousel-cards top-recomendacoes-card-2,
+#top-recomendacoes-item-2:checked ~ .carousel-cards top-recomendacoes-card-3,
+#top-recomendacoes-item-3:checked ~ .carousel-cards top-recomendacoes-card-1 {
+    transform: translateX(40%) scale(0.8);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+#top-recomendacoes-item-1:checked ~ .carousel-cards top-recomendacoes-card-3,
+#top-recomendacoes-item-2:checked ~ .carousel-cards top-recomendacoes-card-1,
+#top-recomendacoes-item-3:checked ~ .carousel-cards top-recomendacoes-card-2 {
+    transform: translateX(-40%) scale(0.8);
+    opacity: 0.5;
+    z-index: 1;
+}

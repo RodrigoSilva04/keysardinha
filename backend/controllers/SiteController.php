@@ -81,17 +81,17 @@ class SiteController extends Controller
             $roles = $auth->getRolesByUser(Yii::$app->user->id);
 
             if (isset($roles['client'])) {
-                // Desloga o usuário e redireciona ao frontend caso ele seja "client"
+                // Desloga o utilizador e redireciona ao frontend caso ele seja "client"
                 Yii::$app->user->logout();
                 // Manda o httprequest invalid e manda para o frontend passado 5s
-                Yii::$app->session->setFlash('error', 'Usuário não autorizado a acessar o backoffice.');
+                Yii::$app->session->setFlash('error', 'Utilizador não autorizado a acessar o backoffice.');
                 return $this->goHome(); // Redireciona ao frontend (ou outro destino)
             }
 
             // Verifica se o utilizador está bloqueado (não está completa a funcionalidade)
             $user = Yii::$app->user->identity;
 
-            // Verifica se a identidade do usuário está carregada corretamente
+            // Verifica se a identidade do utilizador está carregada corretamente
             if ($user === null) {
                 Yii::$app->session->setFlash('error', 'Erro ao carregar a identidade do usuário.');
                 return $this->goHome(); // Redireciona ao frontend ou página de erro

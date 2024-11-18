@@ -116,8 +116,8 @@ class RbacController extends Controller
         // Limpar todas as atribuições
 
         // Atribuir roles aos usuários. 1 e 2 são IDs retornados por IdentityInterface::getId()
-        $auth->assign($collaborator, 1); // Atribuindo a role Collaborator ao usuário com ID 2
-        $auth->assign($admin, 2); // Atribuindo a role Administrator ao usuário com ID 1
+        $auth->assign($collaborator, 1); // Atribuindo a role Collaborator ao usuário com ID 1
+        $auth->assign($admin, 2); // Atribuindo a role Administrator ao usuário com ID 2
         $auth->assign($client, 3); // Atribuindo a role Client ao usuário com ID 3
 
 
