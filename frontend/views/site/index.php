@@ -21,6 +21,10 @@ $this->registerCssFile('@web/css/index.css');
         </div>
         <div class="carousel-container">
             <?php if (!empty($produtos)): ?>
+                <?php
+                // Limitar a exibição a no máximo 3 produtos
+                $produtos = array_slice($produtos, 0, 3);
+                ?>
                 <?php foreach ($produtos as $index => $produto): ?>
                     <input type="radio" name="slider-top-vendas" id="top-vendas-item-<?= $index + 1 ?>" <?= $index === 0 ? 'checked' : '' ?>>
                 <?php endforeach; ?>
@@ -53,6 +57,10 @@ $this->registerCssFile('@web/css/index.css');
         </div>
         <div class="carousel-container">
             <?php if (!empty($produtos)): ?>
+                <?php
+                // Limitar a exibição a no máximo 3 produtos
+                $produtos = array_slice($produtos, 0, 3);
+                ?>
                 <?php foreach ($produtos as $index => $produto): ?>
                     <input type="radio" name="slider-top-promocoes" id="top-promocoes-item-<?= $index + 1 ?>" <?= $index === 0 ? 'checked' : '' ?>>
                 <?php endforeach; ?>
@@ -83,6 +91,10 @@ $this->registerCssFile('@web/css/index.css');
         </div>
         <div class="carousel-container">
             <?php if (!empty($produtos)): ?>
+                <?php
+                // Limitar a exibição a no máximo 3 produtos
+                $produtos = array_slice($produtos, 0, 3);
+                ?>
                 <?php foreach ($produtos as $index => $produto): ?>
                     <input type="radio" name="slider" id="top-recomendacoes-item-<?= $index + 1 ?>" <?= $index === 0 ? 'checked' : '' ?>>
                 <?php endforeach; ?>
