@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\UserCreateForm;
 use Yii;
 use common\models\User;
 use common\models\UtilizadorPerfil;
@@ -70,14 +71,11 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-        $model = new User();
+        $model = new UserCreateForm();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
+        if ($model->load(Yii::$app->request->post()) && $model->createUser()) {
+            Yii::$app->session->setFlash('success', 'Usuário criado com sucesso.');
+            return $this->redirect(['index']);
         }
 
         return $this->render('create', [
@@ -97,23 +95,29 @@ class UserController extends Controller
         $userModel = $this->findModel($id);
         $perfilModel = UtilizadorPerfil::findOne($id);  // Buscar o perfil existente
 
-        if ($this->request->isPost && $userModel->load($this->request->post()) && $userModel->save()) {
-            // Atualizar o perfil
-            $perfilModel->load($this->request->post());
-            $perfilModel->save();
+        if ($this->request->isPost && $userModel->load($this->request->post())) {
+
+            // Verificar se o campo de password não está vazio e, se sim, atualiza-a
+            if (!empty($userModel->password)) {
+                $userModel->setPassword($userModel->password);  // Definir a nova senha
+            }
+
+            if ($userModel->save()){
+                // Atualizar o perfil
+                $perfilModel->load($this->request->post());
+                $perfilModel->save();
+            }
 
             // Atribuir a nova role (caso tenha sido alterada)
             $auth = Yii::$app->authManager;
-
-            // Recuperar a nova role do formulário
             $role = $this->request->post('User')['role'];  // Acessar a role corretamente
-            Yii::debug('Received role: ' . $role);  // Exibir o valor recebido
+            //Yii::debug('Received role: ' . $role);  // Exibir o valor recebido
 
             if ($role) {
                 // Procurar pela role no sistema de RBAC
                 $roleToAssign = $auth->getRole($role);
                 if ($roleToAssign) {
-                    Yii::debug('Assigning role: ' . $role);  // Exibir a role que será atribuída
+                    //Yii::debug('Assigning role: ' . $role);  // Exibir a role que será atribuída
 
                     // Revogar todas as roles anteriores
                     $auth->revokeAll($userModel->id);
@@ -126,8 +130,8 @@ class UserController extends Controller
             }
 
             // Verificar as roles atribuídas após a operação
-            $assignedRoles = $auth->getAssignments($userModel->id);
-            Yii::debug('Assigned roles after: ' . json_encode($assignedRoles));  // Exibir as roles atribuídas
+          //  $assignedRoles = $auth->getAssignments($userModel->id);
+            // Yii::debug('Assigned roles after: ' . json_encode($assignedRoles));  // Exibir as roles atribuídas
 
             return $this->redirect(['view', 'id' => $userModel->id]);
         }

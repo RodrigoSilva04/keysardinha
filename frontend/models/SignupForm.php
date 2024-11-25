@@ -57,6 +57,7 @@ class SignupForm extends Model
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
 
+        // if ($this->role == 'cliente')
         // Salva o usuário e verifica se a operação foi bem-sucedida
         if ($user->save()) {
             // Cria um novo registro na tabela utilizador_perfil com o mesmo ID do usuário
