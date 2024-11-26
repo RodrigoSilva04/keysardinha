@@ -23,8 +23,10 @@ use yii\web\IdentityInterface;
  * @property integer $updated_at
  * @property string $password write-only password
  */
+
 class User extends ActiveRecord implements IdentityInterface
 {
+    public $password;
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
@@ -57,9 +59,15 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED, self::STATUS_BLOCKED]],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED, self::STATUS_BLOCKED]], // Fechamento do colchete aqui
+            [['username', 'email'], 'required'], // Campos obrigatórios agrupados corretamente
+            ['email', 'email'], // Validação de e-mail
+            ['username', 'string', 'max' => 255], // Tamanho máximo do username
+            ['email', 'string', 'max' => 255], // Tamanho máximo do e-mail
+            ['password', 'string', 'min' => 6], // Senha deve ter no mínimo 6 caracteres
         ];
     }
+
 
     /**
      * {@inheritdoc}

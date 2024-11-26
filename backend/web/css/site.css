@@ -10,7 +10,7 @@ main > .container {
 
 .footer > .container {
     padding-right: 15px;
-    padding-left: 15px;
+    padding-left: 15.0px;
 }
 
 .not-set {

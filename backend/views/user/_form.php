@@ -1,4 +1,4 @@
- <?php
+<?php
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -16,6 +16,12 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <!-- Username -->
+    <?= $form->field($userModel, 'username')->textInput(['maxlength' => true]) ?>
+
+    <!-- E-mail -->
+    <?= $form->field($userModel, 'email')->input('email') ?>
+
     <!-- Dropdown para mudar a role -->
     <?= $form->field($userModel, 'role')->dropDownList(
         ['admin' => 'Admin', 'client' => 'Client', 'collaborator' => 'Collaborator'],  // As roles disponíveis
@@ -26,6 +32,9 @@ use yii\widgets\ActiveForm;
             ],
         ]
     ) ?>
+
+    <!-- Campo da password -->
+    <?= $form->field($userModel, 'password')->passwordInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
