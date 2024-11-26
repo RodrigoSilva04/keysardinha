@@ -7,7 +7,8 @@ use common\widgets\Alert;
 use frontend\assets\AppAsset;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
-use yii\helpers\Url;
+use yii\bootstrap5\Nav;
+use yii\bootstrap5\NavBar;
 
 AppAsset::register($this);
 ?>
@@ -19,14 +20,6 @@ AppAsset::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
-    <meta name="description" content="Loja de jogos digitais com melhores ofertas e novidades!">
-    <meta property="og:title" content="<?= Html::encode($this->title) ?>">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="<?= Yii::$app->request->absoluteUrl ?>">
-    <meta property="og:image" content="<?= Yii::getAlias('@web/assetslayout/img/preview.jpg') ?>">
-    <meta property="og:description" content="Loja de jogos digitais com melhores ofertas e novidades!">
-
-    <!-- CSS -->
     <link rel="stylesheet" href="<?= Yii::getAlias('@web/assetslayout/css/fontawesome.css') ?>">
     <link rel="stylesheet" href="<?= Yii::getAlias('@web/assetslayout/css/templatemo-lugx-gaming.css') ?>">
     <link rel="stylesheet" href="<?= Yii::getAlias('@web/assetslayout/css/owl.css') ?>">
@@ -34,76 +27,64 @@ AppAsset::register($this);
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
 
     <?php $this->head() ?>
+    <style>
+
+    </style>
 </head>
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
 
-
-
-<!-- Header -->
 <header class="header-area header-sticky">
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <nav class="main-nav">
-                    <!-- Logo -->
+                    <!-- ***** Logo Start ***** -->
                     <?= Html::a(
                         Html::img('@web/logokeysardinha.webp', ['alt' => 'Logo', 'style' => 'width: 158px;']),
                         Yii::$app->homeUrl,
                         ['class' => 'logo']
                     ) ?>
-                    <!-- Logo End -->
-
-                    <!-- Menu -->
+                    <!-- ***** Logo End ***** -->
+                    <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                        <li><?= Html::a('Home', ['/site/index'], ['class' => 'active']) ?></li>
+                        <li><?= Html::a('Home', ['/produto/index'], ['class' => 'active']) ?></li>
                         <li><?= Html::a('Catálogo', ['/produto/index']) ?></li>
                         <li><?= Html::a('Favoritos', ['/favoritos/index']) ?></li>
-                        <li><?= Html::a('Contact Us', ['/site/contact']) ?></li>
+                        <li><?= Html::a('Contacto', ['/site/contact']) ?></li>
                         <?php if (Yii::$app->user->isGuest): ?>
-                            <li><?= Html::a('<i class="fas fa-sign-in-alt"></i> Sign In', ['/site/login']) ?></li>
+                            <li><?= Html::a('Sign In', ['/site/login']) ?></li>
                         <?php else: ?>
-                            <li><?= Html::a('<i class="fas fa-sign-out-alt"></i> Logout (' . Yii::$app->user->identity->username . ')', ['/site/logout'], ['data-method' => 'post']) ?></li>
+                            <li><?= Html::a('Logout (' . Yii::$app->user->identity->username . ')', ['/site/logout'], ['data-method' => 'post']) ?></li>
                         <?php endif; ?>
                     </ul>
-                    <a class="menu-trigger" aria-label="Open menu">
+                    <a class="menu-trigger">
                         <span>Menu</span>
                     </a>
-                    <!-- Menu End -->
+                    <!-- ***** Menu End ***** -->
                 </nav>
             </div>
         </div>
     </div>
 </header>
-<div class="page-heading header-text">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h3><?= $this->title
-                    ?></h3>
-                <span class="breadcrumbe"><a href="<?= Url::to('site/index')?>">Home</a> > <?= $this->title
-                ?></span>
-            </div>
-        </div>
-    </div>
-</div>
-<main role="main" class="section trending">
+
+
+
+
+<main role="main" class="flex-shrink-0">
     <div class="container-fluid">
+        <?= Breadcrumbs::widget([
+            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+        ]) ?>
         <?= Alert::widget() ?>
         <?= $content ?>
     </div>
 </main>
 
-<footer class="footer-area bg-dark text-light py-3">
+<footer class="footer mt-auto py-3 text-muted">
     <div class="container">
-        <div class="row">
-            <div class="col text-start">
-                &copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?>
-            </div>
-            <div class="col text-end">
-                Powered by <?= Html::a('Yii Framework', 'https://www.yiiframework.com/', ['target' => '_blank']) ?>
-            </div>
-        </div>
+        <p class="float-start">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
+        <p class="float-end"><?= Yii::powered() ?></p>
     </div>
 </footer>
 

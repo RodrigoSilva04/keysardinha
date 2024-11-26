@@ -60,4 +60,9 @@ class Produto extends \yii\db\ActiveRecord
             'categoria_id' => 'Categoria ID',
         ];
     }
+    public function getCategoria()
+    {
+        return $this->hasOne(Categoria::class, ['id' => 'categoria_id']);
+    }
+
 }

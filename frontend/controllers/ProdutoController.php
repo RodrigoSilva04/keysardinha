@@ -9,14 +9,11 @@ class ProdutoController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-        // Criando o ActiveDataProvider
-        $dataProvider = new ActiveDataProvider([
-            'query' => Produto::find(), // Substitua 'Produto' pelo nome correto do seu modelo
+        $this->layout = 'main';
+        $produtos = Produto::find()->with('categoria')->all();
+        return $this->render('index', [
+            'produtos' => $produtos,
         ]);
 
-        // Renderizando a view e passando o dataProvider
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
     }
 }

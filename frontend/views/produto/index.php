@@ -11,26 +11,37 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <div class="row">
-        <?php foreach ($dataProvider->getModels() as $model): ?>
-            <div class="col-md-4 mb-4">
-                <div class="card border-primary" style="background-color: #f8f9fa;">
-                    <img src="<?= Html::encode($model->imagem) ?>" class="card-img-top" alt="<?= Html::encode($model->nome) ?>">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary"><?= Html::encode($model->nome) ?></h5>
-                        <p class="card-text"><?= Html::encode($model->descricao) ?></p>
-                        <p class="card-text"><strong>Preço:</strong> <?= Html::encode($model->preco) ?>€</p>
-                        <?php
-                        // Verifica se o produto está nos favoritos (substitua pela lógica real)
-                        $isFavorito = false; // Exemplo de estado; você precisará implementar a lógica
-                        $favoritoIcon = $isFavorito ? 'fas fa-heart' : 'far fa-heart'; // Ícone cheio ou vazio
-                        $favoritoColor = $isFavorito ? 'text-danger' : 'text-primary'; // Cor do ícone
-                        ?>
-                        <?= Html::a('Ver Detalhes', ['view', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                        <?= Html::a('<i class="' . $favoritoIcon . ' ' . $favoritoColor . '"></i>', ['favoritos/add', 'id' => $model->id], ['class' => 'btn btn-link p-0']) ?>
+    <ul class="trending-filter">
+
+        <li>
+            <a class="is_active" href="#!" data-filter="*">Show All</a>
+        </li>
+        <li>
+            <a href="#!" data-filter=".adv">Adventure</a>
+        </li>
+        <li>
+            <a href="#!" data-filter=".str">Strategy</a>
+        </li>
+        <li>
+        <a href="#!" data-filter=".rac">Racing</a>
+        </li>
+    </ul>
+    <div class="row trending-box">
+        <?php foreach ($produtos as $produto): ?>
+            <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 adv">
+                <div class="item">
+                <div class="thumb">
+                    <a href="produto/detalhes">
+                        <?= Html::img('@web/imagensjogos/' . $produto->imagem, ['alt' => 'Imagem do produto']) ?>
+                        <span class="price"><?= $produto->preco ?>€</span>
+                    </div>
+                    <div class="conteudo-baixo">
+                        <span class="category"><?= $produto->categoria->nome ? $produto->categoria->nome : 'Sem categoria' ?></span>
+                        <h4><?= $produto->nome?></h4>
+                        <a href=""><i class="fa fa-shopping-bag"></i></a>
                     </div>
                 </div>
-            </div>
+                </div>
         <?php endforeach; ?>
     </div>
 
