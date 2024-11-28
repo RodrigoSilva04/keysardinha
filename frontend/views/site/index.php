@@ -12,7 +12,7 @@ $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
                 <div class="col-lg-6 align-self-center">
                     <div class="caption header-text">
                         <h6>Bem vindo ao KeySardinha</h6>
-                        <h2>O MELHOR WEBSITE PARA <C></C>OMPRAR JOGOS!</h2>
+                        <h2>O MELHOR WEBSITE PARA <C></C>COMPRAR JOGOS!</h2>
                         <p>O melhor site para comprar jogos do mercado, estamos sempre focados 100% em si e nos seus futuros jogos!</p>
                         <div class="search-input">
                             <form id="search" action="#">
