@@ -41,16 +41,16 @@
                         'badge' => '<span class="right badge badge-info">2</span>',
                         'items' => [
                             ['label' => 'Gerir jogos', 'url' => ['produto/index'], 'iconStyle' => 'far'],
-                            ['label' => 'Gerir categorias', 'iconStyle' => 'far'],
+                            ['label' => 'Gerir categorias', 'url' => ['categoria/index'],'iconStyle' => 'far'],
                         ]
                     ],
-                    ['label' => 'Gerir chaves de jogos', 'url' => ['chaves/index'], 'icon' => 'th', 'badge' => '<span class="right badge badge-danger">New</span>'],
+                    ['label' => 'Gerir chaves de jogos', 'url' => ['chavedigital/index'], 'icon' => 'th', 'badge' => '<span class="right badge badge-danger">New</span>'],
                     ['label' => 'Yii2 PROVIDED', 'header' => true],
                     ['label' => 'Login', 'url' => ['site/login'], 'icon' => 'sign-in-alt', 'visible' => Yii::$app->user->isGuest],
                     ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
                     ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank'],
                     ['label' => 'Promoções e vendas', 'header' => true],
-                    ['label' => 'Gerir metodos de pagamento', 'url' => ['metodos/index'], 'iconStyle' => 'far'],
+                    ['label' => 'Gerir metodos de pagamento', 'url' => ['metodopagamento/index'], 'iconStyle' => 'far'],
                     ['label' => 'Gerir Promoções'],
                     [
                         'label' => 'Relatórios e estatísticas',

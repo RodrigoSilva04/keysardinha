@@ -164,78 +164,32 @@ $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
                         <a href="shop.html">Ver todos</a>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/top-game-01.jpg" alt=""></a>
+
+                <!-- Exibe os jogos mais jogados dinamicamente -->
+                <?php if (!empty($jogosmaisjogados)): ?>
+                    <?php foreach ($jogosmaisjogados as $jogo): ?>
+                        <div class="col-lg-2 col-md-6 col-sm-6">
+                            <div class="item">
+                                <div class="thumb">
+                                    <!-- Usando a imagem do jogo (se disponível) -->
+                                    <a href="product-details.html">
+                                        <!-- Adicione aqui a imagem do jogo se tiver, como sugerido -->
+                                    </a>
+                                </div>
+                                <div class="down-content">
+                                    <!-- Exibe a categoria se disponível -->
+                                    <span class="category"><?= $produto->categoria->nome ?? 'Categoria desconhecida' ?></span>
+                                    <h4><?= htmlspecialchars($jogo['name']) ?></h4> <!-- Exibe o nome do jogo -->
+                                    <a href="<product-details.html>">Explorar</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="down-content">
-                            <span class="category">Adventure</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html">Explorar</a>
-                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="col-lg-12">
+                        <p>Não foi possível carregar os jogos mais jogados.</p>
                     </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/top-game-02.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Adventure</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html">Explorar</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/top-game-03.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Adventure</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html">Explorar</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/top-game-04.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Adventure</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html">Explorar</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/top-game-05.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Adventure</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html">Explorar</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/top-game-06.jpg" alt=""></a>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Adventure</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html">Explorar</a>
-                        </div>
-                    </div>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

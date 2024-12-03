@@ -14,7 +14,6 @@ use Yii;
  * @property string|null $imagem
  * @property string|null $datalancamento
  * @property int|null $stockdisponivel
- * @property int|null $chaveigital_id
  * @property int|null $categoria_id
  */
 class Produto extends \yii\db\ActiveRecord
@@ -33,13 +32,11 @@ class Produto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
-            [['id', 'stockdisponivel', 'chaveigital_id', 'categoria_id'], 'integer'],
             [['descricao'], 'string'],
             [['preco'], 'number'],
             [['datalancamento'], 'safe'],
+            [['stockdisponivel', 'categoria_id'], 'integer'],
             [['nome', 'imagem'], 'string', 'max' => 255],
-            [['id'], 'unique'],
         ];
     }
 
@@ -56,13 +53,12 @@ class Produto extends \yii\db\ActiveRecord
             'imagem' => 'Imagem',
             'datalancamento' => 'Datalancamento',
             'stockdisponivel' => 'Stockdisponivel',
-            'chaveigital_id' => 'Chaveigital ID',
             'categoria_id' => 'Categoria ID',
         ];
     }
+
     public function getCategoria()
     {
         return $this->hasOne(Categoria::class, ['id' => 'categoria_id']);
     }
-
 }

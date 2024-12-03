@@ -2,18 +2,16 @@
 
 namespace backend\controllers;
 
-use common\models\Produto;
-use common\models\Categoria;
-use Yii;
+use common\models\Metodopagamento;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProdutoController implements the CRUD actions for Produto model.
+ * MetodopagamentoController implements the CRUD actions for Metodopagamento model.
  */
-class ProdutoController extends Controller
+class MetodopagamentoController extends Controller
 {
     /**
      * @inheritDoc
@@ -34,15 +32,15 @@ class ProdutoController extends Controller
     }
 
     /**
-     * Lists all Produto models.
+     * Lists all Metodopagamento models.
      *
      * @return string
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Produto::find(),
-
+            'query' => Metodopagamento::find(),
+            /*
             'pagination' => [
                 'pageSize' => 50
             ],
@@ -51,7 +49,7 @@ class ProdutoController extends Controller
                     'id' => SORT_DESC,
                 ]
             ],
-
+            */
         ]);
 
         return $this->render('index', [
@@ -60,7 +58,7 @@ class ProdutoController extends Controller
     }
 
     /**
-     * Displays a single Produto model.
+     * Displays a single Metodopagamento model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -73,41 +71,29 @@ class ProdutoController extends Controller
     }
 
     /**
-     * Creates a new Produto model.
+     * Creates a new Metodopagamento model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Produto();
-        $categorias = Categoria::find()->all();
+        $model = new Metodopagamento();
 
-        // Verifica se a requisição é do tipo POST
         if ($this->request->isPost) {
-            // Carrega os dados do POST no modelo
-            if ($model->load($this->request->post())) {
-                // Verifica se há uma imagem e faz o upload
-                if ($model->imagemFile && $model->uploadImagem()) {
-                    // Salva o modelo com o caminho da imagem
-                    if ($model->save()) {
-                        Yii::$app->session->setFlash('success', 'Produto criado com sucesso!');
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }
-                } else {
-                    Yii::$app->session->setFlash('error', 'Erro ao fazer upload da imagem.');
-                }
+            if ($model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();
         }
+
         return $this->render('create', [
-            'categorias' => $categorias,
-            'model' => $model
+            'model' => $model,
         ]);
     }
 
     /**
-     * Updates an existing Produto model.
+     * Updates an existing Metodopagamento model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -116,20 +102,18 @@ class ProdutoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $categorias = Categoria::find()->all();
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id, 'categorias' => $categorias]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
-            'categorias' => $categorias,
             'model' => $model,
         ]);
     }
 
     /**
-     * Deletes an existing Produto model.
+     * Deletes an existing Metodopagamento model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -143,15 +127,15 @@ class ProdutoController extends Controller
     }
 
     /**
-     * Finds the Produto model based on its primary key value.
+     * Finds the Metodopagamento model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Produto the loaded model
+     * @return Metodopagamento the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Produto::findOne(['id' => $id])) !== null) {
+        if (($model = Metodopagamento::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

@@ -49,7 +49,7 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule','controller' => 'api/produto',
                 'extraPatterns' => [
-                    'GET count' => 'count', 
+                    'GET count' => 'count',
                     ],
                 ],
             ],

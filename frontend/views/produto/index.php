@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <span class="price"><?= $produto->preco ?>€</span>
                     </div>
                     <div class="conteudo-baixo">
-                        <span class="category"><?= $produto->categoria->nome ? $produto->categoria->nome : 'Sem categoria' ?></span>
+                        <span class="category"><?= $produto->categoria != null ? $produto->categoria->nome : 'Sem categoria' ?></span>
                         <h4><?= $produto->nome?></h4>
                         <a href=""><i class="fa fa-shopping-bag"></i></a>
                     </div>

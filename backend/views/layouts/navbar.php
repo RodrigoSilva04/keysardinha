@@ -14,13 +14,13 @@ use yii\helpers\Html;
             <a href="<?=\yii\helpers\Url::home()?>" class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Chaves de Jogo</a>
+            <a href="<?= \yii\helpers\Url::to(['chavedigital/index'])?>" class="nav-link">Chaves de Jogo</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Categorias</a>
+            <a href="<?= \yii\helpers\Url::to(['categoria/index'])?>" class="nav-link">Categorias</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Jogos</a>
+            <a href="<?= \yii\helpers\Url::to(['produto/index']) ?>" class="nav-link">Jogos</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
             <a href="<?= \yii\helpers\Url::to(['user/index']) ?>" class="nav-link">UserManage</a>

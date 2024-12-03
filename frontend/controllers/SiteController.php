@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
+use yii\httpclient\Client;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\web\BadRequestHttpException;
@@ -76,9 +77,13 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $produtos = \common\models\Produto::find()->all();
+        $jogosmaisjogados = $this->obterJogosMaisJogadosSteamAPI();
         $this->layout = 'indexlay';
 
-        return $this->render('index' , ['produtos' => $produtos]);
+        return $this->render('index' , [
+            'produtos' => $produtos,
+            'jogosmaisjogados' => $jogosmaisjogados,
+        ]);
 
     }
 
@@ -260,4 +265,99 @@ class SiteController extends Controller
             'model' => $model
         ]);
     }
+    public function obterJogosMaisJogadosSteamAPI()
+    {
+        $keyapi = "1BAEA13D3135D728476B8C8DE51B1CD4";
+        $url = "https://api.steampowered.com/ISteamChartsService/GetMostPlayedGames/v1/";
+
+        $client = new Client();
+        $response = $client->createRequest()
+            ->setMethod('GET')
+            ->setUrl($url)
+            ->setData([
+                'key' => $keyapi
+            ])
+            ->send();
+
+        // Verifique o status code da resposta
+        if ($response->statusCode == 200) {
+            $jogos = [];
+            $ranks = $response->data['response']['ranks'];
+
+            // Filtra os 10 primeiros jogos
+            $topJogos = array_slice($ranks, 0, 6);
+
+            // Iterar sobre os 10 primeiros jogos e obter o nome através do appid
+            foreach ($topJogos as $rank) {
+                $appid = $rank['appid'];
+
+                // Buscar o nome do jogo utilizando o appid
+                $nomeJogo = $this->obternomeporsteamid($appid);
+
+                // Verificar se o jogo já existe na base de dados pelo nome
+                $jogoExistente = \Yii::$app->db->createCommand('SELECT * FROM produto WHERE nome = :nome')
+                    ->bindValue(':nome', $nomeJogo)
+                    ->queryOne();
+
+                // Se o jogo não existir, crie-o na base de dados
+                if (!$jogoExistente) {
+                    \Yii::$app->db->createCommand()->insert('produto', [
+                        'nome' => $nomeJogo,
+                        'descricao' => null,  // Opcional, se você ainda quiser armazenar o appid
+                        'preco' => "Não definido",
+                        'imagem' => "Não definido",
+                        'datalancamento' => "Não definido",
+                        'stockdisponivel' => 0,
+                        'categoria_id' => 'null', // Caso a categoria exista
+                    ])->execute();
+                }
+                //Vai buscar o id dos jogos á base de dados e procura na tabela produto
+                $jogoid = \Yii::$app->db->createCommand('SELECT id FROM produto WHERE nome = :nome')
+                    ->bindValue(':nome', $nomeJogo)
+                    ->queryOne();
+
+                // Adicionar o nome do jogo ao array de jogos
+                $jogos[] = [
+                    'id' => $jogoid['id'],
+                    'name' => $nomeJogo,
+                    'rank' => $rank['rank'],
+                    'appid' => $appid,
+                    'peak_in_game' => $rank['peak_in_game'],
+                ];
+            }
+
+            return $jogos; // Retorna os jogos mais jogados
+        } else {
+            \Yii::error('Erro ao acessar a API da Steam: ' . $response->statusCode, __METHOD__);
+            return [];
+        }
+    }
+
+    function obternomeporsteamid($appid)
+    {
+        $keyapi = "1BAEA13D3135D728476B8C8DE51B1CD4";
+        $url = "https://store.steampowered.com/api/appdetails";
+
+        // Solicita detalhes do jogo pelo appid da steam
+        $client = new Client();
+        $response = $client->createRequest()
+            ->setMethod('GET')
+            ->setUrl($url)
+            ->setData([
+                'appids' => $appid,
+                'key' => $keyapi
+            ])
+            ->send();
+
+        if ($response->statusCode == 200) {
+            $appData = $response->data[$appid];
+            if (isset($appData['data']['name'])) {
+                return $appData['data']['name']; // Retorna o nome do jogo
+            }
+        }
+
+        return "Nome não encontrado"; // Caso não encontre o nome
+    }
+
+
 }

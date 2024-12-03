@@ -9,7 +9,6 @@ use Yii;
  *
  * @property int $id
  * @property string|null $nome
- * @property string|null $descricao
  */
 class Categoria extends \yii\db\ActiveRecord
 {
@@ -27,11 +26,7 @@ class Categoria extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
-            [['id'], 'integer'],
-            [['descricao'], 'string'],
             [['nome'], 'string', 'max' => 100],
-            [['id'], 'unique'],
         ];
     }
 
@@ -43,12 +38,6 @@ class Categoria extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nome' => 'Nome',
-            'descricao' => 'Descricao',
         ];
     }
-    public function getProdutos()
-    {
-        return $this->hasMany(Produto::class, ['categoria_id' => 'id']);
-    }
-
 }
