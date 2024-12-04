@@ -50,4 +50,9 @@ class Utilizadorperfil extends \yii\db\ActiveRecord
             'carrinho_id' => 'Carrinho ID',
         ];
     }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'id']);
+    }
 }

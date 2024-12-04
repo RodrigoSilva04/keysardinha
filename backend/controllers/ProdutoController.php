@@ -40,6 +40,7 @@ class ProdutoController extends Controller
      */
     public function actionIndex()
     {
+        $categorias = Categoria::find()->all();
         $dataProvider = new ActiveDataProvider([
             'query' => Produto::find(),
 
@@ -56,6 +57,7 @@ class ProdutoController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'categorias' => $categorias,
         ]);
     }
 

@@ -2,6 +2,10 @@
 
 namespace frontend\controllers;
 
+use common\models\Categoria;
+use common\models\Favoritos;
+use common\models\Produto;
+use common\models\Utilizadorperfil;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use yii\httpclient\Client;
@@ -76,13 +80,15 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $produtos = \common\models\Produto::find()->all();
+        $produtos = Produto::find()->all();
         $jogosmaisjogados = $this->obterJogosMaisJogadosSteamAPI();
+        $categorias = Categoria::find()->all();
         $this->layout = 'indexlay';
 
         return $this->render('index' , [
             'produtos' => $produtos,
             'jogosmaisjogados' => $jogosmaisjogados,
+            'categorias' => $categorias,
         ]);
 
     }
@@ -358,6 +364,88 @@ class SiteController extends Controller
 
         return "Nome não encontrado"; // Caso não encontre o nome
     }
+
+    public function actionSearch()
+    {
+        $searchKeyword = Yii::$app->request->get('searchKeyword'); // Obtém o termo de pesquisa
+
+        if ($searchKeyword) {
+            // Procura o produto pelo nome
+            $produto = Produto::find()
+                ->where(['like', 'nome', $searchKeyword])
+                ->one();
+
+            if ($produto) {
+                // Se encontrado, redireciona para a página de detalhes
+                return $this->redirect(['produtos/view', 'id' => $produto->id]);
+            }
+        }
+
+        // Se não encontrado, redireciona para a página de listagem de produtos
+        return $this->redirect(['produtos/index']);
+    }
+
+    public function actionAddFavorite($produtoId)
+    {
+        $user = Yii::$app->user->identity; // Obtemos o usuário logado
+
+        if (!$user) {
+            Yii::$app->session->setFlash('error', 'Você precisa estar logado para adicionar aos favoritos.');
+            return $this->redirect(['site/login']);
+        }
+
+        // Buscar o perfil do usuário logado
+        $utilizadorPerfil = UtilizadorPerfil::findOne(['id' => $user->id]);
+
+        if ($utilizadorPerfil === null) {
+            Yii::$app->session->setFlash('error', 'Perfil não encontrado.');
+            return $this->redirect(['site/index']);
+        }
+
+        // Agora temos o id do perfil
+        $utilizadorPerfilId = $utilizadorPerfil->id;
+
+        // Tenta adicionar aos favoritos
+        if (Favoritos::addFavoritos($utilizadorPerfilId, $produtoId)) {
+            Yii::$app->session->setFlash('success', 'Produto adicionado aos favoritos.');
+        } else {
+            Yii::$app->session->setFlash('info', 'Este produto já está nos favoritos.');
+        }
+
+        return $this->redirect(['produto/view', 'id' => $produtoId]);
+    }
+
+    // Ação para remover dos favoritos
+    public function actionRemoveFavorite($produtoId)
+    {
+        $user = Yii::$app->user->identity; // Obtemos o usuário logado
+
+        if (!$user) {
+            Yii::$app->session->setFlash('error', 'Você precisa estar logado para remover dos favoritos.');
+            return $this->redirect(['site/login']);
+        }
+
+        // Buscar o perfil do usuário logado
+        $utilizadorPerfil = UtilizadorPerfil::findOne(['id' => $user->id]);
+
+        if ($utilizadorPerfil === null) {
+            Yii::$app->session->setFlash('error', 'Perfil não encontrado.');
+            return $this->redirect(['site/index']);
+        }
+
+        // Agora temos o id do perfil
+        $utilizadorPerfilId = $utilizadorPerfil->id;
+
+        // Tenta remover dos favoritos
+        if (Favoritos::removeFavoritos($utilizadorPerfilId, $produtoId)) {
+            Yii::$app->session->setFlash('success', 'Produto removido dos favoritos.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao remover o produto dos favoritos.');
+        }
+
+        return $this->redirect(['produto/view', 'id' => $produtoId]);
+    }
+
 
 
 }

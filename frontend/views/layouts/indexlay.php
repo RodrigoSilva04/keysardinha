@@ -53,7 +53,7 @@ AppAsset::register($this);
                         <li><?= Html::a('Favoritos', ['/favoritos/index']) ?></li>
                         <li><?= Html::a('Contacto', ['/site/contact']) ?></li>
                         <?php if (Yii::$app->user->isGuest): ?>
-                            <li><?= Html::a('Sign In', ['/site/login']) ?></li>
+                            <li><?= Html::a('Sign In', ['/site/signup']) ?></li>
                         <?php else: ?>
                             <li><?= Html::a('Logout (' . Yii::$app->user->identity->username . ')', ['/site/logout'], ['data-method' => 'post']) ?></li>
                         <?php endif; ?>

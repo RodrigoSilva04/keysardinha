@@ -33,7 +33,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'imagem',
             'datalancamento',
             'stockdisponivel',
-            'categoria_id',
+            [
+                'attribute' => 'categoria_id',
+                'value' => 'categoria.nome', // Usa a relação para obter o nome do produto
+                'label' => 'Categoria', // Título da coluna no GridView
+            ],
+
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Produto $model, $key, $index, $column) {
