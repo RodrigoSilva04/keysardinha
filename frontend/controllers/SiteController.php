@@ -311,7 +311,7 @@ class SiteController extends Controller
                         'nome' => $nomeJogo,
                         'descricao' => null,  // Opcional, se você ainda quiser armazenar o appid
                         'preco' => "Não definido",
-                        'imagem' => "Não definido",
+                        'imagem' => "imagemdefault.jpg",
                         'datalancamento' => "Não definido",
                         'stockdisponivel' => 0,
                         'categoria_id' => 'null', // Caso a categoria exista

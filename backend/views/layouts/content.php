@@ -7,6 +7,8 @@ use yii\helpers\Url;
 
 // Defina os cards para o colaborador
 // Definição dos cards para as roles 'colaborador' e 'admin' no backoffice
+
+
 $cards = [
     'collaborator' => [
         [
@@ -89,6 +91,7 @@ $availableCards = $cards[$userRole] ?? [];
 
 ?>
 
+
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -137,6 +140,7 @@ $availableCards = $cards[$userRole] ?? [];
                     <?= $content ?>
                 <?php endif; ?>
             </div>
+
         </div>
     </div>
 </div>

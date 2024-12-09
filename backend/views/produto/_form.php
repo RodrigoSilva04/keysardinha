@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'preco')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'imagem')->fileInput() ?>
+    <?= $form->field($model, 'uploadImagem')->fileInput() ?>
 
     <?= $form->field($model, 'datalancamento')->textInput() ?>
 

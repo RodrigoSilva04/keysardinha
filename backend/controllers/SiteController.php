@@ -128,4 +128,19 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
+
+    public function actionInvoicesData()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        // Consulta: número de faturas por mês
+        $invoices = (new \yii\db\Query())
+            ->select(['month' => 'MONTHNAME(created_at)', 'count' => 'COUNT(*)'])
+            ->from('faturas') // Substitua pelo nome real da sua tabela de faturas
+            ->groupBy(['MONTH(created_at)'])
+            ->orderBy(['MONTH(created_at)' => SORT_ASC])
+            ->all();
+
+        return $invoices;
+    }
 }

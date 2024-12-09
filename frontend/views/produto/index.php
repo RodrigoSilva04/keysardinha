@@ -36,7 +36,7 @@ $this->registerJsFile('@web/js/produtos.js', ['depends' => [\yii\web\JqueryAsset
                         <span class="price"><?= $produto->preco ?>€</span>
                     </div>
                     <div class="conteudo-baixo">
-                        <span class="category"><?= $produto->categoria != null ? $produto->categoria->nome : 'Sem categoria' ?></span>
+                        <span class="category"><?= $produto->categoria!= null ? $produto->categoria->nome : 'Sem categoria' ?></span>
                         <h4><?= $produto->nome?></h4>
                         <a href=""><i class="btn btn-primary padding-1rem">Adicionar ao carrinho</i></a>
                         <a href="<?= \yii\helpers\Url::to(['produto/addFavoritos', 'id' => $produto->id]) ?>"><i class="btn btn-danger padding-1rem">Adicionar aos Favoritos</i></a>
