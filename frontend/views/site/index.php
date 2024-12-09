@@ -15,7 +15,7 @@ $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
                         <h2>O MELHOR WEBSITE PARA <C></C>COMPRAR JOGOS!</h2>
                         <p>O melhor site para comprar jogos do mercado, estamos sempre focados 100% em si e nos seus futuros jogos!</p>
                         <div class="search-input">
-                            <form id="search" action="#">
+                            <form id="search" action="<?= \yii\helpers\Url::to(['site/search']) ?>" method="get">
                                 <input type="text" placeholder="Type Something" id='searchText' name="searchKeyword" onkeypress="handle" />
                                 <button role="button">Search Now</button>
                             </form>
@@ -203,49 +203,26 @@ $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
                         <h2>Top Categorias</h2>
                     </div>
                 </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/categories-01.jpg" alt=""></a>
+
+                <?php foreach ($categorias as $categoria): ?>
+                    <div class="col-lg-3 col-sm-6 col-xs-12"> <!-- Create a new column for each category -->
+                        <div class="item">
+                            <h4><?= $categoria->nome ?></h4>
+                            <div class="thumb">
+                                <a href="<?= \yii\helpers\Url::to(['categoria/view', 'id' => $categoria->id]) ?>"> <!-- Link to category view page -->
+                                    <!-- Use a dynamic image if applicable -->
+                                    <img src="<?= Yii::$app->request->baseUrl ?>/assets/images/categories-01.jpg" alt="Category Image">
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/categories-05.jpg" alt=""></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/categories-03.jpg" alt=""></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/categories-04.jpg" alt=""></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg col-sm-6 col-xs-12">
-                    <div class="item">
-                        <h4>Action</h4>
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/categories-05.jpg" alt=""></a>
-                        </div>
-                    </div>
-                </div>
+                <?php endforeach; ?>
+
             </div>
         </div>
     </div>
+
+
 
     <div class="section cta" id="newsletter">
         <div class="container">

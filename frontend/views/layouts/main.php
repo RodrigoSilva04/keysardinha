@@ -61,7 +61,7 @@ AppAsset::register($this);
                         <li><?= Html::a('Favoritos', ['/favoritos/index']) ?></li>
                         <li><?= Html::a('Contact Us', ['/site/contact']) ?></li>
                         <?php if (Yii::$app->user->isGuest): ?>
-                            <li><?= Html::a('<i class="fas fa-sign-in-alt"></i> Sign In', ['/site/login']) ?></li>
+                            <li><?= Html::a('<i class="fas fa-sign-in-alt"></i> Sign In', ['/site/signup']) ?></li>
                         <?php else: ?>
                             <li><?= Html::a('<i class="fas fa-sign-out-alt"></i> Logout (' . Yii::$app->user->identity->username . ')', ['/site/logout'], ['data-method' => 'post']) ?></li>
                         <?php endif; ?>

@@ -3,28 +3,14 @@
 namespace common\models;
 
 use Yii;
+use yii\web\UploadedFile;
 
-/**
- * This is the model class for table "produto".
- *
- * @property int $id
- * @property string|null $nome
- * @property string|null $descricao
- * @property float|null $preco
- * @property string|null $imagem
- * @property string|null $datalancamento
- * @property int|null $stockdisponivel
- * @property int|null $categoria_id
- */
 class Produto extends \yii\db\ActiveRecord
 {
     /**
-     * {@inheritdoc}
+     * @var UploadedFile
      */
-    public static function tableName()
-    {
-        return 'produto';
-    }
+    public $uploadImagem;
 
     /**
      * {@inheritdoc}
@@ -37,26 +23,29 @@ class Produto extends \yii\db\ActiveRecord
             [['datalancamento'], 'safe'],
             [['stockdisponivel', 'categoria_id'], 'integer'],
             [['nome', 'imagem'], 'string', 'max' => 255],
+            [['uploadImagem'], 'file', 'maxSize' => 1024 * 1024 * 2], // Tamanho máximo de 2MB
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * Upload da imagem
      */
-    public function attributeLabels()
+    public function upload()
     {
-        return [
-            'id' => 'ID',
-            'nome' => 'Nome',
-            'descricao' => 'Descricao',
-            'preco' => 'Preco',
-            'imagem' => 'Imagem',
-            'datalancamento' => 'Datalancamento',
-            'stockdisponivel' => 'Stockdisponivel',
-            'categoria_id' => 'Categoria ID',
-        ];
-    }
+        if ($this->validate()) {
+            if ($this->uploadImagem) {
+                $nomeArquivo = $this->uploadImagem->baseName . '.' . $this->uploadImagem->extension; // Nome único para evitar conflitos
+                $caminhoCompleto = Yii::getAlias('@frontend/web/imagensjogos/' . $nomeArquivo);
 
+                if ($this->uploadImagem->saveAs($caminhoCompleto)) {
+                    $this->imagem = $nomeArquivo; // Salva apenas o nome do arquivo no banco de dados
+                    return true;
+                }
+            }
+        }
+        return false;
+
+    }
     public function getCategoria()
     {
         return $this->hasOne(Categoria::class, ['id' => 'categoria_id']);

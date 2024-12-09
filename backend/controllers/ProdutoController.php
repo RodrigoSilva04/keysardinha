@@ -4,6 +4,9 @@ namespace backend\controllers;
 
 use common\models\Produto;
 use common\models\Categoria;
+use backend\models\UploadForm;
+
+use yii\web\UploadedFile;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -40,6 +43,7 @@ class ProdutoController extends Controller
      */
     public function actionIndex()
     {
+        $categorias = Categoria::find()->all();
         $dataProvider = new ActiveDataProvider([
             'query' => Produto::find(),
 
@@ -56,6 +60,7 @@ class ProdutoController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'categorias' => $categorias,
         ]);
     }
 
@@ -77,34 +82,37 @@ class ProdutoController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
+
     public function actionCreate()
     {
         $model = new Produto();
         $categorias = Categoria::find()->all();
 
-        // Verifica se a requisição é do tipo POST
         if ($this->request->isPost) {
-            // Carrega os dados do POST no modelo
-            if ($model->load($this->request->post())) {
-                // Verifica se há uma imagem e faz o upload
-                if ($model->imagemFile && $model->uploadImagem()) {
-                    // Salva o modelo com o caminho da imagem
-                    if ($model->save()) {
-                        Yii::$app->session->setFlash('success', 'Produto criado com sucesso!');
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }
-                } else {
-                    Yii::$app->session->setFlash('error', 'Erro ao fazer upload da imagem.');
-                }
+            $model->load($this->request->post());
+            $model->uploadImagem = UploadedFile::getInstance($model, 'uploadImagem');
+
+            if (!$model->uploadImagem) {
+                echo "Nenhum arquivo foi recebido."; // Diagnóstico
+                return;
             }
-        } else {
-            $model->loadDefaultValues();
+
+            // Verifica se o upload foi bem-sucedido
+            if ($model->upload() && $model->save()) {
+                echo "Produto criado com sucesso!";
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                echo "Erro ao fazer upload da imagem."; // Mensagem de erro para depuração
+            }
         }
+
         return $this->render('create', [
+            'model' => $model,
             'categorias' => $categorias,
-            'model' => $model
         ]);
     }
+
+
 
     /**
      * Updates an existing Produto model.
@@ -118,13 +126,32 @@ class ProdutoController extends Controller
         $model = $this->findModel($id);
         $categorias = Categoria::find()->all();
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id, 'categorias' => $categorias]);
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post())) {
+                $novaImagem = UploadedFile::getInstance($model, 'uploadImagem');
+
+                // Verifica se há nova imagem
+                if ($novaImagem) {
+                    $model->uploadImagem = $novaImagem;
+
+                    // Faz o upload da nova imagem e salva o modelo
+                    if ($model->upload()) {
+                        // Opcional: Remova a imagem antiga do diretório se necessário
+                    }
+                }
+
+                if ($model->save()) {
+                    Yii::$app->session->setFlash('success', 'Produto atualizado com sucesso!');
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao atualizar o produto.');
+                }
+            }
         }
 
         return $this->render('update', [
-            'categorias' => $categorias,
             'model' => $model,
+            'categorias' => $categorias,
         ]);
     }
 

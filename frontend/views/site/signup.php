@@ -17,6 +17,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row justify-content-center w-100">
         <div class="col-lg-5">
+            <div class="form-group text-center">
+                <p>Já tem um conta?</p>
+                <ul>
+                    <li class="btn btn-bd-light"><?= Html::a('Login', ['site/login']) ?></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center w-100">
+        <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
 
             <?= $form->field($model, 'username')->textInput(['autofocus' => true, 'class' => 'form-control']) ?>
@@ -32,5 +43,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php ActiveForm::end(); ?>
         </div>
     </div>
+
 </div>
 

@@ -12,8 +12,11 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+<<<<<<< HEAD
     <?= $form->field($model, 'id')->textInput() ?>
 
+=======
+>>>>>>> dcdbf68989c8363ea8b54663f8ebe733949a1d7c
     <?= $form->field($model, 'datavalidade')->textInput() ?>
 
     <?= $form->field($model, 'desconto')->textInput(['maxlength' => true]) ?>

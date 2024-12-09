@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controllers;
+namespace backend\controllers;
 
 use common\models\Cupao;
 use yii\data\ActiveDataProvider;
