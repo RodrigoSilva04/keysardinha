@@ -2,6 +2,7 @@
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
+use common\models\Favoritos;
 use yii\helpers\Html;
 
 $this->title = 'Lista de Produtos';
@@ -27,23 +28,43 @@ $this->registerJsFile('@web/js/produtos.js', ['depends' => [\yii\web\JqueryAsset
         <?php foreach ($produtos as $produto): ?>
             <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 adv" data-category="<?= $produto->categoria_id; ?>">
                 <div class="item">
-                <div class="thumb">
-                    <a href="<?= \yii\helpers\Url::to(['produto/view', 'id' => $produto->id]) ?>">
-                        <?= //Se a imagem estiver null, mostra uma imagem padrão
-                        $produto->imagem == null ? Html::img('@web/imagensjogos/imagemdefault.jpg', ['alt' => 'Imagem do produto']) :
+                    <div class="thumb">
+                        <a href="<?= \yii\helpers\Url::to(['produto/view', 'id' => $produto->id]) ?>">
+                            <?= // Se a imagem estiver null, mostra uma imagem padrão
+                            $produto->imagem == null ? Html::img('@web/imagensjogos/imagemdefault.jpg', ['alt' => 'Imagem do produto']) :
+                                Html::img('@web/imagensjogos/' . $produto->imagem, ['alt' => 'Imagem do produto']) ?>
+                            <span class="price"><?= $produto->preco ?>€</span>
+                        </a>
+                    </div> <!-- Fim de .thumb -->
 
-                        Html::img('@web/imagensjogos/' . $produto->imagem, ['alt' => 'Imagem do produto']) ?>
-                        <span class="price"><?= $produto->preco ?>€</span>
-                    </div>
                     <div class="conteudo-baixo">
-                        <span class="category"><?= $produto->categoria!= null ? $produto->categoria->nome : 'Sem categoria' ?></span>
-                        <h4><?= $produto->nome?></h4>
-                        <a href=""><i class="btn btn-primary padding-1rem">Adicionar ao carrinho</i></a>
-                        <a href="<?= \yii\helpers\Url::to(['produto/addFavoritos', 'id' => $produto->id]) ?>"><i class="btn btn-danger padding-1rem">Adicionar aos Favoritos</i></a>
-                    </div>
-                </div>
-                </div>
-        <?php endforeach; ?>
-    </div>
+                        <span class="category"><?= $produto->categoria != null ? $produto->categoria->nome : 'Sem categoria' ?></span>
+                        <h4><?= $produto->nome ?></h4>
+                        <a href="#" class="btn btn-primary padding-1rem">Adicionar ao carrinho</a>
 
+                        <!-- Verifica se o produto já está nos favoritos -->
+                        <?php if (Favoritos::isFavorito($produto->id)): ?>
+                            <!-- Produto está nos favoritos, mostrar opção para remover -->
+                            <?= Html::a(
+                                'Remover dos Favoritos',
+                                ['favoritos/delete', 'produto_id' => $produto->id],
+                                [
+                                    'class' => 'btn btn-danger mt-2',
+                                    'data' => [
+                                        'confirm' => 'Tem certeza de que deseja remover este produto dos favoritos?',
+                                        'method' => 'post', // Garante que a requisição será segura
+                                    ],
+                                ]
+                            ) ?>
+                        <?php else: ?>
+                            <!-- Produto não está nos favoritos, mostrar opção para adicionar -->
+                            <a href="<?= \yii\helpers\Url::to(['favoritos/create', 'idProduto' => $produto->id]) ?>" class="btn btn-danger mt-2">
+                                Adicionar aos Favoritos
+                            </a>
+                        <?php endif; ?>
+                    </div> <!-- Fim de .conteudo-baixo -->
+                </div> <!-- Fim de .item -->
+            </div> <!-- Fim de .col-lg-3 -->
+        <?php endforeach; ?>
+    </div> <!-- Fim de .row -->
 </div>

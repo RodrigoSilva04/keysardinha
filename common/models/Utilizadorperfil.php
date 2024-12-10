@@ -55,4 +55,15 @@ class Utilizadorperfil extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::class, ['id' => 'id']);
     }
+
+    /**
+     * Gets query for [[Favoritos]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFavoritos()
+    {
+        return $this->hasMany(Favoritos::class, ['utilizadorperfil_id' => 'id'])
+            ->joinWith('produto'); // Carregar dados dos produtos relacionados;
+    }
 }

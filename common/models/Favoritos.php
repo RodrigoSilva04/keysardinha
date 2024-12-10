@@ -45,6 +45,8 @@ class Favoritos extends \yii\db\ActiveRecord
     }
 
 
+
+
     // Método para adicionar aos favoritos
     public static function addFavoritos($utilizadorPerfilId, $produtoId)
     {
@@ -71,8 +73,31 @@ class Favoritos extends \yii\db\ActiveRecord
     }
 
     // Método para verificar se o produto está nos favoritos
-    public static function isFavorite($utilizadorPerfilId, $produtoId)
+    public static function isFavorito($produto_id)
     {
-        return self::find()->where(['utilizadorperfil_id' => $utilizadorPerfilId, 'produto_id' => $produtoId])->exists();
+        return self::find()
+            ->where(['utilizadorperfil_id' => Yii::$app->user->id, 'produto_id' => $produto_id])
+            ->exists();
+    }
+
+
+    /**
+     * Gets query for [[Produto]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProduto()
+    {
+        return $this->hasOne(Produto::class, ['id' => 'produto_id']);
+    }
+
+    /**
+     * Gets query for [[Utilizadorperfil]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUtilizadorperfil()
+    {
+        return $this->hasOne(Utilizadorperfil::class, ['id' => 'utilizadorperfil_id']);
     }
 }

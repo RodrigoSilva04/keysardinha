@@ -56,4 +56,6 @@ class Cupao extends \yii\db\ActiveRecord
             'codigo' => 'Codigo',
         ];
     }
+
+
 }

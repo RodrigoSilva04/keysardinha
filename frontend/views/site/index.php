@@ -107,45 +107,6 @@ $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-02.jpg" alt=""></a>
-                            <span class="price">$44</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-03.jpg" alt=""></a>
-                            <span class="price"><em>$64</em>$44</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-04.jpg" alt=""></a>
-                            <span class="price">$32</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -204,14 +165,13 @@ $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
                     </div>
                 </div>
 
-                <?php foreach ($categorias as $categoria): ?>
+
+                <?php foreach ($top3categorias as $categoria): ?>
                     <div class="col-lg-3 col-sm-6 col-xs-12"> <!-- Create a new column for each category -->
                         <div class="item">
                             <h4><?= $categoria->nome ?></h4>
                             <div class="thumb">
                                 <a href="<?= \yii\helpers\Url::to(['categoria/view', 'id' => $categoria->id]) ?>"> <!-- Link to category view page -->
-                                    <!-- Use a dynamic image if applicable -->
-                                    <img src="<?= Yii::$app->request->baseUrl ?>/assets/images/categories-01.jpg" alt="Category Image">
                                 </a>
                             </div>
                         </div>

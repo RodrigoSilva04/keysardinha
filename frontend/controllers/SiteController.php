@@ -83,12 +83,15 @@ class SiteController extends Controller
         $produtos = Produto::find()->all();
         $jogosmaisjogados = $this->obterJogosMaisJogadosSteamAPI();
         $categorias = Categoria::find()->all();
+        $top3categorias = Categoria::find()->limit(3)->all();
+
         $this->layout = 'indexlay';
 
         return $this->render('index' , [
             'produtos' => $produtos,
             'jogosmaisjogados' => $jogosmaisjogados,
             'categorias' => $categorias,
+            'top3categorias' => $top3categorias
         ]);
 
     }
