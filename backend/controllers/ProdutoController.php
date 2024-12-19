@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use common\models\Desconto;
+use common\models\Iva;
 use common\models\Produto;
 use common\models\Categoria;
 use backend\models\UploadForm;
@@ -44,6 +46,8 @@ class ProdutoController extends Controller
     public function actionIndex()
     {
         $categorias = Categoria::find()->all();
+        $ivas = Iva::find()->all();
+        $descontos = Desconto::find()->all();
         $dataProvider = new ActiveDataProvider([
             'query' => Produto::find(),
 
@@ -61,6 +65,8 @@ class ProdutoController extends Controller
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'categorias' => $categorias,
+            'ivas' => $ivas,
+            'descontos' => $descontos,
         ]);
     }
 
@@ -87,30 +93,37 @@ class ProdutoController extends Controller
     {
         $model = new Produto();
         $categorias = Categoria::find()->all();
+        $ivas = Iva::find()->all();
+        $descontos = Desconto::find()->all();
 
         if ($this->request->isPost) {
-            $model->load($this->request->post());
-            $model->uploadImagem = UploadedFile::getInstance($model, 'uploadImagem');
+            // Load data from POST request
+            if ($model->load($this->request->post())) {
+                // Get the uploaded image instance
+                $model->imagemFile = UploadedFile::getInstance($model, 'imagemFile');  // Alterado para 'imagemFile'
 
-            if (!$model->uploadImagem) {
-                echo "Nenhum arquivo foi recebido."; // Diagnóstico
-                return;
-            }
-
-            // Verifica se o upload foi bem-sucedido
-            if ($model->upload() && $model->save()) {
-                echo "Produto criado com sucesso!";
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                echo "Erro ao fazer upload da imagem."; // Mensagem de erro para depuração
+                if ($model->imagemFile) {
+                    // Perform the upload process
+                    if ($model->uploadImagem() && $model->save()) {
+                        Yii::$app->session->setFlash('success', 'Produto criado com sucesso!');
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        Yii::$app->session->setFlash('error', 'Erro ao fazer upload da imagem. Por favor, tente novamente.');
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'Nenhum arquivo de imagem foi recebido.');
+                }
             }
         }
 
         return $this->render('create', [
             'model' => $model,
             'categorias' => $categorias,
+            'ivas' => $ivas,
+            'descontos' => $descontos,
         ]);
     }
+
 
 
 
@@ -125,6 +138,8 @@ class ProdutoController extends Controller
     {
         $model = $this->findModel($id);
         $categorias = Categoria::find()->all();
+        $ivas = Iva::find()->all();
+        $descontos = Desconto::find()->all();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
@@ -152,6 +167,8 @@ class ProdutoController extends Controller
         return $this->render('update', [
             'model' => $model,
             'categorias' => $categorias,
+            'ivas' => $ivas,
+            'descontos' => $descontos,
         ]);
     }
 

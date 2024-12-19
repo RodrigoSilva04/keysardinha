@@ -317,7 +317,9 @@ class SiteController extends Controller
                         'imagem' => "imagemdefault.jpg",
                         'datalancamento' => "Não definido",
                         'stockdisponivel' => 0,
-                        'categoria_id' => 'null', // Caso a categoria exista
+                        'categoria_id' => '1', // Caso a categoria exista
+                        'desconto_id' => '1', // Caso o desconto exista
+                        'iva_id' => '1', // Caso o iva exista
                     ])->execute();
                 }
                 //Vai buscar o id dos jogos á base de dados e procura na tabela produto

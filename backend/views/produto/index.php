@@ -39,6 +39,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Categoria', // Título da coluna no GridView
 
             ],
+            [
+                'attribute' => 'desconto_id',
+                'value' => 'desconto.percentagem', // Usa a relação para obter o nome da categoria
+                'label' => 'Desconto', // Título da coluna no GridView
+
+            ],
+            [
+                'attribute' => 'iva_id',
+                'value' => 'iva.taxa', // Usa a relação para obter o nome da categoria
+                'label' => 'Iva', // Título da coluna no GridView
+
+            ],
 
             [
                 'class' => ActionColumn::className(),

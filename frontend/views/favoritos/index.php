@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="conteudo-baixo text-center">
                             <span class="category"><?= $produto->categoria !== null ? Html::encode($produto->categoria->nome) : 'Sem categoria' ?></span>
                             <h4><?= Html::encode($produto->nome) ?></h4>
-                            <a href="#" class="btn btn-primary mt-2">Adicionar ao carrinho</a>
+                            <a href="<?= \yii\helpers\Url::to(['carrinho/add-to-cart', 'IdProduto' => $produto->id]) ?>" class="btn btn-primary mt-2">Adicionar ao carrinho</a>
                             <?= Html::a(
                                 'Remover dos Favoritos',
                                 ['favoritos/delete', 'produto_id' => $produto->id],

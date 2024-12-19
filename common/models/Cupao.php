@@ -9,11 +9,11 @@ use Yii;
  *
  * @property int $id
  * @property string|null $datavalidade
- * @property float|null $desconto
- * @property string|null $descricao
+ * @property int|null $valor
  * @property int|null $ativo
- * @property int|null $pontosnecessarios
  * @property string|null $codigo
+ *
+ * @property Carrinho[] $carrinhos
  */
 class Cupao extends \yii\db\ActiveRecord
 {
@@ -31,13 +31,9 @@ class Cupao extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
-            [['id', 'ativo', 'pontosnecessarios'], 'integer'],
             [['datavalidade'], 'safe'],
-            [['desconto'], 'number'],
-            [['descricao'], 'string', 'max' => 100],
+            [['valor', 'ativo'], 'integer'],
             [['codigo'], 'string', 'max' => 10],
-            [['id'], 'unique'],
         ];
     }
 
@@ -49,13 +45,19 @@ class Cupao extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'datavalidade' => 'Datavalidade',
-            'desconto' => 'Desconto',
-            'descricao' => 'Descricao',
+            'valor' => 'Valor',
             'ativo' => 'Ativo',
-            'pontosnecessarios' => 'Pontosnecessarios',
             'codigo' => 'Codigo',
         ];
     }
 
-
+    /**
+     * Gets query for [[Carrinhos]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCarrinhos()
+    {
+        return $this->hasMany(Carrinho::class, ['cupao_id' => 'id']);
+    }
 }

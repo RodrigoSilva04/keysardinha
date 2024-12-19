@@ -1,6 +1,6 @@
 <?php
 
-use common\models\Desconto;
+use common\models\Iva;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -9,15 +9,15 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Descontos';
+$this->title = 'Ivas';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="desconto-index">
+<div class="iva-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Desconto', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Iva', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
 
@@ -27,10 +27,12 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'percentagem',
+            'taxa',
+            'descricao',
+            'ativo',
             [
                 'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Desconto $model, $key, $index, $column) {
+                'urlCreator' => function ($action, Iva $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }
             ],

@@ -5,21 +5,23 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "desconto".
+ * This is the model class for table "iva".
  *
  * @property int $id
- * @property float|null $percentagem
+ * @property float $taxa
+ * @property string|null $descricao
+ * @property int|null $ativo
  *
  * @property Produto[] $produtos
  */
-class Desconto extends \yii\db\ActiveRecord
+class Iva extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'desconto';
+        return 'iva';
     }
 
     /**
@@ -28,7 +30,10 @@ class Desconto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['percentagem'], 'number'],
+            [['taxa'], 'required'],
+            [['taxa'], 'number'],
+            [['ativo'], 'integer'],
+            [['descricao'], 'string', 'max' => 255],
         ];
     }
 
@@ -39,7 +44,9 @@ class Desconto extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'percentagem' => 'Percentagem',
+            'taxa' => 'Taxa',
+            'descricao' => 'Descricao',
+            'ativo' => 'Ativo',
         ];
     }
 
@@ -50,6 +57,6 @@ class Desconto extends \yii\db\ActiveRecord
      */
     public function getProdutos()
     {
-        return $this->hasMany(Produto::class, ['desconto_id' => 'id']);
+        return $this->hasMany(Produto::class, ['iva_id' => 'id']);
     }
 }

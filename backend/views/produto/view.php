@@ -36,8 +36,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'imagem',
             'datalancamento',
             'stockdisponivel',
-            'chaveigital_id',
             'categoria_id',
+            'desconto_id',
+            'iva_id',
         ],
     ]) ?>
 

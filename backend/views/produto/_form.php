@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'preco')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'uploadImagem')->fileInput() ?>
+    <?= $form->field($model, 'imagemFile')->fileInput() ?>
 
     <?= $form->field($model, 'datalancamento')->textInput() ?>
 
@@ -30,6 +30,16 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'categoria_id')->dropDownList(
         \yii\helpers\ArrayHelper::map($categorias, 'id', 'nome'),
         ['prompt' => 'Selecione uma Categoria']
+    ) ?>
+
+    <?= $form->field($model, 'desconto_id')->dropDownList(
+        \yii\helpers\ArrayHelper::map($categorias, 'id', 'desconto'),
+        ['prompt' => 'Selecione um desconto']
+    ) ?>
+
+    <?= $form->field($model, 'iva_id')->dropDownList(
+        \yii\helpers\ArrayHelper::map($ivas, 'id', 'taxa'),
+        ['prompt' => 'Selecione um iva']
     ) ?>
 
     <div class="form-group">

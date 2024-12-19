@@ -2,16 +2,16 @@
 
 namespace backend\controllers;
 
-use common\models\Desconto;
+use common\models\Iva;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * DescontoController implements the CRUD actions for Desconto model.
+ * IvaController implements the CRUD actions for Iva model.
  */
-class DescontoController extends Controller
+class IvaController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,14 +32,14 @@ class DescontoController extends Controller
     }
 
     /**
-     * Lists all Desconto models.
+     * Lists all Iva models.
      *
      * @return string
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Desconto::find(),
+            'query' => Iva::find(),
             /*
             'pagination' => [
                 'pageSize' => 50
@@ -58,7 +58,7 @@ class DescontoController extends Controller
     }
 
     /**
-     * Displays a single Desconto model.
+     * Displays a single Iva model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -71,13 +71,13 @@ class DescontoController extends Controller
     }
 
     /**
-     * Creates a new Desconto model.
+     * Creates a new Iva model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Desconto();
+        $model = new Iva();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -93,7 +93,7 @@ class DescontoController extends Controller
     }
 
     /**
-     * Updates an existing Desconto model.
+     * Updates an existing Iva model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -113,7 +113,7 @@ class DescontoController extends Controller
     }
 
     /**
-     * Deletes an existing Desconto model.
+     * Deletes an existing Iva model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -127,15 +127,15 @@ class DescontoController extends Controller
     }
 
     /**
-     * Finds the Desconto model based on its primary key value.
+     * Finds the Iva model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Desconto the loaded model
+     * @return Iva the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Desconto::findOne(['id' => $id])) !== null) {
+        if (($model = Iva::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
