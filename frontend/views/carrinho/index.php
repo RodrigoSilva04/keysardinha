@@ -17,9 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="carrinho-index">
 
     <!-- Carrinho free template -->
-    <div class="container px-3 my-5 clearfix">
+    <div class="container px-3 my-5 clearfix d-flex justify-content-center" style=" max-width: 1600px;">
         <!-- Shopping cart table -->
-        <div class="card">
+        <div class="card" style=" max-width: 1600px;">
             <div class="card-header">
                 <h2>As tuas compras</h2>
             </div>

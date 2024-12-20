@@ -6,6 +6,7 @@ use common\models\Carrinho;
 use common\models\Cupao;
 use common\models\Desconto;
 use common\models\Linhacarrinho;
+use common\models\Metodopagamento;
 use common\models\Produto;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -299,6 +300,9 @@ class CarrinhoController extends Controller
 
     public function actionCheckout()
     {
+        //Vai buscar os métodos de pagamento
+        $metodospagamento = Metodopagamento::find()->all();
+
         //Procura o carrinho do utilizador
         $carrinho = Carrinho::findOne(['utilizadorperfil_id' => Yii::$app->user->id]);
 
@@ -315,7 +319,7 @@ class CarrinhoController extends Controller
 
         //Verifica se o carrinho tem um cupão
         $cupao = $carrinho->cupao;
-        $desconto = $cupao ? $cupao->desconto : 0;
+        $desconto = $cupao ? $cupao->valor : 0;
         //Vai buscar as linhas carrinho
         // Vai buscar as linhas carrinho
         $linhasCarrinho = $carrinho->linhacarrinhos;
@@ -332,9 +336,14 @@ class CarrinhoController extends Controller
         // Calcula o IVA
         $totalIVA = 0;
         foreach ($linhasCarrinho as $linha) {
-            $totalIVA += ($linha->produto->preco * $linha->produto->iva->percentagem / 100) * $linha->quantidade;
+            $totalIVA += ($linha->produto->preco * $linha->produto->iva->taxa / 100) * $linha->quantidade;
         }
 
+        return $this->render('checkout', [
+            'carrinho' => $carrinho,
+            'linhasCarrinho' => $carrinho->linhacarrinhos,
+            'metodospagamento' => $metodospagamento,
+        ]);
 
 
 
