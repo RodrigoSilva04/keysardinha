@@ -47,12 +47,65 @@ return [
             'showScriptName' => false,
             'rules' => [
                 [
-                    'class' => 'yii\rest\UrlRule','controller' => 'api/produto',
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/produto', // Controlador de produtos
                 'extraPatterns' => [
                     'GET count' => 'count',
+                    'GET search' => 'search', // Pesquisar jogos.
+                    'GET filter' => 'filter',  // Filtrar por categoria.
+                    'GET {id}/detalhes' => 'detalhes', // Ver detalhes de um jogo.
                     ],
                 ],
-            ],
+                // Carrinho de compras
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/carrinho',
+                    'extraPatterns' => [
+                        'POST add' => 'add',  // Adicionar item ao carrinho.
+                        'DELETE remove/{id}' => 'remove',  // Remover item do carrinho.
+                        'POST checkout' => 'checkout',  // Finalizar a compra.
+                        'POST aplicar-cupao' => 'aplicar-cupao', // Aplicar cupao no carrinho.
+                    ],
+                ],
+
+                // Favoritos
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/favoritos',
+                    'extraPatterns' => [
+                        'POST add' => 'add', // Adicionar aos favoritos.
+                        'DELETE remove/{id}' => 'remove',  // Remover dos favoritos.
+                        'GET offline' => 'offline',  // Gerir favoritos offline.
+                    ],
+                ],
+
+                // Perfil do utilizador
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/perfil',
+                    'extraPatterns' => [
+                        'GET view' => 'view',// Ver perfil do utilizador.
+                        'POST perfil' => 'create',// Cria perfil
+                        'PUT perfil' => 'update', // Atualiza perfil
+                        'DELETE perfil' => 'delete',    // Atualizar perfil
+                    ],
+                ],
+
+                // Métodos de pagamento e faturas
+                // Ver fazer junto ou separado
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/pagamento',
+                    'extraPatterns' => [
+                        'GET metodos' => 'metodos',            // Listar métodos de pagamento.
+                        'POST email-recibo' => 'email-recibo', // Enviar email com recibo.
+                        'POST email-chave' => 'email-chave',   // Enviar chave do jogo.
+                    ],
+                ],
+
+
+            ], //End rules
+
         ],
 
     ],
