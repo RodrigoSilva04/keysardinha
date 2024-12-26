@@ -18,74 +18,75 @@ class ProdutoController extends ActiveController
 
     // Pesquisar jogos
     public function actionSearch($query)
-    { $produtos = $this->modelClass::find()->where(['like', 'nome', $query])->all();
+    {
+        $produtos = $this->modelClass::find()
+            ->where(['like', 'nome', $query])
+            ->asArray()
+            ->all();
 
-        // Se não houver produtos encontrados
         if (empty($produtos)) {
-            return Yii::$app->response->setStatusCode(404)
-                ->data = [
+            return [
                 'status' => 'error',
-                'message' => 'Nenhum produto encontrado para a pesquisa.'
+                'message' => 'Nenhum produto encontrado para a pesquisa.',
             ];
         }
 
-        // Retorna os produtos encontrados com sucesso
-        return Yii::$app->response->setStatusCode(200)
-            ->data = [
+        return [
             'status' => 'success',
             'message' => 'Produtos encontrados.',
-            'produtos' => $produtos
+            'produtos' => $produtos,
         ];
     }
 
     // Filtrar jogos por categoria
     public function actionFilter($categoria)
     {
-        // Buscar produtos pela categoria
-        $produtos = $this->modelClass::find()->where(['categoria' => $categoria])->all();
+        $produtos = $this->modelClass::find()
+            ->where(['categoria' => $categoria])
+            ->asArray()
+            ->all();
 
-        // Se não houver produtos encontrados
         if (empty($produtos)) {
-            return Yii::$app->response->setStatusCode(404)
-                ->data = [
+            return [
                 'status' => 'error',
-                'message' => "Nenhum produto encontrado para a categoria '$categoria'."
+                'message' => 'Nenhum produto encontrado para a categoria especificada.',
             ];
         }
 
-        // Retorna os produtos encontrados com sucesso
-        return Yii::$app->response->setStatusCode(200)
-            ->data = [
+        return [
             'status' => 'success',
-            'message' => 'Produtos filtrados com sucesso.',
-            'produtos' => $produtos
+            'message' => 'Produtos encontrados na categoria.',
+            'produtos' => $produtos,
         ];
     }
-
 
     // Detalhes de um jogo
     public function actionDetalhes($id)
     {
-        // Buscar o produto pelo ID
         $produto = $this->modelClass::findOne($id);
 
-        // Se o produto não for encontrado
         if (!$produto) {
-            return Yii::$app->response->setStatusCode(404)
-                ->data = [
+            return [
                 'status' => 'error',
-                'message' => "Produto não encontrado com o ID $id."
+                'message' => 'Produto não encontrado.',
             ];
         }
 
-        // Retorna os detalhes do produto com sucesso
-        return Yii::$app->response->setStatusCode(200)
-            ->data = [
+        return [
             'status' => 'success',
-            'message' => 'Detalhes do produto recuperados com sucesso.',
-            'produto' => $produto
+            'message' => 'Detalhes do produto encontrados.',
+            'produto' => $produto->toArray(),
         ];
     }
+    public function actionCount()
+    {
+        $count = $this->modelClass::find()->count();
 
+        return [
+            'status' => 'success',
+            'message' => 'Contagem de produtos realizada com sucesso.',
+            'count' => $count,
+        ];
+    }
 
 }

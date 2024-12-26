@@ -61,11 +61,14 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/carrinho',
                     'extraPatterns' => [
+                        'GET view' => 'view',// Ver carrinho.
                         'POST add' => 'add',  // Adicionar item ao carrinho.
+                        'PUT update/{id}' => 'update', // Atualizar item no carrinho
                         'DELETE remove/{id}' => 'remove',  // Remover item do carrinho.
                         'POST checkout' => 'checkout',  // Finalizar a compra.
-                        'POST aplicar-cupao' => 'aplicar-cupao', // Aplicar cupao no carrinho.
+                        'POST verificar-cupao' => 'verificar-cupao', // Aplicar cupao no carrinho.
                     ],
+                    'pluralize' => false, // Evitar o plural
                 ],
 
                 // Favoritos

@@ -16,6 +16,7 @@ class UtilizadorPerfilController extends ActiveController
         // Recupera o perfil do utilizador com base no ID
         $utilizadorPerfil = UtilizadorPerfil::findOne(Yii::$app->user->id);
 
+        // Verifica se o perfil foi encontrado
         if (!$utilizadorPerfil) {
             return Yii::$app->response->setStatusCode(404)
                 ->data = [
@@ -24,6 +25,7 @@ class UtilizadorPerfilController extends ActiveController
             ];
         }
 
+        // Retorna o perfil do utilizador com um código de sucesso
         return Yii::$app->response->setStatusCode(200)
             ->data = [
             'status' => 'success',
@@ -35,25 +37,27 @@ class UtilizadorPerfilController extends ActiveController
     // Criar perfil do utilizador
     public function actionCreate()
     {
-        // Cria um novo objeto UtilizadorPerfil
-        $utilizadorPerfil = new UtilizadorPerfil();
-        $utilizadorPerfil->load(Yii::$app->request->post(), '');
+        $model = new UtilizadorPerfil(); // Criar um novo perfil
 
-        if ($utilizadorPerfil->save()) {
-            return Yii::$app->response->setStatusCode(201)
-                ->data = [
-                'status' => 'success',
-                'message' => 'Perfil criado com sucesso.',
-                'utilizadorPerfil' => $utilizadorPerfil
-            ];
+        // Verifica se os dados da requisição foram carregados corretamente
+        if ($model->load(Yii::$app->request->post())) {
+            // Tentativa de salvar o novo perfil de utilizador
+            if ($model->save()) {
+                // Se o perfil for criado com sucesso
+                Yii::$app->session->setFlash('success', 'Usuário criado com sucesso.');
+
+                // Redireciona para a lista de utilizadores ou outra página relevante
+                return $this->redirect(['index']); // Você pode ajustar essa rota conforme necessário
+            } else {
+                // Se ocorrer um erro ao salvar o perfil
+                Yii::$app->session->setFlash('error', 'Erro ao criar o usuário. Tente novamente.');
+            }
         }
 
-        return Yii::$app->response->setStatusCode(400)
-            ->data = [
-            'status' => 'error',
-            'message' => 'Erro ao criar perfil.',
-            'errors' => $utilizadorPerfil->errors
-        ];
+        // Renderiza a página de criação com o modelo vazio
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     // Atualiza perfil do utilizador
