@@ -3,11 +3,15 @@
 namespace frontend\controllers;
 
 use common\models\Carrinho;
+use common\models\Chavedigital;
 use common\models\Cupao;
 use common\models\Desconto;
+use common\models\Fatura;
 use common\models\Linhacarrinho;
+use common\models\Linhafatura;
 use common\models\Metodopagamento;
 use common\models\Produto;
+use common\models\Utilizadorperfil;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\conditions\ExistsConditionBuilder;
@@ -58,12 +62,8 @@ class CarrinhoController extends Controller
                 $erros = json_encode($carrinho->errors);
                 Yii::error("Erro ao criar carrinho: $erros", __METHOD__);
                 Yii::$app->session->setFlash('error', "Erro ao criar o carrinho: $erros");
-                // Retorna para a página do carrinho em vez de site/index
                 return $this->redirect(['produto/index']);
             }
-        } else {
-            Yii::$app->session->setFlash('success', 'Carrinho criado com sucesso.');
-
         }
 
 
@@ -323,6 +323,14 @@ class CarrinhoController extends Controller
         //Vai buscar as linhas carrinho
         // Vai buscar as linhas carrinho
         $linhasCarrinho = $carrinho->linhacarrinhos;
+        //Vai buscar as linhas carrinho e verifica se tem stock se nao estiver aparece uma mensagem de erro a dizer para remover produto do carrinho
+        foreach ($linhasCarrinho as $linha) {
+            $produto = Produto::findOne($linha->produto_id);
+            if ($produto->stockdisponivel < $linha->quantidade) {
+                Yii::$app->session->setFlash('error', 'O produto ' . $produto->nome . ' não tem stock suficiente. Remova o produto do carrinho.');
+                return $this->redirect(['carrinho/index']);
+            }
+        }
 
         // Calcula o subtotal
         $subtotal = 0;
@@ -345,11 +353,131 @@ class CarrinhoController extends Controller
             'metodospagamento' => $metodospagamento,
         ]);
 
-
-
-
-
     }
+
+    //Função para finalizar compra e gerar a fatura
+    public function actionFinalizarCompra()
+    {
+        $idUtilizador = Yii::$app->user->id;
+        // Verificar se o utilizador tem carrinho ativo
+        $carrinho = Carrinho::findOne(['utilizadorperfil_id' => Yii::$app->user->id]);
+
+        // Verificar se o carrinho existe
+        if (!$carrinho) {
+            Yii::$app->session->setFlash('error', 'Carrinho não encontrado.');
+            Yii::error('Carrinho não encontrado para o utilizador ID: ' . $idUtilizador, __METHOD__);
+            return $this->redirect(['carrinho/index']);
+        }
+
+        // Verificar se o carrinho tem produtos
+        if (count($carrinho->linhacarrinhos) == 0) {
+            Yii::$app->session->setFlash('error', 'Carrinho vazio.');
+            Yii::error('Carrinho vazio para o utilizador ID: ' . $idUtilizador, __METHOD__);
+            return $this->redirect(['carrinho/index']);
+        }
+
+        $metodoPagamento = Yii::$app->request->post('metodopagamento');
+        if (!$metodoPagamento) {
+            //Atribuir um metodo para teste
+            $metodoPagamento = 1;
+
+        }
+
+        // Verificar se o carrinho tem um cupão
+        if($carrinho->cupao_id != null){
+            $cupao = Cupao::findOne($carrinho->cupao_id);
+        } else {
+            $cupao = null;
+        }
+        $desconto = $cupao ? $cupao->valor : 0;
+        $valorTotal = 0;
+        $valorIVA = 0;
+        $subtotal = 0;
+
+        // Vai buscar as linhas carrinho
+        $linhasCarrinho = $carrinho->linhacarrinhos;
+
+        // Calcula o subtotal
+        foreach ($linhasCarrinho as $linha) {
+            $subtotal += $linha->produto->preco * $linha->quantidade;
+            $valorIVA += ($linha->produto->preco * $linha->produto->iva->taxa / 100) * $linha->quantidade;
+        }
+
+        // Calcula o valor total com desconto
+        $valorTotal = $subtotal - $desconto;
+
+        // Criar a fatura
+        $fatura = new Fatura();
+        $fatura->datafatura = date('Y-m-d H:i:s');
+        $fatura->totalciva = $valorIVA;
+        $fatura->subtotal = $subtotal;
+        $fatura->valor_total = $valorTotal;
+        $fatura->estado = 'Pago';
+        $fatura->descontovalor = $desconto;
+        $fatura->datapagamento = date('Y-m-d H:i:s');
+        $fatura->utilizadorperfil_id = $idUtilizador;
+        $fatura->metodopagamento_id = $metodoPagamento;
+        $fatura->cupao_id = $carrinho->cupao_id;
+
+
+        if ($fatura->save()) {
+            // Agora atribui as linhas fatura
+            foreach ($linhasCarrinho as $linha) {
+                $produto = Produto::findOne($linha->produto_id);
+                $linhaFatura = new LinhaFatura();
+                $linhaFatura->quantidade = $linha->quantidade;
+                $linhaFatura->precounitario = $linha->produto->preco;
+                $linhaFatura->subtotal = $linha->produto->preco * $linha->quantidade;
+                $linhaFatura->fatura_id = $fatura->id;
+                $linhaFatura->desconto_id = $linha->produto->desconto_id;
+                $linhaFatura->iva_id = $linha->produto->iva_id;
+                $linhaFatura->produto_id = $linha->produto_id;
+                //Vai verificar se tem stock em chaves e se estao usadas
+                $chaveDigital = Chavedigital::find()->where(['produto_id' => $linha->produto_id, 'estado' => 'nao usada'])->one();
+                if ($chaveDigital) {
+                    $linhaFatura->chavedigital_id = $chaveDigital->id;
+                    $chaveDigital->estado = 'usada';
+                    $chaveDigital->datavenda = date('Y-m-d H:i:s');
+                    $chaveDigital->save();
+                }else{
+                    //Mensagem a dizer para contactar o suporte
+                    Yii::$app->session->setFlash('error', 'O produto ' . $produto->nome . ' não tem chaves disponíveis. Por favor, contacta o suporte.');
+                    $fatura->estado = 'Pago';
+                }
+
+
+                if (!$linhaFatura->save()) {
+                    Yii::error('Erro ao salvar linha de fatura: ' . json_encode($linhaFatura->errors), __METHOD__);
+                }
+                $produto->stockdisponivel -= $linha->quantidade;
+                $produto->save();
+            }
+
+            // Limpar o carrinho
+            foreach ($linhasCarrinho as $linha) {
+                $linha->delete();
+            }
+
+            // Limpar o cupão se tiver
+            if($carrinho->cupao_id != null){
+                $cupao->ativo = 0;
+                $carrinho->cupao_id = null;
+                //Procurar o cupao e mudar o estado para usado
+                $cupao->save();
+                $carrinho->save();
+            }
+
+            Yii::$app->session->setFlash('success', 'Compra efetuada com sucesso!');
+        } else {
+            Yii::error('Erro ao criar a fatura: ' . json_encode($fatura->errors), __METHOD__);
+            Yii::$app->session->setFlash('error', 'Erro ao finalizar a compra. Tente novamente.');
+        }
+
+
+
+        return $this->redirect(['fatura/view', 'id' => $fatura->id]);
+    }
+
 
 
 }

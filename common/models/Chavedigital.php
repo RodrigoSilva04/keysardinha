@@ -12,6 +12,9 @@ use Yii;
  * @property string|null $estado
  * @property int|null $produto_id
  * @property string|null $datavenda
+ *
+ * @property Linhafatura[] $linhafaturas
+ * @property Produto $produto
  */
 class Chavedigital extends \yii\db\ActiveRecord
 {
@@ -33,6 +36,7 @@ class Chavedigital extends \yii\db\ActiveRecord
             [['produto_id'], 'integer'],
             [['datavenda'], 'safe'],
             [['chaveativacao'], 'string', 'max' => 255],
+            [['produto_id'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::class, 'targetAttribute' => ['produto_id' => 'id']],
         ];
     }
 
@@ -50,8 +54,23 @@ class Chavedigital extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * Gets query for [[Linhafaturas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLinhafaturas()
+    {
+        return $this->hasMany(Linhafatura::class, ['chavedigital_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Produto]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getProduto()
     {
-        return $this->hasOne(Produto::className(), ['id' => 'produto_id']);
+        return $this->hasOne(Produto::class, ['id' => 'produto_id']);
     }
 }

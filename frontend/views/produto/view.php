@@ -30,7 +30,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     <button type="submit"><i class="fa fa-shopping-bag"></i> Adicionar ao Carrinho</button>
                 </form>
                 <ul>
-                    <li><span>Categoria:</span><?=$produto->categoria->nome?></a></li>
+                    <li>
+                        <span>Stock:</span>
+                        <?php
+                        if($produto->stockdisponivel > 0){
+                            echo '<span style="color: green;">Disponível</span>';
+                        } else {
+                            echo '<span style="color: red;">Indisponível</span>';
+                        }
+                        ?>
+                    </li>
+                </ul>
+
+                <ul>
+                    <li><span>Categoria:</span><?=$produto->categoria->nome?></li>
                 </ul>
             </div>
             <div class="col-lg-12">

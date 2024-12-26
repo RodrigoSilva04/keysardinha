@@ -1,44 +1,50 @@
-var cardDrop = document.getElementById('card-dropdown');
-var activeDropdown;
-cardDrop.addEventListener('click',function(){
-    var node;
-    for (var i = 0; i < this.childNodes.length-1; i++)
-        node = this.childNodes[i];
-    if (node.className === 'dropdown-select') {
-        node.classList.add('visible');
-        activeDropdown = node;
-    };
-})
+let selectedPaymentMethodId = null;  // Variable to store selected payment method ID
 
-window.onclick = function(e) {
-    console.log(e.target.tagName)
-    console.log('dropdown');
-    console.log(activeDropdown)
-    if (e.target.tagName === 'LI' && activeDropdown){
-        if (e.target.innerHTML === 'Master Card') {
-            document.getElementById('credit-card-image').src = 'https://dl.dropboxusercontent.com/s/2vbqk5lcpi7hjoc/MasterCard_Logo.svg.png';
-            activeDropdown.classList.remove('visible');
-            activeDropdown = null;
-            e.target.innerHTML = document.getElementById('current-card').innerHTML;
-            document.getElementById('current-card').innerHTML = 'Master Card';
-        }
-        else if (e.target.innerHTML === 'American Express') {
-            document.getElementById('credit-card-image').src = 'https://dl.dropboxusercontent.com/s/f5hyn6u05ktql8d/amex-icon-6902.png';
-            activeDropdown.classList.remove('visible');
-            activeDropdown = null;
-            e.target.innerHTML = document.getElementById('current-card').innerHTML;
-            document.getElementById('current-card').innerHTML = 'American Express';
-        }
-        else if (e.target.innerHTML === 'Visa') {
-            document.getElementById('credit-card-image').src = 'https://dl.dropboxusercontent.com/s/ubamyu6mzov5c80/visa_logo%20%281%29.png';
-            activeDropdown.classList.remove('visible');
-            activeDropdown = null;
-            e.target.innerHTML = document.getElementById('current-card').innerHTML;
-            document.getElementById('current-card').innerHTML = 'Visa';
-        }
+// Function to show dropdown and handle selection
+document.getElementById("current-payment").addEventListener("click", function() {
+    const dropdown = document.getElementById("payment-dropdown").querySelector(".dropdown-select");
+    dropdown.classList.toggle("visible");
+});
+
+// Function to select the payment method and show corresponding form
+function selectPaymentMethod(paymentMethod) {
+    // Hide all forms first
+    document.getElementById("credit-card-form").style.display = "none";
+    document.getElementById("mbway-form").style.display = "none";
+    document.getElementById("paypal-form").style.display = "none";
+
+    // Show the corresponding form and set the payment method ID
+    if (paymentMethod === 'credit-card') {
+        document.getElementById("credit-card-form").style.display = "block";
+        selectedPaymentMethodId = 3;  // ID for Credit Card
+    } else if (paymentMethod === 'mbway') {
+        document.getElementById("mbway-form").style.display = "block";
+        selectedPaymentMethodId = 2;  // ID for MBWay
+    } else if (paymentMethod === 'paypal') {
+        document.getElementById("paypal-form").style.display = "block";
+        selectedPaymentMethodId = 1;  // ID for PayPal
     }
-    else if (e.target.className !== 'dropdown-btn' && activeDropdown) {
-        activeDropdown.classList.remove('visible');
-        activeDropdown = null;
-    }
+
+    // Update dropdown button text
+    document.getElementById("current-payment").textContent = paymentMethod === 'credit-card' ? 'Cartão de Crédito' :
+        paymentMethod === 'mbway' ? 'MBWay' :
+            'PayPal';
+
+    // Close the dropdown
+    document.getElementById("payment-dropdown").querySelector(".dropdown-select").classList.remove("visible");
 }
+
+// Attach the selected payment method ID to the hidden input and submit the form
+document.getElementById("finalize-purchase-btn").addEventListener("click", function(event) {
+    if (selectedPaymentMethodId === null) {
+        alert("Por favor, selecione um método de pagamento.");
+        event.preventDefault();  // Prevent the default action if no payment method is selected
+        return;
+    }
+
+    // Set the selected payment method ID in the hidden input
+    document.getElementById("hidden-metodopagamento-id").value = selectedPaymentMethodId;
+
+    // Submit the form
+    document.getElementById("payment-method-form").submit();
+});

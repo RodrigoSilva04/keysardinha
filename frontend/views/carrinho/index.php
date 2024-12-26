@@ -33,8 +33,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             <th class="text-right py-3 px-4" style="width: 100px;">Preço</th>
                             <th class="text-center py-3 px-4" style="width: 120px;">Quantidade</th>
                             <th class="text-right py-3 px-4" style="width: 100px;">Subtotal</th>
-                            <th class="text-center align-middle py-3 px-0" style="width: 40px;"><a href="#" class="shop-tooltip float-none text-light" title="" data-original-title="Clear cart"><i class="ino ion-md-trash"></i></a></th>
+                            <th class="text-center py-3 px-4" style="width: 100px;">Em Stock</th>
+                            <th class="text-center align-middle py-3 px-0" style="width: 40px;">
+                                <a href="#" class="shop-tooltip float-none text-light" title="" data-original-title="Clear cart">
+                                    <i class="ino ion-md-trash"></i>
+                                </a>
+                            </th>
                         </tr>
+
                         </thead>
                         <tbody>
                         <?php $total = 0; ?>
@@ -56,7 +62,14 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <td class="align-middle p-4">
                                     <input type="text" class="form-control text-center" value="<?= $linha->quantidade ?>" readonly>
                                 </td>
-                                <td class="text-right font-weight-semibold align-middle p-4">€<?= number_format($linha->produto->preco * $linha->quantidade, 2) ?></td>
+                                <td class="text-right font-weight-semibold align-middle p-4">€<?= number_format($subtotal, 2) ?></td>
+                                <td class="text-center align-middle p-4">
+                                    <?php if ($linha->produto->stockdisponivel > 0): ?>
+                                        <span style="color: green;">✔ Em Stock</span>
+                                    <?php else: ?>
+                                        <span style="color: red;">✖ Indisponível</span>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="text-center align-middle px-0">
                                     <a href="<?= \yii\helpers\Url::to(['carrinho/remover-carrinho', 'idProduto' => $linha->produto_id]) ?>"
                                        class="shop-tooltip close float-none text-danger"
@@ -67,6 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <?php $total += $subtotal; ?>
                         <?php endforeach; ?>
                         </tbody>
+
                     </table>
                 </div>
                 <!-- / Shopping cart table -->
