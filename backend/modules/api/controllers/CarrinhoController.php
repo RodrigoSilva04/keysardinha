@@ -48,23 +48,45 @@ class CarrinhoController extends \yii\web\Controller
 
     public function actionView($id)
     {
-        // Buscar o modelo com o ID fornecido
-        $model = $this->findModel($id);
+        // Busca o modelo do carrinho com base no ID
+        $carrinho = Carrinho::findOne($id);
 
-        if (!$model) {
-            return Yii::$app->response->setStatusCode(404)->data = [
+        if (!$carrinho) {
+            Yii::$app->response->statusCode = 404;
+            return [
                 'status' => 'error',
-                'message' => 'Modelo não encontrado.',
+                'message' => 'Carrinho não encontrado.',
             ];
         }
 
-        // Retornar dados do modelo em formato JSON
-        return Yii::$app->response->setStatusCode(200)->data = [
+        // Busca as linhas associadas ao carrinho
+        $linhasCarrinho = Linhacarrinho::find()->where(['carrinho_id' => $carrinho->id])->all();
+
+        // Prepara os dados das linhas do carrinho
+        $linhas = [];
+        foreach ($linhasCarrinho as $linha) {
+            $linhas[] = [
+                'produto_id' => $linha->produto_id,
+                'nome' => $linha->produto->nome, // Assumindo relação com Produto
+                'quantidade' => $linha->quantidade,
+                'preco_unitario' => $linha->preco_unitario,
+                'subtotal' => $linha->quantidade * $linha->preco_unitario,
+            ];
+        }
+
+        // Retorna os detalhes do carrinho e suas linhas
+        Yii::$app->response->statusCode = 200;
+        return [
             'status' => 'success',
-            'message' => 'Modelo recuperado com sucesso.',
-            'data' => $model,
+            'carrinho' => [
+                'id' => $carrinho->id,
+                'data_criacao' => $carrinho->data_criacao,
+                'utilizador_id' => $carrinho->utilizadorperfil_id,
+            ],
+            'linhas' => $linhas,
         ];
     }
+
 
     public function actionCreate()
     {
@@ -365,7 +387,7 @@ class CarrinhoController extends \yii\web\Controller
 
     protected function findModel($id)
     {
-        // Tenta encontrar o modelo no banco de dados com o ID fornecido
+        // Tenta encontrar o modelo na base de dados com o ID fornecido
         if (($model = Carrinho::findOne(['id' => $id])) !== null) {
             return $model;
         }

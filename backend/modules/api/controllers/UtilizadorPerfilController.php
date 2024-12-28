@@ -37,27 +37,27 @@ class UtilizadorPerfilController extends ActiveController
     // Criar perfil do utilizador
     public function actionCreate()
     {
-        $model = new UtilizadorPerfil(); // Criar um novo perfil
+        $model = new UtilizadorPerfil();
 
-        // Verifica se os dados da requisição foram carregados corretamente
-        if ($model->load(Yii::$app->request->post())) {
-            // Tentativa de salvar o novo perfil de utilizador
-            if ($model->save()) {
-                // Se o perfil for criado com sucesso
-                Yii::$app->session->setFlash('success', 'Usuário criado com sucesso.');
-
-                // Redireciona para a lista de utilizadores ou outra página relevante
-                return $this->redirect(['index']); // Você pode ajustar essa rota conforme necessário
-            } else {
-                // Se ocorrer um erro ao salvar o perfil
-                Yii::$app->session->setFlash('error', 'Erro ao criar o usuário. Tente novamente.');
-            }
+        // Tenta carregar os dados enviados pela requisição POST
+        $data = Yii::$app->request->post();
+        if ($model->load($data, '') && $model->save()) {
+            // Retorna o modelo criado como JSON, com o status HTTP 201 (Created)
+            Yii::$app->response->statusCode = 201;
+            return [
+                'status' => 'success',
+                'message' => 'Usuário criado com sucesso.',
+                'data' => $model,
+            ];
         }
 
-        // Renderiza a página de criação com o modelo vazio
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        // Retorna os erros de validação com o status HTTP 422 (Unprocessable Entity)
+        Yii::$app->response->statusCode = 422;
+        return [
+            'status' => 'error',
+            'message' => 'Erro ao criar o usuário.',
+            'errors' => $model->errors,
+        ];
     }
 
     // Atualiza perfil do utilizador
