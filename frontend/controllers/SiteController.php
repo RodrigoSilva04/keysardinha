@@ -80,21 +80,26 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $produtos = Produto::find()->all();
+        // Obter os jogos mais jogados e criar produtos no banco de dados
         $jogosmaisjogados = $this->obterJogosMaisJogadosSteamAPI();
+
+        // Buscar os produtos criados no banco de dados
+        $produtos = Produto::find()->all();
+
         $categorias = Categoria::find()->all();
         $top3categorias = Categoria::find()->limit(3)->all();
 
         $this->layout = 'indexlay';
 
-        return $this->render('index' , [
+        return $this->render('index', [
             'produtos' => $produtos,
-            'jogosmaisjogados' => $jogosmaisjogados,
             'categorias' => $categorias,
-            'top3categorias' => $top3categorias
+            'top3categorias' => $top3categorias,
+            'jogosmaisjogados' => $jogosmaisjogados
         ]);
-
     }
+
+
 
     /**
      * Logs in a user.
@@ -283,66 +288,49 @@ class SiteController extends Controller
         $response = $client->createRequest()
             ->setMethod('GET')
             ->setUrl($url)
-            ->setData([
-                'key' => $keyapi
-            ])
+            ->setData(['key' => $keyapi])
             ->send();
 
-        // Verifique o status code da resposta
         if ($response->statusCode == 200) {
-            $jogos = [];
             $ranks = $response->data['response']['ranks'];
+            $topJogos = array_slice($ranks, 0, 6); // Filtra os 6 primeiros jogos
+            $produtosCriados = [];
 
-            // Filtra os 10 primeiros jogos
-            $topJogos = array_slice($ranks, 0, 6);
-
-            // Iterar sobre os 10 primeiros jogos e obter o nome através do appid
             foreach ($topJogos as $rank) {
                 $appid = $rank['appid'];
 
-                // Buscar o nome do jogo utilizando o appid
+                // Obter nome do jogo pela API Steam
                 $nomeJogo = $this->obternomeporsteamid($appid);
 
-                // Verificar se o jogo já existe na base de dados pelo nome
-                $jogoExistente = \Yii::$app->db->createCommand('SELECT * FROM produto WHERE nome = :nome')
-                    ->bindValue(':nome', $nomeJogo)
-                    ->queryOne();
+                // Verificar se já existe um produto com este nome
+                $produtoExistente = Produto::find()->where(['nome' => $nomeJogo])->one();
 
-                // Se o jogo não existir, crie-o na base de dados
-                if (!$jogoExistente) {
-                    \Yii::$app->db->createCommand()->insert('produto', [
-                        'nome' => $nomeJogo,
-                        'descricao' => null,  // Opcional, se você ainda quiser armazenar o appid
-                        'preco' => "Não definido",
-                        'imagem' => "imagemdefault.jpg",
-                        'datalancamento' => "Não definido",
-                        'stockdisponivel' => 0,
-                        'categoria_id' => '1', // Caso a categoria exista
-                        'desconto_id' => '1', // Caso o desconto exista
-                        'iva_id' => '1', // Caso o iva exista
-                    ])->execute();
+                if (!$produtoExistente) {
+                    // Criar novo produto no banco de dados
+                    $produto = new Produto();
+                    $produto->nome = $nomeJogo;
+                    $produto->descricao = "Jogo popular na Steam"; // Alterar conforme necessário
+                    $produto->preco = "0.00"; // Alterar conforme necessário
+                    $produto->imagem = "imagemdefault.jpg"; // Alterar conforme necessário
+                    $produto->datalancamento = null; // Alterar conforme necessário
+                    $produto->stockdisponivel = 0;
+                    $produto->categoria_id = 1; // Ajustar para a categoria padrão
+                    $produto->desconto_id = 1; // Ajustar para o desconto padrão
+                    $produto->iva_id = 1; // Ajustar para o IVA padrão
+                    $produto->save();
+
+                    $produtosCriados[] = $produto;
+                }else {
+                    $produtosCriados[] = $produtoExistente;
                 }
-                //Vai buscar o id dos jogos á base de dados e procura na tabela produto
-                $jogoid = \Yii::$app->db->createCommand('SELECT id FROM produto WHERE nome = :nome')
-                    ->bindValue(':nome', $nomeJogo)
-                    ->queryOne();
-
-                // Adicionar o nome do jogo ao array de jogos
-                $jogos[] = [
-                    'id' => $jogoid['id'],
-                    'name' => $nomeJogo,
-                    'rank' => $rank['rank'],
-                    'appid' => $appid,
-                    'peak_in_game' => $rank['peak_in_game'],
-                ];
             }
-
-            return $jogos; // Retorna os jogos mais jogados
+            return $produtosCriados;
         } else {
             \Yii::error('Erro ao acessar a API da Steam: ' . $response->statusCode, __METHOD__);
-            return [];
         }
     }
+
+
 
     function obternomeporsteamid($appid)
     {

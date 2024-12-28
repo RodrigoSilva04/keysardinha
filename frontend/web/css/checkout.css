@@ -140,10 +140,10 @@ ul li:hover {
 
 .total {
     margin-top:25px;
-    font-size:20px;
+    font-size:15px;
     font-size:1.3rem;
     position:absolute;
-    bottom:30px;
+    bottom:-5px;
     right:27px;
     left:35px;
 }

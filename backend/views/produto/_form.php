@@ -33,7 +33,7 @@ use yii\widgets\ActiveForm;
     ) ?>
 
     <?= $form->field($model, 'desconto_id')->dropDownList(
-        \yii\helpers\ArrayHelper::map($categorias, 'id', 'desconto'),
+        \yii\helpers\ArrayHelper::map($descontos, 'id', 'percentagem'),
         ['prompt' => 'Selecione um desconto']
     ) ?>
 

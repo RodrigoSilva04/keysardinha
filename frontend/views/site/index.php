@@ -2,7 +2,9 @@
 
 /** @var yii\web\View $this */
 
-$this->title = 'Keysardinha - Sua Loja de Chaves de Jogos';
+    use yii\helpers\Html;
+
+    $this->title = 'Keysardinha - Sua Loja de Chaves de Jogos';
 $this->registerCssFile('@web/css/index.css');
 $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
 ?>
@@ -132,16 +134,18 @@ $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
                         <div class="col-lg-2 col-md-6 col-sm-6">
                             <div class="item">
                                 <div class="thumb">
-                                    <!-- Usando a imagem do jogo (se disponível) -->
-                                    <a href="product-details.html">
-                                        <!-- Adicione aqui a imagem do jogo se tiver, como sugerido -->
+                                    <a href="<?= \yii\helpers\Url::to(['produto/view', 'id' => $jogo->id]) ?>">
+                                        <?= // Se a imagem estiver null, mostra uma imagem padrão
+                                        $jogo->imagem == null ? Html::img('@web/imagensjogos/imagemdefault.jpg', ['alt' => 'Imagem do produto']) :
+                                            Html::img('@web/imagensjogos/' . $jogo->imagem, ['alt' => 'Imagem do produto']) ?>
+                                        <span class="price"><?= $jogo->preco ?>€</span>
                                     </a>
                                 </div>
                                 <div class="down-content">
                                     <!-- Exibe a categoria se disponível -->
-                                    <span class="category"><?= $produto->categoria->nome ?? 'Categoria desconhecida' ?></span>
-                                    <h4><?= htmlspecialchars($jogo['name']) ?></h4> <!-- Exibe o nome do jogo -->
-                                    <a href="<product-details.html>">Explorar</a>
+                                    <span class="category"><?= $jogo->categoria->nome ?? 'Categoria desconhecida' ?></span>
+                                    <h4><?= $jogo->nome ?></h4> <!-- Exibe o nome do jogo -->
+                                    <a href="<?= \yii\helpers\Url::to(['produto/view', 'id' => $jogo->id]) ?>">Explorar</a>
                                 </div>
                             </div>
                         </div>
@@ -167,7 +171,7 @@ $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
 
 
                 <?php foreach ($top3categorias as $categoria): ?>
-                    <div class="col-lg-3 col-sm-6 col-xs-12"> <!-- Create a new column for each category -->
+                    <div class="col-lg-4 col-sm-6 col-xs-12"> <!-- Create a new column for each category -->
                         <div class="item">
                             <h4><?= $categoria->nome ?></h4>
                             <div class="thumb">
