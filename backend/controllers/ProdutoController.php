@@ -143,17 +143,22 @@ class ProdutoController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-                $novaImagem = UploadedFile::getInstance($model, 'uploadImagem');
+                $novaImagem = UploadedFile::getInstance($model, 'imagemFile');
 
                 // Verifica se há nova imagem
                 if ($novaImagem) {
-                    $model->uploadImagem = $novaImagem;
+                    $model->imagemFile = $novaImagem;
 
                     // Faz o upload da nova imagem e salva o modelo
-                    if ($model->upload()) {
-                        // Opcional: Remova a imagem antiga do diretório se necessário
+                    if ($model->uploadImagem()) {
+                        // Caso necessário implementar no futuro
+                    }
+                    else{
+                        Yii::$app->session->setFlash('error', 'Erro ao fazer upload da nova imagem.');
+                        return $this->redirect(['update', 'id' => $model->id]);
                     }
                 }
+
 
                 if ($model->save()) {
                     Yii::$app->session->setFlash('success', 'Produto atualizado com sucesso!');

@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <tbody>
                         <?php $total = 0; ?>
                         <?php foreach ($linhasCarrinho as $linha): ?>
-                            <?php $subtotal = $linha->produto->preco * $linha->quantidade; ?>
+                            <?php $subtotal = $linha->preco_unitario * $linha->quantidade; ?>
                             <tr>
                                 <td class="p-4">
                                     <div class="media align-items-center">

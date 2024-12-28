@@ -1,50 +1,63 @@
-let selectedPaymentMethodId = null;  // Variable to store selected payment method ID
+let selectedPaymentMethodId = null;
 
-// Function to show dropdown and handle selection
+// Função para mostrar o dropdown
 document.getElementById("current-payment").addEventListener("click", function() {
     const dropdown = document.getElementById("payment-dropdown").querySelector(".dropdown-select");
     dropdown.classList.toggle("visible");
 });
 
-// Function to select the payment method and show corresponding form
-function selectPaymentMethod(paymentMethod) {
-    // Hide all forms first
-    document.getElementById("credit-card-form").style.display = "none";
-    document.getElementById("mbway-form").style.display = "none";
-    document.getElementById("paypal-form").style.display = "none";
+// Função para selecionar o método de pagamento e mostrar o formulário correspondente
+function selectPaymentMethod(paymentMethodId, paymentMethodName) {
+    // Esconder todos os formulários de pagamento
+    const paymentForms = document.querySelectorAll('.payment-form');
+    paymentForms.forEach(form => {
+        form.style.display = "none";
+    });
 
-    // Show the corresponding form and set the payment method ID
-    if (paymentMethod === 'credit-card') {
-        document.getElementById("credit-card-form").style.display = "block";
-        selectedPaymentMethodId = 3;  // ID for Credit Card
-    } else if (paymentMethod === 'mbway') {
-        document.getElementById("mbway-form").style.display = "block";
-        selectedPaymentMethodId = 2;  // ID for MBWay
-    } else if (paymentMethod === 'paypal') {
-        document.getElementById("paypal-form").style.display = "block";
-        selectedPaymentMethodId = 1;  // ID for PayPal
-    }
+    // Mostrar o formulário correspondente ao método selecionado
+    document.getElementById("payment-form-" + paymentMethodId).style.display = "block";
+    selectedPaymentMethodId = paymentMethodId;
 
-    // Update dropdown button text
-    document.getElementById("current-payment").textContent = paymentMethod === 'credit-card' ? 'Cartão de Crédito' :
-        paymentMethod === 'mbway' ? 'MBWay' :
-            'PayPal';
+    // Atualizar o texto do botão de seleção do método de pagamento
+    document.getElementById("current-payment").textContent = paymentMethodName;
 
-    // Close the dropdown
+    // Fechar o dropdown
     document.getElementById("payment-dropdown").querySelector(".dropdown-select").classList.remove("visible");
 }
 
-// Attach the selected payment method ID to the hidden input and submit the form
+document.addEventListener('DOMContentLoaded', function() {
+    // Ouvintes de clique do dropdown
+    document.querySelectorAll('#payment-dropdown .dropdown-select li').forEach(function(item) {
+        item.addEventListener('click', function() {
+            const paymentMethodId = this.getAttribute('data-method');
+            const paymentMethodName = this.textContent.trim();
+            selectPaymentMethod(paymentMethodId, paymentMethodName);
+        });
+    });
+});
+
+
+// Adicionar o ID do metodo de pagamento selecionado no input oculto e submeter o formulário
 document.getElementById("finalize-purchase-btn").addEventListener("click", function(event) {
     if (selectedPaymentMethodId === null) {
         alert("Por favor, selecione um método de pagamento.");
-        event.preventDefault();  // Prevent the default action if no payment method is selected
+        event.preventDefault();  // Impede o envio se nenhum metodo for selecionado
         return;
     }
 
-    // Set the selected payment method ID in the hidden input
-    document.getElementById("hidden-metodopagamento-id").value = selectedPaymentMethodId;
+    // Criar ou atualizar o campo oculto com o ID do metodo de pagamento
+    const hiddenInput = document.getElementById("hidden-metodopagamento-id");
+    if (!hiddenInput) {
+        const newInput = document.createElement("input");
+        newInput.type = "hidden";
+        newInput.id = "hidden-metodopagamento-id";
+        newInput.name = "metodopagamento_id";
+        newInput.value = selectedPaymentMethodId;
+        document.getElementById("payment-method-form").appendChild(newInput);
+    } else {
+        hiddenInput.value = selectedPaymentMethodId;
+    }
 
-    // Submit the form
+    // Submeter o formulário
     document.getElementById("payment-method-form").submit();
 });

@@ -204,7 +204,20 @@ class CarrinhoController extends Controller
             $linhaCarrinho->carrinho_id = $carrinho->id;
             $linhaCarrinho->produto_id = $IdProduto;
             $linhaCarrinho->quantidade = 1;
-            $linhaCarrinho->preco_unitario = $produto->preco;
+            //Verifica se o produto tem desconto
+            $desconto = $produto->desconto;
+
+            // Verifique se o produto tem desconto
+            if ($desconto) {
+                // Calcule o preço unitário com o desconto
+                $precounitario = $produto->preco - ($produto->preco * $desconto->percentagem / 100);
+            } else {
+                // Se não houver desconto, o preço unitário será o preço original
+                $precounitario = $produto->preco;
+            }
+
+            // Atribua o preço unitário ao item do carrinho
+            $linhaCarrinho->preco_unitario = $precounitario;;
 
             if (!$linhaCarrinho->save()) {
                 Yii::error('Erro ao criar a linha do carrinho: ' . json_encode($linhaCarrinho->errors), __METHOD__);
@@ -319,7 +332,7 @@ class CarrinhoController extends Controller
 
         //Verifica se o carrinho tem um cupão
         $cupao = $carrinho->cupao;
-        $desconto = $cupao ? $cupao->valor : 0;
+        $descontocupao = $cupao ? $cupao->valor : 0;
         //Vai buscar as linhas carrinho
         // Vai buscar as linhas carrinho
         $linhasCarrinho = $carrinho->linhacarrinhos;
@@ -335,16 +348,16 @@ class CarrinhoController extends Controller
         // Calcula o subtotal
         $subtotal = 0;
         foreach ($linhasCarrinho as $linha) {
-            $subtotal += $linha->produto->preco * $linha->quantidade;
+            $subtotal += $linha->preco_unitario * $linha->quantidade;
         }
 
         // Calcula o valor total com desconto
-        $totalComDesconto = $subtotal - $desconto;
+        $totalComDesconto = $subtotal - $descontocupao;
 
         // Calcula o IVA
         $totalIVA = 0;
         foreach ($linhasCarrinho as $linha) {
-            $totalIVA += ($linha->produto->preco * $linha->produto->iva->taxa / 100) * $linha->quantidade;
+            $totalIVA += ($linha->preco_unitario * $linha->produto->iva->taxa / 100) * $linha->quantidade;
         }
 
         return $this->render('checkout', [
@@ -358,6 +371,7 @@ class CarrinhoController extends Controller
     //Função para finalizar compra e gerar a fatura
     public function actionFinalizarCompra()
     {
+
         $idUtilizador = Yii::$app->user->id;
         // Verificar se o utilizador tem carrinho ativo
         $carrinho = Carrinho::findOne(['utilizadorperfil_id' => Yii::$app->user->id]);
@@ -376,11 +390,10 @@ class CarrinhoController extends Controller
             return $this->redirect(['carrinho/index']);
         }
 
-        $metodoPagamento = Yii::$app->request->post('metodopagamento');
-        if (!$metodoPagamento) {
-            //Atribuir um metodo para teste
-            $metodoPagamento = 1;
-
+        $metodoPagamento = Yii::$app->request->post('metodopagamento_id');
+        if(!$metodoPagamento){
+            Yii::$app->session->setFlash('error', 'Selecione um método de pagamento. Este foi o detetado var_dump: ' . var_dump($metodoPagamento));
+            return $this->redirect(['carrinho/checkout']);
         }
 
         // Verificar se o carrinho tem um cupão

@@ -132,13 +132,11 @@ class Produto extends \yii\db\ActiveRecord
             // Caminho onde a imagem será salva
             $uploadPath = Yii::getAlias('@frontend/web/imagensjogos');
 
-            // Verifica se o diretório existe, se não, cria-o
-
             // Salva a imagem no diretório 'imagensjogos'
             $this->imagemFile->saveAs($fileName);
 
             // Atualiza o campo 'imagem' com o nome da imagem salva
-            $this->imagem = 'imagensjogos/' . $fileName;
+            $this->imagem =  $fileName;
             return true;
         }
         return false;
