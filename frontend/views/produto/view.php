@@ -25,9 +25,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h4><?= $produto->nome?></h4>
                 <span class="price"><?=$produto->preco?>€</span>
                 <p><?= $produto->descricao?></p>
-                <form id="qty" action="#">
-                    <input type="qty" class="form-control" id="1" aria-describedby="quantity" placeholder="1">
-                    <button type="submit"><i class="fa fa-shopping-bag"></i> Adicionar ao Carrinho</button>
+                <form id="qty" action="<?= \yii\helpers\Url::to(['carrinho/add-to-cart', 'IdProduto' => $produto->id]) ?>" method="get">
+                    <input type="number" class="form-control" name="qty" id="qty" placeholder="1" min="1">
+                    <a id="botton-addtocart" href="<?= \yii\helpers\Url::to(['carrinho/add-to-cart', 'IdProduto' => $produto->id]) ?>" type="submit" class="btn btn-primary botton-view"><i class="fa fa-shopping-bag"></i> Adicionar ao Carrinho</a>
                 </form>
                 <ul>
                     <li>

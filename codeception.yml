@@ -1,9 +1,14 @@
-# global codeception file to run tests from all apps
-include:
-    - common
-    - frontend
-    - backend
+namespace: Tests
+support_namespace: Support
 paths:
-    output: console/runtime/output
-settings:
-    colors: true
+    tests: backend/tests
+    output: tests/_output
+    data: tests/Support/Data
+    support: tests/Support
+    envs: tests/_envs
+actor_suffix: Tester
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed
+autoload:
+    - vendor/autoload.php

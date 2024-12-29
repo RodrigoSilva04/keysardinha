@@ -2,6 +2,7 @@
 
 namespace backend\modules\api\controllers;
 
+use backend\modules\api\components\CustomAuth;
 use Yii;
 use yii\rest\ActiveController;
 
@@ -15,6 +16,17 @@ class ProdutoController extends ActiveController
      * @return string
      */
     public $modelClass = 'common\models\Produto';
+
+    public function behaviors()
+    {
+        Yii::$app->params['id'] = 0;
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => CustomAuth::className(),
+            //only=> ['index'], //Apenas para o GET
+        ];
+        return $behaviors;
+    }
 
     // Pesquisar jogos
     public function actionSearch($query)
@@ -83,7 +95,7 @@ class ProdutoController extends ActiveController
         $count = $this->modelClass::find()->count();
 
         return [
-            'status' => 'success',
+            'status' => 'Sucesso',
             'message' => 'Contagem de produtos realizada com sucesso.',
             'count' => $count,
         ];

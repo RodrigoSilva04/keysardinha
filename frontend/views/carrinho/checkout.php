@@ -176,10 +176,12 @@ $totalDescontos = 0;
 
 
                 <!-- Botão de Finalizar Compra -->
-                <a href="<?= \yii\helpers\Url::to(['carrinho/finalizar-compra', 'metodopagamento_id' => $metodo->id]) ?>" id="finalize-purchase-btn" class="pay-btn">Finalizar Compra</a>
+                <a href="#" id="finalize-purchase-btn" class="pay-btn">Finalizar Compra</a>
             </div>
         </div>
 
+
     </div>
+
 </div>
 

@@ -369,7 +369,7 @@ class CarrinhoController extends Controller
     }
 
     //Função para finalizar compra e gerar a fatura
-    public function actionFinalizarCompra()
+    public function actionFinalizarCompra($metodopagamento_id)
     {
 
         $idUtilizador = Yii::$app->user->id;
@@ -390,10 +390,12 @@ class CarrinhoController extends Controller
             return $this->redirect(['carrinho/index']);
         }
 
-        $metodoPagamento = Yii::$app->request->post('metodopagamento_id');
+        $metodoPagamento = Metodopagamento::findOne($metodopagamento_id);
         if(!$metodoPagamento){
             Yii::$app->session->setFlash('error', 'Selecione um método de pagamento. Este foi o detetado var_dump: ' . var_dump($metodoPagamento));
             return $this->redirect(['carrinho/checkout']);
+        }else{
+            Yii::$app->session->setFlash('success', 'Método de pagamento selecionado com sucesso. este é o id do metodo de pagamento: ' . $metodoPagamento->id);
         }
 
         // Verificar se o carrinho tem um cupão
@@ -429,7 +431,7 @@ class CarrinhoController extends Controller
         $fatura->descontovalor = $desconto;
         $fatura->datapagamento = date('Y-m-d H:i:s');
         $fatura->utilizadorperfil_id = $idUtilizador;
-        $fatura->metodopagamento_id = $metodoPagamento;
+        $fatura->metodopagamento_id = (int)$metodopagamento_id;
         $fatura->cupao_id = $carrinho->cupao_id;
 
 
@@ -461,6 +463,10 @@ class CarrinhoController extends Controller
 
                 if (!$linhaFatura->save()) {
                     Yii::error('Erro ao salvar linha de fatura: ' . json_encode($linhaFatura->errors), __METHOD__);
+                    Yii::$app->session->setFlash('error', 'Erro ao finalizar a compra. Tente novamente. Erro ao salvar linha de fatura: ' . json_encode($linhaFatura->errors));
+                }else
+                {
+                    Yii::$app->session->setFlash('success', 'Compra efetuada com sucesso!');
                 }
                 $produto->stockdisponivel -= $linha->quantidade;
                 $produto->save();
@@ -484,6 +490,8 @@ class CarrinhoController extends Controller
         } else {
             Yii::error('Erro ao criar a fatura: ' . json_encode($fatura->errors), __METHOD__);
             Yii::$app->session->setFlash('error', 'Erro ao finalizar a compra. Tente novamente.');
+            Yii::$app->session->setFlash('error', 'Deu erro ao finalizar a compra estes são os erros: ' . json_encode($fatura->errors));
+            return $this->redirect(['carrinho/checkout']);
         }
 
 

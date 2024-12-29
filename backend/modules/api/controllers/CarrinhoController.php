@@ -2,15 +2,27 @@
 
 namespace app\modules\api\controllers;
 
+use backend\modules\api\components\CustomAuth;
 use common\models\Carrinho;
 use common\models\Cupao;
 use common\models\Linhacarrinho;
 use common\models\Produto;
 use Yii;
+use yii\filters\auth\QueryParamAuth;
 use yii\rest\Controller;
 
 class CarrinhoController extends \yii\web\Controller
 {
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => CustomAuth::className(),
+            'tokenParam' => 'access-token',
+        ];
+        return $behaviors;
+    }
     public function actionIndex()
     {
         // Obter carrinho do utilizador

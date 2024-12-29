@@ -2,6 +2,7 @@
 
 namespace backend\modules\api\controllers;
 
+use backend\modules\api\components\CustomAuth;
 use yii\rest\ActiveController;
 use Yii;
 use common\models\UtilizadorPerfil; // Modelo UtilizadorPerfil
@@ -9,6 +10,16 @@ use common\models\UtilizadorPerfil; // Modelo UtilizadorPerfil
 class UtilizadorPerfilController extends ActiveController
 {
     public $modelClass = 'common\models\UtilizadorPerfil';
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => CustomAuth::className(),
+            //only=> ['index'], //Apenas para o GET
+        ];
+        return $behaviors;
+    }
 
     // Ver perfil do utilizador
     public function actionView()
@@ -44,13 +55,13 @@ class UtilizadorPerfilController extends ActiveController
             // Tentativa de salvar o novo perfil de utilizador
             if ($model->save()) {
                 // Se o perfil for criado com sucesso
-                Yii::$app->session->setFlash('success', 'Usuário criado com sucesso.');
+                Yii::$app->session->setFlash('success', 'Utilizador criado com sucesso.');
 
                 // Redireciona para a lista de utilizadores ou outra página relevante
                 return $this->redirect(['index']); // Você pode ajustar essa rota conforme necessário
             } else {
                 // Se ocorrer um erro ao salvar o perfil
-                Yii::$app->session->setFlash('error', 'Erro ao criar o usuário. Tente novamente.');
+                Yii::$app->session->setFlash('error', 'Erro ao criar o Utilizador. Tente novamente.');
             }
         }
 

@@ -11,5 +11,9 @@ return [
         'request' => [
             'cookieValidationKey' => 'test',
         ],
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=keysardinhadb_test',
+        ],
     ],
 ];

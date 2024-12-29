@@ -169,3 +169,18 @@ input[type="radio"] {
     opacity: 0.5;
     z-index: 1;
 }
+
+.botton-addtocart {
+    display: inline-block;
+    height: 50px;
+    line-height: 50px;
+    background-color: #ee626b;
+    color: #fff;
+    font-size: 15px;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 0px 25px;
+    border: none;
+    border-radius: 25px;
+    transition: all .3s;
+}

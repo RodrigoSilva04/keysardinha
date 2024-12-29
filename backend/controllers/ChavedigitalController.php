@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Chavedigital;
 use common\models\Produto;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -83,16 +84,37 @@ class ChavedigitalController extends Controller
         $model = new Chavedigital();
         $produtos = Produto::find()->all();
 
+        // Verificar se a requisição é um POST
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                echo "salvo com sucesso";
-                return $this->redirect(['view', 'id' => $model->id]);
+
+                // Encontra o produto associado à chave digital
+                $produto = Produto::findOne($model->produto_id);
+
+                if ($produto) {
+                    // Incrementa o estoque do produto
+                    $produto->stockdisponivel += 1;
+
+                    // Salva o produto com o estoque atualizado
+                    if ($produto->save()) {
+                        Yii::$app->session->setFlash('success', 'Chave digital salva e stock atualizado com sucesso!');
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        Yii::$app->session->setFlash('error', 'Erro ao atualizar o stock do produto.');
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'Produto não encontrado.');
+                }
+            } else {
+                // Se não conseguiu salvar o modelo de chave digital
+                Yii::$app->session->setFlash('error', 'Erro ao salvar a chave digital.');
             }
-        } else {
-            $model->loadDefaultValues();
-            echo "erro ao salvar";
         }
 
+        // Carrega os valores padrão se não for um POST
+        $model->loadDefaultValues();
+
+        // Renderiza a view de criação
         return $this->render('create', [
             'model' => $model,
             'produtos' => $produtos,

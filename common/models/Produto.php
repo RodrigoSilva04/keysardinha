@@ -141,4 +141,8 @@ class Produto extends \yii\db\ActiveRecord
         }
         return false;
     }
+    public function calcularDescontoPreco()
+    {
+        return $this->preco - ($this->preco * $this->desconto->percentagem / 100);
+    }
 }
