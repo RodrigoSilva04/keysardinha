@@ -59,7 +59,7 @@ class Favoritos extends \yii\db\ActiveRecord
         $favorito = new self();
         $favorito->utilizadorperfil_id = $utilizadorPerfilId;
         $favorito->produto_id = $produtoId;
-        return $favorito->save(); // Salva no banco de dados
+        return $favorito->save(); // Guarda na base de dados
     }
 
     // Método para remover dos favoritos
@@ -67,7 +67,7 @@ class Favoritos extends \yii\db\ActiveRecord
     {
         $favorito = self::findOne(['utilizadorperfil_id' => $utilizadorPerfilId, 'produto_id' => $produtoId]);
         if ($favorito) {
-            return $favorito->delete(); // Remove o favorito do banco de dados
+            return $favorito->delete(); // Remove o favorito da base de dados
         }
         return false;
     }

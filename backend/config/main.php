@@ -50,10 +50,14 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/produto', // Controlador de produtos
                 'extraPatterns' => [
-                    'GET count' => 'count',
+                    'GET view' => 'view',// mostra todos os produtos
+                    'POST produto' => 'create',// Cria produto
+                    'PUT produto' => 'update', // Atualiza produto
+                    'DELETE produto' => 'delete',    // apagar produto
+                    'GET count' => 'count',  // Conta quanto jogos há
                     'GET search' => 'search', // Pesquisar jogos.
                     'GET filter' => 'filter',  // Filtrar por categoria.
-                    'GET {id}/detalhes' => 'detalhes', // Ver detalhes de um jogo.
+                    'GET {id}/detalhes' => 'detalhes', // Ver detalhes de um jogo
                     ],
                 ],
                 // Carrinho de compras
@@ -90,7 +94,7 @@ return [
                         'GET view' => 'view',// Ver perfil do utilizador.
                         'POST perfil' => 'create',// Cria perfil
                         'PUT perfil' => 'update', // Atualiza perfil
-                        'DELETE perfil' => 'delete',    // Atualizar perfil
+                        'DELETE perfil' => 'delete',    // apagar perfil
                     ],
                 ],
 

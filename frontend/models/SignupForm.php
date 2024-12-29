@@ -60,7 +60,7 @@ class SignupForm extends Model
         // if ($this->role == 'cliente')
         // Salva o usuário e verifica se a operação foi bem-sucedida
         if ($user->save()) {
-            // Cria um novo registro na tabela utilizador_perfil com o mesmo ID do usuário
+            // Cria um novo registo na tabela utilizador_perfil com o mesmo ID do usuário
             $utilizadorPerfil = new UtilizadorPerfil();
             $utilizadorPerfil->id = $user->id; // Define o mesmo ID do usuário
             $utilizadorPerfil->nome = null; // Supondo que o nome vem do formulário
