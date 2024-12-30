@@ -3,6 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use backend\modules\api\components\CustomAuth;
+use common\models\Produto;
 use Yii;
 use yii\rest\ActiveController;
 
@@ -17,9 +18,18 @@ class ProdutoController extends ActiveController
      */
     public $modelClass = 'common\models\Produto';
 
-<<<<<<< Updated upstream
+
     public function behaviors()
-=======
+    {
+        Yii::$app->params['id'] = 0;
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => CustomAuth::className(),
+            //only=> ['index'], //Apenas para o GET
+        ];
+        return $behaviors;
+    }
+
     public function actionIndex()
     {
         // Obter todos os produtos da base de dados
@@ -58,15 +68,29 @@ class ProdutoController extends ActiveController
 
     //Mostrar todos os produtos
     public function actionView($id)
->>>>>>> Stashed changes
     {
-        Yii::$app->params['id'] = 0;
-        $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class' => CustomAuth::className(),
-            //only=> ['index'], //Apenas para o GET
+        $produto = Produto::findOne($id);
+
+        if (!$produto) {
+            Yii::$app->response->statusCode = 404; // Produto não encontrado
+            return [
+                'status' => 'error',
+                'message' => 'Produto não encontrado.',
+            ];
+        }
+
+        return [
+            'status' => 'success',
+            'message' => 'Produto recuperado com sucesso.',
+            'data' => [
+                'id' => $produto->id,
+                'nome' => $produto->nome,
+                'descricao' => $produto->descricao,
+                'preco' => $produto->preco,
+                'stockdisponivel' => $produto->stockdisponivel,
+                'imagem' => $produto->imagem,
+            ],
         ];
-        return $behaviors;
     }
 
     // Pesquisar jogos
