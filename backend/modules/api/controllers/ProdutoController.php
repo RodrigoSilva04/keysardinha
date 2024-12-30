@@ -17,7 +17,48 @@ class ProdutoController extends ActiveController
      */
     public $modelClass = 'common\models\Produto';
 
+<<<<<<< Updated upstream
     public function behaviors()
+=======
+    public function actionIndex()
+    {
+        // Obter todos os produtos da base de dados
+        $produtos = Produto::find()->all();
+
+        // Verificar se há produtos
+        if (empty($produtos)) {
+            Yii::$app->response->statusCode = 404; // Nenhum produto encontrado
+            return [
+                'status' => 'error',
+                'message' => 'Nenhum produto encontrado.',
+            ];
+        }
+
+        // Formatar os produtos para a resposta
+        $produtosFormatados = [];
+        foreach ($produtos as $produto) {
+            $produtosFormatados[] = [
+                'id' => $produto->id,
+                'nome' => $produto->nome,
+                'descricao' => $produto->descricao,
+                'preco' => $produto->preco,
+                'stockdisponivel' => $produto->stockdisponivel,
+                'imagem' => $produto->imagem,
+            ];
+        }
+
+        // Retornar os produtos formatados
+        Yii::$app->response->statusCode = 200; // Sucesso
+        return [
+            'status' => 'success',
+            'message' => 'Produtos recuperados com sucesso.',
+            'data' => $produtosFormatados,
+        ];
+    }
+
+    //Mostrar todos os produtos
+    public function actionView($id)
+>>>>>>> Stashed changes
     {
         Yii::$app->params['id'] = 0;
         $behaviors = parent::behaviors();

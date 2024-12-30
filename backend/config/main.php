@@ -50,7 +50,8 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/produto', // Controlador de produtos
                 'extraPatterns' => [
-                    'GET view' => 'view',// mostra todos os produtos
+                    'GET index' => 'index', //Lista todos os produtos
+                    'GET view' => 'view', // Mostra todos os produtos
                     'POST produto' => 'create',// Cria produto
                     'PUT produto' => 'update', // Atualiza produto
                     'DELETE produto' => 'delete',    // apagar produto
@@ -75,11 +76,25 @@ return [
                     'pluralize' => false, // Evitar o plural
                 ],
 
+                // Faturas
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/fatura',
+                    'extraPatterns' => [
+                        'GET index' => 'index',// Ver todas as faturas do utilizador
+                        'GET {id}' => 'view', // Ver detalhes de uma fatura específica.                        'PUT update/{id}' => 'update', // Atualizar item no carrinho
+                        'POST create' => 'create',         // Criar uma nova fatura.
+                        'PUT update/{id}' => 'update',     // Atualizar uma fatura existente.
+                        'DELETE delete/{id}' => 'delete', // Apagar uma fatura.
+                    ],
+                ],
+
                 // Favoritos
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/favoritos',
                     'extraPatterns' => [
+                        'GET index' => 'index', //Lista todos os favoritos do user
                         'POST add' => 'add', // Adicionar aos favoritos.
                         'DELETE remove/{id}' => 'remove',  // Remover dos favoritos.
                         'GET offline' => 'offline',  // Gerir favoritos offline.
@@ -95,6 +110,19 @@ return [
                         'POST perfil' => 'create',// Cria perfil
                         'PUT perfil' => 'update', // Atualiza perfil
                         'DELETE perfil' => 'delete',    // apagar perfil
+                    ],
+                ],
+
+                // Controlador de categorias
+                [
+                'class' => 'yii\rest\UrlRule',
+                'controller' => 'api/categoria',
+                'extraPatterns' => [
+                    'GET index' => 'index', // Lista todas as categorias
+                    'GET view' => 'view', // Mostra detalhes de uma categoria específica
+                    'POST categoria' => 'create', // Cria nova categoria
+                    'PUT categoria' => 'update', // Atualiza uma categoria existente
+                    'DELETE categoria' => 'delete', // Deleta uma categoria
                     ],
                 ],
 

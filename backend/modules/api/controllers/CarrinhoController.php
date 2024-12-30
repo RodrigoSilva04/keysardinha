@@ -133,10 +133,18 @@ class CarrinhoController extends \yii\web\Controller
 
     public function actionUpdate($id)
     {
-        // Encontra o carrinho com o ID fornecido
-        $model = $this->findModel($id);
+        // Procurar o carrinho pelo ID
+        $model = Carrinho::findOne($id);
 
-        // Verifica se a requisição é POST e carrega os dados
+        // Verifica se o carrinho foi encontrado
+        if (!$model) {
+            return Yii::$app->response->setStatusCode(404)->data = [
+                'status' => 'error',
+                'message' => 'Carrinho não encontrado.',
+            ];
+        }
+
+        // Verifica se a requisição é do tipo POST
         if (Yii::$app->request->isPost) {
             // Carrega os dados da requisição no modelo
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -166,10 +174,10 @@ class CarrinhoController extends \yii\web\Controller
 
     public function actionDelete($id)
     {
-        // Busca o modelo com o ID fornecido
-        $model = $this->findModel($id);
+        // Busca o carrinho pelo ID
+        $model = Carrinho::findOne($id);
 
-        // Se o modelo não for encontrado, retornamos uma resposta de erro
+        // Verifica se o carrinho foi encontrado
         if (!$model) {
             return Yii::$app->response->setStatusCode(404)->data = [
                 'status' => 'error',
@@ -177,7 +185,7 @@ class CarrinhoController extends \yii\web\Controller
             ];
         }
 
-        // Deleta o modelo
+        // Deleta o carrinho
         if ($model->delete()) {
             // Retorna uma resposta de sucesso
             return Yii::$app->response->setStatusCode(200)->data = [
