@@ -41,18 +41,17 @@ AppAsset::register($this);
 
 <?php
 
+    $carrinhoQuantidade = 0;
 
-$carrinhoQuantidade = 0;
-
-// Obter o número de itens no carrinho
-if (!Yii::$app->user->isGuest) {
-$carrinho = common\models\Carrinho::findOne(['utilizadorperfil_id' => Yii::$app->user->id]);
-if ($carrinho) {
-$carrinhoQuantidade = LinhaCarrinho::find()
-->where(['carrinho_id' => $carrinho->id])
-->sum('quantidade') ?? 0;
-}
-}
+    // Obter o número de itens no carrinho
+    if (!Yii::$app->user->isGuest) {
+        $carrinho = common\models\Carrinho::findOne(['utilizadorperfil_id' => Yii::$app->user->id]);
+    if ($carrinho) {
+        $carrinhoQuantidade = LinhaCarrinho::find()
+            ->where(['carrinho_id' => $carrinho->id])
+                ->sum('quantidade') ?? 0;
+        }
+    }
 ?>
 
 <!-- Header -->
@@ -70,7 +69,7 @@ $carrinhoQuantidade = LinhaCarrinho::find()
                     <!-- Logo End -->
 
                     <!-- Menu -->
-                    <ul class="nav">
+                    <ul class="nav d-flex justify-content-center align-items-center">
                         <li><?= Html::a('Home', ['/site/index'], ['class' => 'active']) ?></li>
                         <li><?= Html::a('Catálogo', ['/produto/index']) ?></li>
                         <li><?= Html::a('Favoritos', ['/favoritos/index']) ?></li>
@@ -79,7 +78,7 @@ $carrinhoQuantidade = LinhaCarrinho::find()
                             <a class="nav-link" href="<?= Url::to(['carrinho/index']) ?>">
                                 <i class="fas fa-shopping-cart"></i>
                                 <?php if ($carrinhoQuantidade > 0): ?>
-                                    <span class="badge badge-pill badge-primary">
+                                    <span class="badge badge-pill badge-primary ">
                                 <?= $carrinhoQuantidade > 9 ? '9+' : $carrinhoQuantidade ?>
                             </span>
                                 <?php endif; ?>
@@ -88,6 +87,7 @@ $carrinhoQuantidade = LinhaCarrinho::find()
                         <?php if (Yii::$app->user->isGuest): ?>
                             <li><?= Html::a('<i class="fas fa-sign-in-alt"></i> Sign In', ['/site/signup']) ?></li>
                         <?php else: ?>
+                            <li><?= Html::a('Meu Perfil', ['/perfil/index']) ?></li>
                             <li><?= Html::a('<i class="fas fa-sign-out-alt"></i> Logout (' . Yii::$app->user->identity->username . ')', ['/site/logout'], ['data-method' => 'post']) ?></li>
                         <?php endif; ?>
 

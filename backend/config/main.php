@@ -49,15 +49,16 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/produto', // Controlador de produtos
-                    'extraPatterns' => [
-                        'GET view' => 'view',    // Mostra todos os produtos
-                        'POST produto' => 'create', // Cria produto
-                        'PUT produto' => 'update', // Atualiza produto
-                        'DELETE produto' => 'delete', // Apagar produto
-                        'GET count' => 'count',  // Conta quantos jogos há
-                        'GET search' => 'search', // Pesquisar jogos
-                        'GET filter' => 'filter',  // Filtrar por categoria
-                        'GET {id}/detalhes' => 'detalhes', // Ver detalhes de um jogo
+                'extraPatterns' => [
+                    'GET index' => 'index', //Lista todos os produtos
+                    'GET view' => 'view', // Mostra todos os produtos
+                    'POST produto' => 'create',// Cria produto
+                    'PUT produto' => 'update', // Atualiza produto
+                    'DELETE produto' => 'delete',    // apagar produto
+                    'GET count' => 'count',  // Conta quanto jogos há
+                    'GET search' => 'search', // Pesquisar jogos.
+                    'GET filter' => 'filter',  // Filtrar por categoria.
+                    'GET {id}/detalhes' => 'detalhes', // Ver detalhes de um jogo
                     ],
                     'pluralize' => false, // Evitar o plural
                 ],
@@ -76,16 +77,43 @@ return [
                     'pluralize' => false, // Evitar o plural
                 ],
 
+                // Faturas
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/fatura',
+                    'extraPatterns' => [
+                        'GET index' => 'index',// Ver todas as faturas do utilizador
+                        'GET {id}' => 'view', // Ver detalhes de uma fatura específica.                        'PUT update/{id}' => 'update', // Atualizar item no carrinho
+                        'POST create' => 'create',         // Criar uma nova fatura.
+                        'PUT update/{id}' => 'update',     // Atualizar uma fatura existente.
+                        'DELETE delete/{id}' => 'delete', // Apagar uma fatura.
+                    ],
+                ],
+
                 // Favoritos
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/favoritos',
                     'extraPatterns' => [
+                        'GET index' => 'index', //Lista todos os favoritos do user
                         'POST add' => 'add', // Adicionar aos favoritos.
                         'DELETE remove/{id}' => 'remove',  // Remover dos favoritos.
                         'GET offline' => 'offline',  // Gerir favoritos offline.
                     ],
                     'pluralize' => false, // Evitar o plural
+                ],
+
+                //Chaves digitais
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/chavedigital',
+                    'extraPatterns' => [
+                        'GET index' => 'index', // Lista todas as chaves digitais
+                        'GET view' => 'view', // Mostra detalhes de uma chave digital específica
+                        'POST chavedigital' => 'create', // Cria nova chave digital
+                        'PUT chavedigital' => 'update', // Atualiza uma chave digital existente
+                        'DELETE chavedigital' => 'delete', // Deleta uma chave digital
+                    ],
                 ],
 
                 // Perfil do utilizador
@@ -101,7 +129,20 @@ return [
                     'pluralize' => false, // Evitar o plural
                 ],
 
-                // Métodos de pagamento e faturas
+                // Controlador de categorias
+                [
+                'class' => 'yii\rest\UrlRule',
+                'controller' => 'api/categoria',
+                'extraPatterns' => [
+                    'GET index' => 'index', // Lista todas as categorias
+                    'GET view' => 'view', // Mostra detalhes de uma categoria específica
+                    'POST categoria' => 'create', // Cria nova categoria
+                    'PUT categoria' => 'update', // Atualiza uma categoria existente
+                    'DELETE categoria' => 'delete', // Deleta uma categoria
+                    ],
+                ],
+
+                // Métodos de pagamento
                 // Ver fazer junto ou separado
                 [
                     'class' => 'yii\rest\UrlRule',
@@ -110,15 +151,6 @@ return [
                         'GET metodos' => 'metodos',            // Listar métodos de pagamento.
                         'POST email-recibo' => 'email-recibo', // Enviar email com recibo.
                         'POST email-chave' => 'email-chave',   // Enviar chave do jogo.
-                    ],
-                    'pluralize' => false, // Evitar o plural
-                ],
-                [
-                    'class' => 'yii\rest\UrlRule',
-                    'controller' => 'api/fatura',
-                    'extraPatterns' => [
-                        'GET faturas' => 'faturas', // Listar faturas.
-                        'POST fatura' => 'fatura',  // Criar fatura.
                     ],
                     'pluralize' => false, // Evitar o plural
                 ],
@@ -136,6 +168,7 @@ return [
                     ],
                     'pluralize' => false, // Evitar o plural
                 ],
+
 
             ], //End rules
 

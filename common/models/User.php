@@ -62,7 +62,9 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED, self::STATUS_BLOCKED]], // Fechamento do colchete aqui
             [['username', 'email'], 'required'], // Campos obrigatórios agrupados corretamente
             ['email', 'email'], // Validação de e-mail
+            ['email', 'unique', 'targetClass' => self::class, 'message' => 'Este e-mail já está ser usado.'],
             ['username', 'string', 'max' => 255], // Tamanho máximo do username
+            ['username', 'unique', 'targetClass' => self::class, 'message' => 'Este nome de utilizador já está a ser usado.'],
             ['email', 'string', 'max' => 255], // Tamanho máximo do e-mail
             ['password', 'string', 'min' => 6], // Senha deve ter no mínimo 6 caracteres
         ];
