@@ -88,6 +88,7 @@ return [
                         'PUT update/{id}' => 'update',     // Atualizar uma fatura existente.
                         'DELETE delete/{id}' => 'delete', // Apagar uma fatura.
                     ],
+                    'pluralize' => false, // Evitar o plural
                 ],
 
                 // Favoritos
@@ -114,6 +115,7 @@ return [
                         'PUT chavedigital' => 'update', // Atualiza uma chave digital existente
                         'DELETE chavedigital' => 'delete', // Deleta uma chave digital
                     ],
+                    'pluralize' => false, // Evitar o plural
                 ],
 
                 // Perfil do utilizador
@@ -140,6 +142,7 @@ return [
                     'PUT categoria' => 'update', // Atualiza uma categoria existente
                     'DELETE categoria' => 'delete', // Deleta uma categoria
                     ],
+                    'pluralize' => false, // Evitar o plural
                 ],
 
                 // Métodos de pagamento
