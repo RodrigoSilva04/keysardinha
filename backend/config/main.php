@@ -101,6 +101,19 @@ return [
                     ],
                 ],
 
+                //Chaves digitais
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/chavedigital',
+                    'extraPatterns' => [
+                        'GET index' => 'index', // Lista todas as chaves digitais
+                        'GET view' => 'view', // Mostra detalhes de uma chave digital específica
+                        'POST chavedigital' => 'create', // Cria nova chave digital
+                        'PUT chavedigital' => 'update', // Atualiza uma chave digital existente
+                        'DELETE chavedigital' => 'delete', // Deleta uma chave digital
+                    ],
+                ],
+
                 // Perfil do utilizador
                 [
                     'class' => 'yii\rest\UrlRule',
@@ -126,7 +139,7 @@ return [
                     ],
                 ],
 
-                // Métodos de pagamento e faturas
+                // Métodos de pagamento
                 // Ver fazer junto ou separado
                 [
                     'class' => 'yii\rest\UrlRule',
