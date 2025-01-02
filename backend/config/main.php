@@ -49,16 +49,17 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/produto', // Controlador de produtos
-                'extraPatterns' => [
-                    'GET view' => 'view',// mostra todos os produtos
-                    'POST produto' => 'create',// Cria produto
-                    'PUT produto' => 'update', // Atualiza produto
-                    'DELETE produto' => 'delete',    // apagar produto
-                    'GET count' => 'count',  // Conta quanto jogos há
-                    'GET search' => 'search', // Pesquisar jogos.
-                    'GET filter' => 'filter',  // Filtrar por categoria.
-                    'GET {id}/detalhes' => 'detalhes', // Ver detalhes de um jogo
+                    'extraPatterns' => [
+                        'GET view' => 'view',    // Mostra todos os produtos
+                        'POST produto' => 'create', // Cria produto
+                        'PUT produto' => 'update', // Atualiza produto
+                        'DELETE produto' => 'delete', // Apagar produto
+                        'GET count' => 'count',  // Conta quantos jogos há
+                        'GET search' => 'search', // Pesquisar jogos
+                        'GET filter' => 'filter',  // Filtrar por categoria
+                        'GET {id}/detalhes' => 'detalhes', // Ver detalhes de um jogo
                     ],
+                    'pluralize' => false, // Evitar o plural
                 ],
                 // Carrinho de compras
                 [
@@ -84,18 +85,20 @@ return [
                         'DELETE remove/{id}' => 'remove',  // Remover dos favoritos.
                         'GET offline' => 'offline',  // Gerir favoritos offline.
                     ],
+                    'pluralize' => false, // Evitar o plural
                 ],
 
                 // Perfil do utilizador
                 [
                     'class' => 'yii\rest\UrlRule',
-                    'controller' => 'api/perfil',
+                    'controller' => 'api/user',
                     'extraPatterns' => [
                         'GET view' => 'view',// Ver perfil do utilizador.
-                        'POST perfil' => 'create',// Cria perfil
-                        'PUT perfil' => 'update', // Atualiza perfil
-                        'DELETE perfil' => 'delete',    // apagar perfil
+                        'POST user' => 'create',// Cria perfil
+                        'PUT user' => 'update', // Atualiza perfil
+                        'DELETE user' => 'delete',    // apagar perfil
                     ],
+                    'pluralize' => false, // Evitar o plural
                 ],
 
                 // Métodos de pagamento e faturas
@@ -108,8 +111,31 @@ return [
                         'POST email-recibo' => 'email-recibo', // Enviar email com recibo.
                         'POST email-chave' => 'email-chave',   // Enviar chave do jogo.
                     ],
+                    'pluralize' => false, // Evitar o plural
                 ],
-
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/fatura',
+                    'extraPatterns' => [
+                        'GET faturas' => 'faturas', // Listar faturas.
+                        'POST fatura' => 'fatura',  // Criar fatura.
+                    ],
+                    'pluralize' => false, // Evitar o plural
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/cupao',
+                    'extraPatterns' => [
+                        'GET view' => 'view',
+                        'POST cupao' => 'create',
+                        'PUT cupao' => 'update',
+                        'DELETE cupao' => 'delete',
+                        'GET count' => 'count',
+                        'GET search' => 'search',
+                        'GET {id}/detalhes' => 'detalhes',
+                    ],
+                    'pluralize' => false, // Evitar o plural
+                ],
 
             ], //End rules
 

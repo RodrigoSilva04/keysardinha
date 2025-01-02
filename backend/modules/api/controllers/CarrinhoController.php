@@ -4,22 +4,26 @@ namespace app\modules\api\controllers;
 
 use backend\modules\api\components\CustomAuth;
 use common\models\Carrinho;
+use common\models\Chavedigital;
 use common\models\Cupao;
+use common\models\Fatura;
 use common\models\Linhacarrinho;
+use common\models\Linhafatura;
+use common\models\Metodopagamento;
 use common\models\Produto;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
+use yii\rest\ActiveController;
 use yii\rest\Controller;
 
-class CarrinhoController extends \yii\web\Controller
+class CarrinhoController extends ActiveController
 {
-
+    public $modelClass = 'common\models\Carrinho';
     public function behaviors()
     {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => CustomAuth::className(),
-            'tokenParam' => 'access-token',
         ];
         return $behaviors;
     }
@@ -167,10 +171,10 @@ class CarrinhoController extends \yii\web\Controller
     public function actionDelete($id)
     {
         // Busca o modelo com o ID fornecido
-        $model = $this->findModel($id);
+        $carrinho = $this->findModel($id);
 
         // Se o modelo não for encontrado, retornamos uma resposta de erro
-        if (!$model) {
+        if (!$carrinho) {
             return Yii::$app->response->setStatusCode(404)->data = [
                 'status' => 'error',
                 'message' => 'Carrinho não encontrado.',
@@ -178,7 +182,10 @@ class CarrinhoController extends \yii\web\Controller
         }
 
         // Deleta o modelo
-        if ($model->delete()) {
+        if ($carrinho->delete()) {
+            //Da tb delete nas linhas do carrinho com o id do carrinho
+            Linhacarrinho::deleteAll(['carrinho_id' => $carrinho->id]);
+
             // Retorna uma resposta de sucesso
             return Yii::$app->response->setStatusCode(200)->data = [
                 'status' => 'success',
@@ -205,7 +212,7 @@ class CarrinhoController extends \yii\web\Controller
             $carrinho = new Carrinho();
             $carrinho->utilizadorperfil_id = $userId;
             if (!$carrinho->save()) {
-                Yii::error('Erro ao criar o carrinho para o usuário ID: ' . $userId . '. Erros: ' . json_encode($carrinho->errors), __METHOD__);
+                Yii::error('Erro ao criar o carrinho para o utilizador ID: ' . $userId . '. Erros: ' . json_encode($carrinho->errors), __METHOD__);
                 return Yii::$app->response->setStatusCode(400)->data = [
                     'status' => 'error',
                     'message' => 'Erro ao criar o carrinho.',
@@ -322,11 +329,221 @@ class CarrinhoController extends \yii\web\Controller
         }
     }
 
-    // Finalizar compra
+    // Rever a compra e preparar o checkout
     public function actionCheckout()
     {
-        // Implementação para finalizar a compra e gerar a fatura
+        $userId = Yii::$app->user->id;
+
+        // Obter o carrinho do utilizador
+        $carrinho = Carrinho::findOne(['utilizadorperfil_id' => $userId]);
+
+        if (!$carrinho) {
+            return Yii::$app->response->setStatusCode(404)->data = [
+                'status' => 'error',
+                'message' => 'Carrinho não encontrado.',
+            ];
+        }
+
+        // Verificar se o carrinho tem produtos
+        if (empty($carrinho->linhacarrinhos)) {
+            return Yii::$app->response->setStatusCode(400)->data = [
+                'status' => 'error',
+                'message' => 'Carrinho vazio.',
+            ];
+        }
+
+        // Verificar o cupão e calcular o desconto
+        $cupao = $carrinho->cupao;
+        $descontocupao = $cupao ? $cupao->valor : 0;
+
+        // Verificar estoque dos produtos
+        foreach ($carrinho->linhacarrinhos as $linha) {
+            $produto = Produto::findOne($linha->produto_id);
+            if ($produto->stockdisponivel < $linha->quantidade) {
+                return Yii::$app->response->setStatusCode(400)->data = [
+                    'status' => 'error',
+                    'message' => "O produto '{$produto->nome}' não tem stock suficiente. Remova o produto do carrinho.",
+                ];
+            }
+        }
+
+        // Calcular subtotal
+        $subtotal = 0;
+        foreach ($carrinho->linhacarrinhos as $linha) {
+            $subtotal += $linha->preco_unitario * $linha->quantidade;
+        }
+
+        // Calcular total com desconto
+        $totalComDesconto = $subtotal - $descontocupao;
+
+        // Calcular IVA
+        $totalIVA = 0;
+        foreach ($carrinho->linhacarrinhos as $linha) {
+            $totalIVA += ($linha->preco_unitario * $linha->produto->iva->taxa / 100) * $linha->quantidade;
+        }
+
+        // Preparar os métodos de pagamento
+        $metodospagamento = Metodopagamento::find()->all();
+        $metodospagamentoArray = [];
+        foreach ($metodospagamento as $metodo) {
+            $metodospagamentoArray[] = [
+                'id' => $metodo->id,
+                'nomemetodopagamento' => $metodo->nomemetodopagamento,
+            ];
+        }
+
+        // Responder com os detalhes do checkout
+        return Yii::$app->response->setStatusCode(200)->data = [
+            'status' => 'success',
+            'data' => [
+                'carrinho_id' => $carrinho->id,
+                'linhas_carrinho' => array_map(function ($linha) {
+                    return [
+                        'produto_id' => $linha->produto_id,
+                        'nome' => $linha->produto->nome,
+                        'quantidade' => $linha->quantidade,
+                        'preco_unitario' => $linha->preco_unitario,
+                    ];
+                }, $carrinho->linhacarrinhos),
+                'subtotal' => $subtotal,
+                'desconto_cupao' => $descontocupao,
+                'total_com_desconto' => $totalComDesconto,
+                'total_iva' => $totalIVA,
+                'metodos_pagamento' => $metodospagamentoArray,
+            ],
+        ];
     }
+
+    // Concluir a compra
+    public function actionFinalizarCompra($metodopagamento_id)
+    {
+        $idUtilizador = Yii::$app->user->id;
+
+        // Verificar se o utilizador tem carrinho ativo
+        $carrinho = Carrinho::findOne(['utilizadorperfil_id' => $idUtilizador]);
+
+        // Verificar se o carrinho existe
+        if (!$carrinho) {
+            return Yii::$app->response->setStatusCode(404)->data = [
+                'status' => 'error',
+                'message' => 'Carrinho não encontrado.',
+            ];
+        }
+
+        // Verificar se o carrinho tem produtos
+        if (count($carrinho->linhacarrinhos) == 0) {
+            return Yii::$app->response->setStatusCode(400)->data = [
+                'status' => 'error',
+                'message' => 'Carrinho vazio.',
+            ];
+        }
+
+        $metodoPagamento = Metodopagamento::findOne($metodopagamento_id);
+        if (!$metodoPagamento) {
+            return Yii::$app->response->setStatusCode(400)->data = [
+                'status' => 'error',
+                'message' => 'Método de pagamento inválido.',
+            ];
+        }
+
+        // Verificar se o carrinho tem um cupão
+        $cupao = $carrinho->cupao_id ? Cupao::findOne($carrinho->cupao_id) : null;
+        $desconto = $cupao ? $cupao->valor : 0;
+
+        $subtotal = 0;
+        $valorIVA = 0;
+
+        // Vai buscar as linhas carrinho
+        $linhasCarrinho = $carrinho->linhacarrinhos;
+
+        // Calcula o subtotal e o valor do IVA
+        foreach ($linhasCarrinho as $linha) {
+            $subtotal += $linha->produto->preco * $linha->quantidade;
+            $valorIVA += ($linha->produto->preco * $linha->produto->iva->taxa / 100) * $linha->quantidade;
+        }
+
+        // Calcula o valor total com desconto
+        $valorTotal = $subtotal - $desconto;
+
+        // Criar a fatura
+        $fatura = new Fatura();
+        $fatura->datafatura = date('Y-m-d H:i:s');
+        $fatura->totalciva = $valorIVA;
+        $fatura->subtotal = $subtotal;
+        $fatura->valor_total = $valorTotal;
+        $fatura->estado = 'Pago';
+        $fatura->descontovalor = $desconto;
+        $fatura->datapagamento = date('Y-m-d H:i:s');
+        $fatura->utilizadorperfil_id = $idUtilizador;
+        $fatura->metodopagamento_id = (int)$metodopagamento_id;
+        $fatura->cupao_id = $carrinho->cupao_id;
+
+        if ($fatura->save()) {
+            // Atribui as linhas da fatura
+            foreach ($linhasCarrinho as $linha) {
+                $produto = Produto::findOne($linha->produto_id);
+                $linhaFatura = new LinhaFatura();
+                $linhaFatura->quantidade = $linha->quantidade;
+                $linhaFatura->precounitario = $linha->produto->preco;
+                $linhaFatura->subtotal = $linha->produto->preco * $linha->quantidade;
+                $linhaFatura->fatura_id = $fatura->id;
+                $linhaFatura->desconto_id = $linha->produto->desconto_id;
+                $linhaFatura->iva_id = $linha->produto->iva_id;
+                $linhaFatura->produto_id = $linha->produto_id;
+
+                // Verifica se tem stock de chaves
+                $chaveDigital = Chavedigital::find()->where(['produto_id' => $linha->produto_id, 'estado' => 'nao usada'])->one();
+                if ($chaveDigital) {
+                    $linhaFatura->chavedigital_id = $chaveDigital->id;
+                    $chaveDigital->estado = 'usada';
+                    $chaveDigital->datavenda = date('Y-m-d H:i:s');
+                    $chaveDigital->save();
+                } else {
+                    return Yii::$app->response->setStatusCode(400)->data = [
+                        'status' => 'error',
+                        'message' => 'O produto ' . $produto->nome . ' não tem chaves disponíveis. Por favor, contacta o suporte.',
+                    ];
+                }
+
+                if (!$linhaFatura->save()) {
+                    return Yii::$app->response->setStatusCode(500)->data = [
+                        'status' => 'error',
+                        'message' => 'Erro ao salvar linha de fatura: ' . json_encode($linhaFatura->errors),
+                    ];
+                }
+
+                $produto->stockdisponivel -= $linha->quantidade;
+                $produto->save();
+            }
+
+            // Limpar o carrinho
+            foreach ($linhasCarrinho as $linha) {
+                $linha->delete();
+            }
+
+            // Limpar o cupão se existir
+            if ($carrinho->cupao_id) {
+                $cupao->ativo = 0;
+                $carrinho->cupao_id = null;
+                $cupao->save();
+                $carrinho->save();
+            }
+
+            return Yii::$app->response->setStatusCode(200)->data = [
+                'status' => 'success',
+                'message' => 'Compra efetuada com sucesso!',
+                'fatura_id' => $fatura->id,
+            ];
+        } else {
+            return Yii::$app->response->setStatusCode(500)->data = [
+                'status' => 'error',
+                'message' => 'Erro ao criar a fatura.',
+            ];
+        }
+    }
+
+
+
 
     // Aplicar cupão
         public function actionVerificarCupao()
@@ -385,7 +602,7 @@ class CarrinhoController extends \yii\web\Controller
                 'message' => 'Cupão aplicado com sucesso!',
                 'cupao' => [
                     'codigo' => $cupao->codigo,
-                    'desconto' => $cupao->desconto,
+                    'valor' => $cupao->valor,
                 ],
             ];
         } else {

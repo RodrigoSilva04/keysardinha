@@ -3,6 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use backend\modules\api\components\CustomAuth;
+use common\models\Produto;
 use Yii;
 use yii\rest\ActiveController;
 
@@ -26,6 +27,23 @@ class ProdutoController extends ActiveController
             //only=> ['index'], //Apenas para o GET
         ];
         return $behaviors;
+    }
+    public function actionCreate()
+    {
+        $produto = new Produto();
+
+        // Carregar dados da requisição POST
+        if ($produto->load(Yii::$app->request->post(), '') && $produto->save()) {
+            return Yii::$app->response->setStatusCode(200)->data = [
+                'status' => 'success',
+                'message' => 'Produto criado com sucesso.',
+            ];
+        } else {
+            return Yii::$app->response->setStatusCode(400)->data = [
+                'status' => 'error',
+                'message' => 'Erro ao criar o produto.',
+            ];
+        }
     }
 
     // Pesquisar jogos

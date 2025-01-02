@@ -14,6 +14,7 @@ use Yii;
  * @property string|null $codigo
  *
  * @property Carrinho[] $carrinhos
+ * @property Fatura[] $faturas
  */
 class Cupao extends \yii\db\ActiveRecord
 {
@@ -59,5 +60,15 @@ class Cupao extends \yii\db\ActiveRecord
     public function getCarrinhos()
     {
         return $this->hasMany(Carrinho::class, ['cupao_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Faturas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFaturas()
+    {
+        return $this->hasMany(Fatura::class, ['cupao_id' => 'id']);
     }
 }

@@ -13,17 +13,18 @@ class CustomAuth extends AuthMethod
 
         // Se o token não foi encontrado, lança erro
         if (!$authToken) {
-            throw new ForbiddenHttpException('No authentication');
+            $response->setStatusCode(401);
+            throw new \yii\web\UnauthorizedHttpException('Token de autenticaçao nao fornecido.');
         }
 
         // Verifica a autenticidade do token
         $user = \common\models\User::findIdentityByAccessToken($authToken);
         if (!$user) {
-            throw new ForbiddenHttpException('Invalid authentication token');
+            throw new \yii\web\UnauthorizedHttpException('Token de autenticaçao invalido');
         }
 
-        // Define o ID do usuário para uso posterior, se necessário
-        Yii::$app->params['id'] = $user->id;
+        // Define o ID do utilizador para uso posterior, se necessário
+        Yii::$app->user->setIdentity($user);
 
         return $user;
     }

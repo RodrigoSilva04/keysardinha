@@ -8,7 +8,7 @@ use yii\rest\ActiveController;
 
 class FavoritosController extends ActiveController
 {
-
+    public $modelClass = 'common\models\Favoritos';
     public function behaviors()
     {
         $behaviors = parent::behaviors();

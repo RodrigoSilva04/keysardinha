@@ -4,91 +4,28 @@
 use yii\bootstrap4\Breadcrumbs;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\web\View;
 
-// Defina os cards para o colaborador
-// Definição dos cards para as roles 'colaborador' e 'admin' no backoffice
-
-
-$cards = [
-    'collaborator' => [
-        [
-            'title' => 'Gerir Jogos',
-            'url' => Url::to(['game/index']),
-            'image' => '../web/imagens/managegames.png',
-            'description' => 'Adicione, edite ou remova jogos.',
-            'permission' => 'manageGames',
-        ],
-        [
-            'title' => 'Gerir chave de jogos',
-            'url' => Url::to(['game/index']),
-            'image' => '../web/imagens/gerirchavejogo.png',
-            'description' => 'Adicione, edite ou remova chaves de jogos.',
-            'permission' => 'manageGamesKey',
-        ],
-        [
-            'title' => 'Gerir Promoções',
-            'url' => Url::to(['promotions/index']),
-            'image' => '../web/imagens/gerirpromocoes.png',
-            'description' => 'Gerencie promoções e ofertas especiais.',
-            'permission' => 'managePromotions',
-        ],
-        [
-            'title' => 'Gerir Categorias',
-            'url' => Url::to(['categories/index']),
-            'image' => '../web/imagens/gerircategorias.png',
-            'description' => 'Gerencie categorias de jogos.',
-            'permission' => 'manageCategories',
-        ],
-        [
-            'title' => 'Visualizar Estatísticas de Vendas',
-            'url' => Url::to(['sales-statistics/index']),
-            'image' => '../web/imagens/gerirestatsticas.png',
-            'description' => 'Veja as estatísticas de vendas.',
-            'permission' => 'viewSalesStatistics',
-        ],
-
-    ],
-];
-
-// Cards para o admin que herdam os cards do colaborador
-$cards['admin'] = array_merge($cards['collaborator'], [
-    [
-        'title' => 'Gerir Utilizadores',
-        'url' => Url::to(['user/index']),
-        'image' => '../web/imagens/usermanageicon.png',
-        'description' => 'Gere as roles de cada utilizador registado no nosso sistema.',
-        'permission' => 'manageUsers',
-    ],
-    [
-        'title' => 'Gerir Encomendas',
-        'url' => Url::to(['orders/index']),
-        'image' => '../web/imagens/gestaodeencomendas.png',
-        'description' => 'Verifique as encomendas realizadas.',
-        'permission' => 'viewOrders',
-    ],
-    [
-        'title' => 'Gerir Métodos de Pagamento',
-        'url' => Url::to(['payment-methods/index']),
-        'image' => '../web/imagens/gerirmetodos.png',
-        'description' => 'Gerencie os métodos de pagamento disponíveis.',
-        'permission' => 'managePaymentMethods',
-    ],
-    [
-        'title' => 'Gerar Relatórios',
-        'url' => Url::to(['reports/index']),
-        'image' => '../web/imagens/gerirrelatorios.png',
-        'description' => 'Gere relatórios de vendas e outros dados.',
-        'permission' => 'generateReports',
-    ],
+$this->registerCssFile('@web/css/site.css', [
+    'depends' => [\yii\bootstrap4\BootstrapAsset::class],
 ]);
 
-$auth = Yii::$app->authManager;
-$roles = $auth->getRolesByUser(Yii::$app->user->id);
-$userRole = !empty($roles) ? key($roles) : null;
-$userPermissions = array_keys($auth->getPermissionsByUser(Yii::$app->user->id));
+// Registrando o Font Awesome (CDN)
+$this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css', [
+    'integrity' => 'sha384-...', // Se necessário, adicione o atributo de integridade
+    'crossorigin' => 'anonymous',
+]);
 
-$availableCards = $cards[$userRole] ?? [];
-
+// Registrando o jQuery (CDN)
+$this->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js', [
+    'integrity' => 'sha384-...', // Se necessário, adicione o atributo de integridade
+    'crossorigin' => 'anonymous',
+    'position' => View::POS_HEAD, // Define o posicionamento do script
+]);
+//Registe js site.js
+$this->registerJsFile('@web/js/site.js', [
+    'depends' => [\yii\web\JqueryAsset::class],
+]);
 ?>
 
 
@@ -109,38 +46,40 @@ $availableCards = $cards[$userRole] ?? [];
         </div>
     </div>
 
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <?php
-                // Verificar se estamos na página do dashboard ou outras páginas do backoffice
-                if ($this->context->id === 'site' && $this->context->action->id === 'index'):
-                    ?>
-                    <!-- Exibe os cards no dashboard -->
-                    <?php if (!empty($availableCards)): ?>
-                    <?php foreach ($availableCards as $card): ?>
-                        <?php if (in_array($card['permission'], $userPermissions)): ?>
-                            <div class="card" style="width: 18rem; margin: 10px;">
-                                <img src="<?= Html::encode($card['image']) ?>" class="card-img-top" alt="<?= Html::encode($card['title']) ?>">
-                                <div class="card-body">
-                                    <h5 class="card-title"><?= Html::encode($card['title']) ?></h5>
-                                    <p class="card-text"><?= Html::encode($card['description']) ?></p>
-                                    <a href="<?= Html::encode($card['url']) ?>" class="btn btn-primary">Ir para</a>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="alert alert-warning" role="alert">
-                        Não há opções disponíveis para a sua role.
-                    </div>
-                <?php endif; ?>
-                <?php else: ?>
-                    <!-- Aqui vai renderizar o conteúdo das outras páginas (por exemplo, a listagem de usuários em user/index) -->
-                    <?= $content ?>
-                <?php endif; ?>
-            </div>
 
+    <div class="container">
+
+        <div class="row">
+
+            <div class="four col-md-3">
+                <div class="counter-box colored">
+                    <i class="fa fa-thumbs-o-up"></i>
+                    <span class="counter">2147</span>
+                    <p>Happy Customers</p>
+                </div>
+            </div>
+            <div class="four col-md-3">
+                <div class="counter-box">
+                    <i class="fa fa-group"></i>
+                    <span class="counter">3275</span>
+                    <p>Registered Members</p>
+                </div>
+            </div>
+            <div class="four col-md-3">
+                <div class="counter-box">
+                    <i class="fa  fa-shopping-cart"></i>
+                    <span class="counter">289</span>
+                    <p>Available Products</p>
+                </div>
+            </div>
+            <div class="four col-md-3">
+                <div class="counter-box">
+                    <i class="fa  fa-user"></i>
+                    <span class="counter">1563</span>
+                    <p>Saved Trees</p>
+                </div>
+            </div>
         </div>
     </div>
+
 </div>
