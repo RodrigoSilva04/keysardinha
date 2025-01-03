@@ -69,7 +69,7 @@ class Fatura extends \yii\db\ActiveRecord
             'descontovalor' => 'Descontovalor',
             'datapagamento' => 'Datapagamento',
             'utilizadorperfil_id' => 'Utilizadorperfil ID',
-            'metodopagamento_id' => 'Metodopagamento ID',
+            'metodopagamento_id' => 'MetodopagamentoController ID',
             'desconto_id' => 'Desconto ID',
             'cupao_id' => 'Cupao ID',
         ];
@@ -106,7 +106,7 @@ class Fatura extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Metodopagamento]].
+     * Gets query for [[MetodopagamentoController]].
      *
      * @return \yii\db\ActiveQuery
      */

@@ -62,11 +62,12 @@ class FaturaController extends Controller
     {
         $linhasFatura = Linhafatura::find()->where(['fatura_id' => $id])->all();
 
-
+        $numeroLinhas = count($linhasFatura);
 
         return $this->render('view', [
             'fatura' => $this->findModel($id),
             'linhasFatura' => $linhasFatura,
+            'numeroLinhas' => $numeroLinhas
         ]);
     }
 

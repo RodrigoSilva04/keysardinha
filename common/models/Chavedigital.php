@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "chavedigital".
@@ -16,7 +17,7 @@ use Yii;
  * @property Linhafatura[] $linhafaturas
  * @property Produto $produto
  */
-class Chavedigital extends \yii\db\ActiveRecord
+class Chavedigital extends ActiveRecord
 {
     /**
      * {@inheritdoc}

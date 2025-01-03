@@ -43,6 +43,7 @@ class Produto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['nome'], 'required'],
             [['descricao'], 'string'],
             [['preco'], 'number'],
             [['datalancamento'], 'safe'],

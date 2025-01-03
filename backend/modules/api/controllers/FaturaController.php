@@ -1,13 +1,25 @@
 <?php
 
-namespace app\modules\api\controllers;
+namespace backend\modules\api\controllers;
 
+use backend\modules\api\components\CustomAuth;
 use common\models\Fatura;
 use common\models\Linhafatura;
 use Yii;
+use yii\rest\ActiveController;
 
-class FaturaController extends \yii\web\Controller
+class FaturaController extends ActiveController
 {
+    public $modelClass = 'common\models\Fatura';
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => CustomAuth::className(),
+        ];
+        return $behaviors;
+    }
     public function actionIndex()
     {
         // Obtém o ID do utilizador logado

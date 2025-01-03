@@ -9,7 +9,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * MetodopagamentoController implements the CRUD actions for Metodopagamento model.
+ * MetodopagamentoController implements the CRUD actions for MetodopagamentoController model.
  */
 class MetodopagamentoController extends Controller
 {
@@ -32,7 +32,7 @@ class MetodopagamentoController extends Controller
     }
 
     /**
-     * Lists all Metodopagamento models.
+     * Lists all MetodopagamentoController models.
      *
      * @return string
      */
@@ -58,7 +58,7 @@ class MetodopagamentoController extends Controller
     }
 
     /**
-     * Displays a single Metodopagamento model.
+     * Displays a single MetodopagamentoController model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -71,7 +71,7 @@ class MetodopagamentoController extends Controller
     }
 
     /**
-     * Creates a new Metodopagamento model.
+     * Creates a new MetodopagamentoController model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
@@ -93,7 +93,7 @@ class MetodopagamentoController extends Controller
     }
 
     /**
-     * Updates an existing Metodopagamento model.
+     * Updates an existing MetodopagamentoController model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -113,7 +113,7 @@ class MetodopagamentoController extends Controller
     }
 
     /**
-     * Deletes an existing Metodopagamento model.
+     * Deletes an existing MetodopagamentoController model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -127,7 +127,7 @@ class MetodopagamentoController extends Controller
     }
 
     /**
-     * Finds the Metodopagamento model based on its primary key value.
+     * Finds the MetodopagamentoController model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
      * @return Metodopagamento the loaded model

@@ -2,7 +2,10 @@
 
 namespace backend\controllers;
 
+use common\models\Fatura;
 use common\models\LoginForm;
+use common\models\Produto;
+use common\models\User;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -62,8 +65,33 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $numeroclientes = User::find()->where(['status' => 10])->count();
+        $numeroprodutos = Produto::find()->count();
+        $numerofaturas = Fatura::find()->count();
+
+        // Usando o modelo Fatura para obter vendas por data
+        $vendasPorData = Fatura::find()
+            ->select(['DATE(datafatura) AS data', 'COUNT(*) AS vendas'])
+            ->groupBy(['DATE(datafatura)'])
+            ->orderBy(['DATE(datafatura)' => SORT_ASC])
+            ->asArray()
+            ->all();
+
+        // Extrair datas e vendas para passá-las para o JavaScript
+        $datas = array_column($vendasPorData, 'data');
+        $vendas = array_column($vendasPorData, 'vendas');
+
+        return $this->render('index', [
+            'numeroclientes' => $numeroclientes,
+            'numeroprodutos' => $numeroprodutos,
+            'numerofaturas' => $numerofaturas,
+            'datas' => $datas,
+            'vendas' => $vendas,
+        ]);
     }
+
+
+
 
     /**
      * Login action.

@@ -3,5 +3,4 @@ actor: UnitTester
 modules:
   enabled:
     - Yii2:
-        configFile: 'backend/config/test.php'
-    - Asserts
+        part: [orm, email, fixtures]

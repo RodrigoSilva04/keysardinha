@@ -109,7 +109,8 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/chavedigital',
                     'extraPatterns' => [
-                        'GET index' => 'index', // Lista todas as chaves digitais
+                         // Lista todas as chaves digitais
+                        'GET index' => 'index',
                         'GET view' => 'view', // Mostra detalhes de uma chave digital específica
                         'POST chavedigital' => 'create', // Cria nova chave digital
                         'PUT chavedigital' => 'update', // Atualiza uma chave digital existente
@@ -171,6 +172,17 @@ return [
                     ],
                     'pluralize' => false, // Evitar o plural
                 ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/metodopagamento',
+                    'extraPatterns' => [
+                        'GET index' => 'index',
+                        'GET view' => 'view',
+                        'POST create' => 'create',
+                        'PUT update/{id}' => 'update',
+                        'DELETE delete/{id}' => 'delete',
+                    ],
+                ]
 
 
             ], //End rules

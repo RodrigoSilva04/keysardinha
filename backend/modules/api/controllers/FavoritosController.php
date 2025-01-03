@@ -3,6 +3,9 @@
 namespace backend\modules\api\controllers;
 
 use backend\modules\api\components\CustomAuth;
+use common\models\Favoritos;
+use common\models\Utilizadorperfil;
+use Yii;
 use yii\rest\ActiveController;
 
 class FavoritosController extends ActiveController
@@ -17,8 +20,6 @@ class FavoritosController extends ActiveController
         ];
         return $behaviors;
     }
-
-    public $modelClass = 'common\models\Favoritos';
 
     public function actionIndex()
     {

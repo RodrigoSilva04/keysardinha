@@ -3,51 +3,73 @@
 /** @var yii\web\View $this */
 
 $this->title = 'My Yii Application';
+
+// Registrar o Chart.js CDN
+$this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', [
+    'crossorigin' => 'anonymous',
+]);
+
+// Registrar graficos.js
+$this->registerJsFile('@web/js/graficos.js', [
+    'depends' => [\yii\web\JqueryAsset::class],
+]);
+
 ?>
 <div class="site-index">
 
-    <div class="jumbotron text-center bg-transparent">
-        <h1 class="display-4">Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="https://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
     <div class="body-content">
 
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+        <div class="container">
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
+            <div class="row">
+                <!-- Estatísticas de faturas -->
+                <div class="four col-md-3">
+                    <div class="counter-box colored">
+                        <i class="fa fa-thumbs-o-up"></i>
+                        <span class="counter"><?= $numerofaturas ?></span> <!-- Mostra o número de faturas -->
+                        <p>Clientes Satisfeitos</p>
+                    </div>
+                </div>
+                <div class="four col-md-3">
+                    <div class="counter-box">
+                        <i class="fa fa-group"></i>
+                        <span class="counter"><?= $numeroclientes ?></span>
+                        <p>Membros Registrados</p>
+                    </div>
+                </div>
+                <div class="four col-md-3">
+                    <div class="counter-box">
+                        <i class="fa  fa-shopping-cart"></i>
+                        <span class="counter"><?= $numeroprodutos ?></span>
+                        <p>Produtos</p>
+                    </div>
+                </div>
+                <div class="four col-md-3">
+                    <div class="counter-box">
+                        <i class="fa  fa-user"></i>
+                        <span class="counter">1563</span>
+                        <p>Arvores Resgatadas</p>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+            <h2>Gráfico de Vendas por Data</h2>
 
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
+            <!-- Contêiner para o gráfico -->
+            <canvas id="myChart" width="400" height="200"></canvas>
+
+            <!-- Passando os dados de vendas e datas para o JavaScript -->
+            <div id="grafico"
+                 data-datas="<?= json_encode($datas) ?>"
+                 data-vendas="<?= json_encode($vendas) ?>">
+                <?= json_encode($datas) ?>
+                <?= json_encode($vendas) ?>
             </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
 
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
+
         </div>
 
     </div>
+
 </div>

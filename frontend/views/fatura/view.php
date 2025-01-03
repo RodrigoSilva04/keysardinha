@@ -24,18 +24,21 @@ $this->registerCssFile('@web/css/fatura-index.css');
                     <div class="row">
                         <div class="col"><h4><b>Fatura</b></h4></div>
                         <div class="col align-self-center text-right text-muted"></div>
+                        foi encontrado este numeros de linhas <?= count($linhasFatura) ?>
                     </div>
                 </div>
 
                 <?php foreach ($linhasFatura as $linha): ?>
                     <div class="row border-top border-bottom">
-                        <div class="row main align-items-center">
+                        <div class="row main align-items-center" id="row-produto-comprado">
                             <div class="col-2">
                                 <?= Html::img('@web/imagensjogos/' . $linha->produto->imagem, ['alt' => 'Imagem do produto']) ?>
 
                             </div>
                             <div class="col">
-                                <div class="row text-muted"><?= $linha['subtotal'] ?></div>
+                                <div class="row"><?= $linha->produto->nome ?></div>
+                            </div>
+                            <div class="col">
                                 <div class="row"><?= $linha->subtotal ?></div>
                             </div>
                             <div class="col">
@@ -45,7 +48,7 @@ $this->registerCssFile('@web/css/fatura-index.css');
                                 <span class="price">&euro; <?= number_format($linha->subtotal, 2) ?></span>
                             </div>
                             <div class="col">
-                                <span class="quantity"><?= $linha->chavedigital->chaveativacao ?></span>
+                                <span id="chavedigital" class="quantity"><?= $linha->chavedigital->chaveativacao ?></span>
                             </div>
                         </div>
                     </div>

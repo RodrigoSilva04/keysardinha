@@ -391,15 +391,15 @@ class CarrinhoController extends Controller
         }
 
         $metodoPagamento = Metodopagamento::findOne($metodopagamento_id);
-        if(!$metodoPagamento){
+        if (!$metodoPagamento) {
             Yii::$app->session->setFlash('error', 'Selecione um método de pagamento. Este foi o detetado var_dump: ' . var_dump($metodoPagamento));
             return $this->redirect(['carrinho/checkout']);
-        }else{
+        } else {
             Yii::$app->session->setFlash('success', 'Método de pagamento selecionado com sucesso. este é o id do metodo de pagamento: ' . $metodoPagamento->id);
         }
 
         // Verificar se o carrinho tem um cupão
-        if($carrinho->cupao_id != null){
+        if ($carrinho->cupao_id != null) {
             $cupao = Cupao::findOne($carrinho->cupao_id);
         } else {
             $cupao = null;
@@ -440,34 +440,78 @@ class CarrinhoController extends Controller
             foreach ($linhasCarrinho as $linha) {
                 $produto = Produto::findOne($linha->produto_id);
                 $linhaFatura = new LinhaFatura();
-                $linhaFatura->quantidade = $linha->quantidade;
-                $linhaFatura->precounitario = $linha->produto->preco;
-                $linhaFatura->subtotal = $linha->produto->preco * $linha->quantidade;
-                $linhaFatura->fatura_id = $fatura->id;
-                $linhaFatura->desconto_id = $linha->produto->desconto_id;
-                $linhaFatura->iva_id = $linha->produto->iva_id;
-                $linhaFatura->produto_id = $linha->produto_id;
-                //Vai verificar se tem stock em chaves e se estao usadas
-                $chaveDigital = Chavedigital::find()->where(['produto_id' => $linha->produto_id, 'estado' => 'nao usada'])->one();
-                if ($chaveDigital) {
-                    $linhaFatura->chavedigital_id = $chaveDigital->id;
-                    $chaveDigital->estado = 'usada';
-                    $chaveDigital->datavenda = date('Y-m-d H:i:s');
-                    $chaveDigital->save();
-                }else{
-                    //Mensagem a dizer para contactar o suporte
-                    Yii::$app->session->setFlash('error', 'O produto ' . $produto->nome . ' não tem chaves disponíveis. Por favor, contacta o suporte.');
-                    $fatura->estado = 'Pago';
+
+                if ($linha->quantidade == 1) {
+                    // Se a quantidade é 1, podemos proceder como estava
+                    $linhaFatura->quantidade = 1;
+                    $linhaFatura->precounitario = $linha->produto->preco;
+                    $linhaFatura->subtotal = $linha->produto->preco * $linha->quantidade;
+                    $linhaFatura->fatura_id = $fatura->id;
+                    $linhaFatura->desconto_id = $linha->produto->desconto_id;
+                    $linhaFatura->iva_id = $linha->produto->iva_id;
+                    $linhaFatura->produto_id = $linha->produto_id;
+
+                    // Verifica a chave digital
+                    $chaveDigital = Chavedigital::find()->where(['produto_id' => $linha->produto_id, 'estado' => 'nao usada'])->one();
+                    if ($chaveDigital) {
+                        $linhaFatura->chavedigital_id = $chaveDigital->id;
+                        $chaveDigital->estado = 'usada';
+                        $chaveDigital->datavenda = date('Y-m-d H:i:s');
+                        $chaveDigital->save();
+
+                        // Salva cada linha de fatura
+                        if (!$linhaFatura->save()) {
+                            Yii::error('Erro ao salvar linha de fatura: ' . json_encode($linhaFatura->errors), __METHOD__);
+                            Yii::$app->session->setFlash('error', 'Erro ao salvar linha de fatura. Tente novamente.');
+                            $fatura->estado = 'Erro';  // Marca a fatura como erro
+                            break;
+                        }
+
+                    } else {
+                        Yii::$app->session->setFlash('error', 'O produto ' . $produto->nome . ' não tem chaves disponíveis suficientes. Por favor, contacte o suporte.');
+                        $fatura->estado = 'Erro';  // Marca a fatura como erro
+                        break;  // Interrompe o processamento se não houver chave
+                    }
+                } else {
+                    // Se a quantidade for maior que 1, cria uma linha para cada chave digital
+                    $chavesDigitaisDisponiveis = Chavedigital::find()
+                        ->where(['produto_id' => $linha->produto_id, 'estado' => 'nao usada'])
+                        ->limit($linha->quantidade)
+                        ->all();
+
+                    if (count($chavesDigitaisDisponiveis) == $linha->quantidade) {
+                        foreach ($chavesDigitaisDisponiveis as $chave) {
+                            $linhaFatura = new LinhaFatura();
+                            $linhaFatura->chavedigital_id = $chave->id;
+                            $linhaFatura->quantidade = 1;
+                            $linhaFatura->precounitario = $linha->produto->preco;
+                            $linhaFatura->subtotal = $linha->produto->preco;
+                            $linhaFatura->fatura_id = $fatura->id;
+                            $linhaFatura->desconto_id = $linha->produto->desconto_id;
+                            $linhaFatura->iva_id = $linha->produto->iva_id;
+                            $linhaFatura->produto_id = $linha->produto_id;
+
+                            // Marca a chave digital como usada
+                            $chave->estado = 'usada';
+                            $chave->datavenda = date('Y-m-d H:i:s');
+                            $chave->save();
+
+                            // Salva cada linha de fatura
+                            if (!$linhaFatura->save()) {
+                                Yii::error('Erro ao salvar linha de fatura: ' . json_encode($linhaFatura->errors), __METHOD__);
+                                Yii::$app->session->setFlash('error', 'Erro ao salvar linha de fatura. Tente novamente.');
+                                $fatura->estado = 'Erro';  // Marca a fatura como erro
+                                break;
+                            }
+                        }
+                    } else {
+                        Yii::$app->session->setFlash('error', 'O produto ' . $produto->nome . ' não tem chaves disponíveis suficientes. Por favor, contacte o suporte.');
+                        $fatura->estado = 'Erro';  // Marca a fatura como erro
+                        break;  // Interrompe o processo de fatura
+                    }
                 }
 
-
-                if (!$linhaFatura->save()) {
-                    Yii::error('Erro ao salvar linha de fatura: ' . json_encode($linhaFatura->errors), __METHOD__);
-                    Yii::$app->session->setFlash('error', 'Erro ao finalizar a compra. Tente novamente. Erro ao salvar linha de fatura: ' . json_encode($linhaFatura->errors));
-                }else
-                {
-                    Yii::$app->session->setFlash('success', 'Compra efetuada com sucesso!');
-                }
+                // Atualiza o estoque do produto apenas uma vez, após processar todas as linhas
                 $produto->stockdisponivel -= $linha->quantidade;
                 $produto->save();
             }
@@ -477,28 +521,29 @@ class CarrinhoController extends Controller
                 $linha->delete();
             }
 
-            // Limpar o cupão se tiver
-            if($carrinho->cupao_id != null){
+            // Limpar o cupão se houver
+            if ($carrinho->cupao_id != null) {
                 $cupao->ativo = 0;
                 $carrinho->cupao_id = null;
-                //Procurar o cupao e mudar o estado para usado
                 $cupao->save();
                 $carrinho->save();
+            }
+
+            // Marcar a fatura como "Pago" se tudo ocorrer corretamente
+            if ($fatura->estado != 'Erro') {
+                $fatura->estado = 'Pago';
+                $fatura->save();
             }
 
             Yii::$app->session->setFlash('success', 'Compra efetuada com sucesso!');
         } else {
             Yii::error('Erro ao criar a fatura: ' . json_encode($fatura->errors), __METHOD__);
             Yii::$app->session->setFlash('error', 'Erro ao finalizar a compra. Tente novamente.');
-            Yii::$app->session->setFlash('error', 'Deu erro ao finalizar a compra estes são os erros: ' . json_encode($fatura->errors));
             return $this->redirect(['carrinho/checkout']);
         }
 
-
-
         return $this->redirect(['fatura/view', 'id' => $fatura->id]);
+
     }
-
-
 
 }

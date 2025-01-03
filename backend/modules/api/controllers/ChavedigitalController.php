@@ -1,13 +1,24 @@
 <?php
 
-namespace app\modules\api\controllers;
+namespace backend\modules\api\controllers;
 
+use backend\modules\api\components\CustomAuth;
 use common\models\Chavedigital;
 use common\models\Produto;
 use Yii;
+use yii\rest\ActiveController;
 
-class ChavedigitalController extends \yii\web\Controller
+class ChavedigitalController extends ActiveController
 {
+    public $modelClass = 'common\models\Chavedigital';
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => CustomAuth::className(),
+        ];
+        return $behaviors;
+    }
     public function actionIndex()
     {
         // Obter todas as chaves digitais
@@ -133,7 +144,7 @@ class ChavedigitalController extends \yii\web\Controller
         }
 
         //Caso não seja uma requisição POST, retorna erro
-        Yii::$app->response->statusCode = 405; //Código HTTP para método não permitido
+        Yii::$app->response->statusCode = 405; //Código HTTP para metodo não permitido
         return [
             'status' => 'error',
             'message' => 'Método não permitido. Utilize POST para criar uma chave digital.',

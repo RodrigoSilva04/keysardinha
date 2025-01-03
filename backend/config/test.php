@@ -13,7 +13,7 @@ return [
         ],
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=keysardinhadb_test',
+            'dsn' => 'mysql:host=localhost;dbname=keysardinhadb',
         ],
     ],
 ];
