@@ -111,12 +111,17 @@ class ProdutoController extends ActiveController
     }
 
     // Pesquisar jogos
-    public function actionSearch($query)
+    public function actionSearch($query, $categoria = null)
     {
-        $produtos = $this->modelClass::find()
-            ->where(['like', 'nome', $query])
-            ->asArray()
-            ->all();
+        $queryBuilder = $this->modelClass::find()
+            ->where(['like', 'nome', $query]); // Pesquisa pelo nome do produto
+
+        // Se a categoria for fornecida, aplica o filtro da categoria
+        if ($categoria !== null) {
+            $queryBuilder->andWhere(['categoria_id' => $categoria]);
+        }
+
+        $produtos = $queryBuilder->asArray()->all();
 
         if (empty($produtos)) {
             return [
@@ -132,11 +137,11 @@ class ProdutoController extends ActiveController
         ];
     }
 
-    // Filtrar jogos por categoria
+    // Filtrar produtos por categoria
     public function actionFilter($categoria)
     {
         $produtos = $this->modelClass::find()
-            ->where(['categoria' => $categoria])
+            ->where(['categoria_id' => $categoria]) // Usando o campo correto 'categoria_id'
             ->asArray()
             ->all();
 
