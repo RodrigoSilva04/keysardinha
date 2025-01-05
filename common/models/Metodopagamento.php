@@ -27,8 +27,8 @@ class Metodopagamento extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['descricao'], 'string'],
-            [['nomemetodopagamento'], 'string', 'max' => 50],
+            [['nomemetodopagamento'], 'required'],
+            [['descricao'], 'string', 'max' => 255],
         ];
     }
 

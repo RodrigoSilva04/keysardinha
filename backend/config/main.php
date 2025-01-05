@@ -180,7 +180,7 @@ return [
                         'GET view' => 'view',
                         'POST create' => 'create',
                         'PUT update/{id}' => 'update',
-                        'DELETE delete/{id}' => 'delete',
+                        'DELETE delete' => 'delete',
                     ],
                 ]
 

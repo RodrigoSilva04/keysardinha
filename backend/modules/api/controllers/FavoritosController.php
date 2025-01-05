@@ -23,45 +23,44 @@ class FavoritosController extends ActiveController
 
     public function actionIndex()
     {
-        // Obter o ID do utilizador autenticado
         $idUser = Yii::$app->user->id;
 
-        // Verificar se o utilizador está autenticado
         if (!$idUser) {
-            return Yii::$app->response->setStatusCode(401) // Não autorizado
-            ->data = [
+            return Yii::$app->response->setStatusCode(401)
+                ->data = [
                 'status' => 'error',
                 'message' => 'Usuário não autenticado.',
             ];
         }
 
-        // Obter o perfil do utilizador
-        $user = UtilizadorPerfil::findOne($idUser);
+        $favoritos = Favoritos::find()
+            ->where(['utilizadorperfil_id' => $idUser])
+            ->joinWith('produto') // Carregar dados dos produtos relacionados
+            ->asArray()
+            ->all();
 
-        // Verificar se o perfil do utilizador foi encontrado
-        if (!$user) {
-            return Yii::$app->response->setStatusCode(404) // Não encontrado
+        return Yii::$app->response->setStatusCode(200)
             ->data = [
-                'status' => 'error',
-                'message' => 'Perfil do usuário não encontrado.',
-            ];
-        }
-
-        // Obter os favoritos do utilizador
-        $favoritos = $user->getFavoritos()->all();
-
-        // Retornar os favoritos em resposta
-        return Yii::$app->response->setStatusCode(200) // OK
-        ->data = [
             'status' => 'success',
             'message' => 'Favoritos recuperados com sucesso.',
             'data' => $favoritos,
         ];
     }
 
+
     // adicionar produto aos favoritos
-    public function actionAdd($produto_id)
+    public function actionAdd()
     {
+        // Receber o produto_id do corpo da requisição POST
+        $produto_id = Yii::$app->request->post('produto_id');
+
+        if (!$produto_id) {
+            return [
+                'status' => 'error',
+                'message' => 'Produto não especificado.',
+            ];
+        }
+
         // Verificar se o produto já está nos favoritos do utilizador
         $favoritoExistente = Favoritos::find()
             ->where(['utilizadorperfil_id' => Yii::$app->user->id, 'produto_id' => $produto_id])
@@ -69,21 +68,20 @@ class FavoritosController extends ActiveController
 
         if ($favoritoExistente) {
             // Produto já está nos favoritos
-            Yii::$app->response->statusCode = 409; // Código de conflito
+            Yii::$app->response->statusCode = 409;
             return [
                 'status' => 'error',
                 'message' => 'Produto já está nos favoritos.',
             ];
         }
 
-        // Criar um novo registo de favorito
         $favorito = new Favoritos();
         $favorito->utilizadorperfil_id = Yii::$app->user->id;
         $favorito->produto_id = $produto_id;
 
-        // Tentar salvar o registro
+        // Tentar guardar o registo
         if ($favorito->save()) {
-            Yii::$app->response->statusCode = 201; // Código de sucesso (criado)
+            Yii::$app->response->statusCode = 201;
             return [
                 'status' => 'success',
                 'message' => 'Produto adicionado aos favoritos com sucesso.',
@@ -91,7 +89,7 @@ class FavoritosController extends ActiveController
         }
 
         // Caso ocorra um erro ao salvar o registo
-        Yii::$app->response->statusCode = 500; // Código de erro interno
+        Yii::$app->response->statusCode = 500;
         return [
             'status' => 'error',
             'message' => 'Erro ao adicionar o produto aos favoritos.',
@@ -100,9 +98,19 @@ class FavoritosController extends ActiveController
     }
 
     // Remover produto dos favoritos
-    public function actionRemove($produto_id)
+    public function actionRemove()
     {
-        // Busca o registo nos favoritos baseado no user autenticado e no produto
+        // Receber o produto_id do corpo da requisição
+        $produto_id = Yii::$app->request->post('produto_id');
+
+        if (!$produto_id) {
+            return [
+                'status' => 'error',
+                'message' => 'Produto não especificado.',
+            ];
+        }
+
+        // Encontra o registo nos favoritos baseado no user autenticado e no produto
         $produtofavorito = Favoritos::find()
             ->where(['utilizadorperfil_id' => Yii::$app->user->id, 'produto_id' => $produto_id])
             ->one();
@@ -124,7 +132,7 @@ class FavoritosController extends ActiveController
             }
         }
 
-        // Caso o produto não seja encontrado nos favoritos
+        // Se nao for encontrado
         Yii::$app->response->statusCode = 404;
         return [
             'status' => 'error',
