@@ -23,28 +23,37 @@ class FaturaController extends ActiveController
     public function actionIndex()
     {
         // Obtém o ID do utilizador logado
-        $utilizadorId = Yii::$app->user->identity->id;
+        $idUser = Yii::$app->user->id;
 
-        //Encontra todas as faturas do utilizador
+        // Verifica se o utilizador está autenticado
+        if (!$idUser) {
+            Yii::$app->response->statusCode = 401; // Não autorizado
+            return [
+                'status' => 'error',
+                'message' => 'Utilizador não autenticado.',
+            ];
+        }
+
         $faturas = Fatura::find()
-            ->where(['utilizadorperfil_id' => $utilizadorId])
+            ->where(['utilizadorperfil_id' => $idUser])
+            ->asArray()
             ->all();
 
-        // Verifica se existem faturas
+        // Verifica se existem faturas para o utilizador
         if (empty($faturas)) {
-            Yii::$app->response->statusCode = 404; // Código de não encontrado
+            Yii::$app->response->statusCode = 404; // Não encontrado
             return [
                 'status' => 'error',
                 'message' => 'Nenhuma fatura encontrada para este utilizador.',
             ];
         }
 
-        // Retorna as faturas encontradas
-        Yii::$app->response->statusCode = 200; //sucesso
+        // Retorna as faturas do utilizador autenticado
+        Yii::$app->response->statusCode = 200; // OK
         return [
             'status' => 'success',
             'message' => 'Faturas recuperadas com sucesso.',
-            'faturas' => $faturas, // Retorna os dados das faturas
+            'data' => $faturas,
         ];
     }
 

@@ -21,10 +21,8 @@ class ChavedigitalController extends ActiveController
     }
     public function actionIndex()
     {
-        // Obter todas as chaves digitais
         $chavesDigitais = Chavedigital::find()->all();
-
-        // Verificar se existem registros
+        // Verificar se existem registos
         if (!empty($chavesDigitais)) {
             // Formatar os dados das chaves digitais para retorno
             $dadosFormatados = [];
@@ -94,7 +92,7 @@ class ChavedigitalController extends ActiveController
                     $produto = Produto::findOne($model->produto_id);
 
                     if ($produto) {
-                        // Incrementar o estoque disponível do produto
+                        // Incrementar o stock disponível do produto
                         $produto->stockdisponivel += 1;
 
                         // Tentar salvar as alterações no produto
@@ -134,7 +132,7 @@ class ChavedigitalController extends ActiveController
                     ];
                 }
             } else {
-                Yii::$app->response->statusCode = 422; // Código HTTP para erro de validação
+                Yii::$app->response->statusCode = 422;
                 return [
                     'status' => 'error',
                     'message' => 'Dados inválidos.',
