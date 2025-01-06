@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Comentario', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create ComentarioController', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
 

@@ -176,9 +176,9 @@ class Produto extends \yii\db\ActiveRecord
 
         $myJSON = json_encode($myObj);
         if($insert)
-            $this->FazPublishNoMosquitto("INSERT",$myJSON);
+            $this->FazPublishNoMosquitto("produto/insert","Foi criado um novo produto : " . $myJSON);
         else
-            $this->FazPublishNoMosquitto("UPDATE",$myJSON);
+            $this->FazPublishNoMosquitto("produto/update","Foi alterado um produto : " .$myJSON);
     }
 
 
@@ -191,7 +191,7 @@ class Produto extends \yii\db\ActiveRecord
         $myObj->id=$prod_id;
         $myJSON = json_encode($myObj);
 
-        $this->FazPublishNoMosquitto("DELETE",$myJSON);
+        $this->FazPublishNoMosquitto("produto/delete", "Foi eliminado um produto : " . $myJSON);
 
 
 

@@ -9,7 +9,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ComentarioController implements the CRUD actions for Comentario model.
+ * ComentarioController implements the CRUD actions for ComentarioController model.
  */
 class ComentarioController extends Controller
 {
@@ -32,7 +32,7 @@ class ComentarioController extends Controller
     }
 
     /**
-     * Lists all Comentario models.
+     * Lists all ComentarioController models.
      *
      * @return string
      */
@@ -58,7 +58,7 @@ class ComentarioController extends Controller
     }
 
     /**
-     * Displays a single Comentario model.
+     * Displays a single ComentarioController model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -71,7 +71,7 @@ class ComentarioController extends Controller
     }
 
     /**
-     * Creates a new Comentario model.
+     * Creates a new ComentarioController model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
@@ -93,7 +93,7 @@ class ComentarioController extends Controller
     }
 
     /**
-     * Updates an existing Comentario model.
+     * Updates an existing ComentarioController model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -113,7 +113,7 @@ class ComentarioController extends Controller
     }
 
     /**
-     * Deletes an existing Comentario model.
+     * Deletes an existing ComentarioController model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -127,7 +127,7 @@ class ComentarioController extends Controller
     }
 
     /**
-     * Finds the Comentario model based on its primary key value.
+     * Finds the ComentarioController model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
      * @return Comentario the loaded model

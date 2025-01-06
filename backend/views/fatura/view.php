@@ -38,7 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'utilizadorperfil_id',
             'metodopagamento_id',
             'desconto_id',
-            'chavedigital_id',
         ],
     ]) ?>
 

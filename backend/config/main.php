@@ -67,6 +67,7 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/carrinho',
                     'extraPatterns' => [
+                        'GET findcarrinho' => 'findcarrinho', // Ver carrinho.
                         'GET view' => 'view',// Ver carrinho.
                         'POST add' => 'add',  // Adicionar item ao carrinho.
                         'PUT update/{id}' => 'update', // Atualizar item no carrinho
@@ -82,7 +83,7 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/fatura',
                     'extraPatterns' => [
-                        'GET index' => 'index',// Ver todas as faturas do utilizador
+                        'GET findfatura' => 'findfatura',// Ver todas as faturas do utilizador
                         'GET {id}' => 'view', // Ver detalhes de uma fatura específica.                        'PUT update/{id}' => 'update', // Atualizar item no carrinho
                         'POST create' => 'create',         // Criar uma nova fatura.
                         'PUT update/{id}' => 'update',     // Atualizar uma fatura existente.
@@ -128,6 +129,8 @@ return [
                         'POST user' => 'create',// Cria perfil
                         'PUT user' => 'update', // Atualiza perfil
                         'DELETE user' => 'delete',    // apagar perfil
+                        'POST login' => 'login', // Ação de login
+                        'POST signup' => 'signup', // Ação de signup
                     ],
                     'pluralize' => false, // Evitar o plural
                 ],
@@ -142,19 +145,6 @@ return [
                     'POST categoria' => 'create', // Cria nova categoria
                     'PUT categoria' => 'update', // Atualiza uma categoria existente
                     'DELETE categoria' => 'delete', // Deleta uma categoria
-                    ],
-                    'pluralize' => false, // Evitar o plural
-                ],
-
-                // Métodos de pagamento
-                // Ver fazer junto ou separado
-                [
-                    'class' => 'yii\rest\UrlRule',
-                    'controller' => 'api/pagamento',
-                    'extraPatterns' => [
-                        'GET metodos' => 'metodos',            // Listar métodos de pagamento.
-                        'POST email-recibo' => 'email-recibo', // Enviar email com recibo.
-                        'POST email-chave' => 'email-chave',   // Enviar chave do jogo.
                     ],
                     'pluralize' => false, // Evitar o plural
                 ],
@@ -182,7 +172,20 @@ return [
                         'PUT update/{id}' => 'update',
                         'DELETE delete' => 'delete',
                     ],
-                ]
+                    'pluralize' => false, // Evitar o plural
+                ],
+                [
+                'class' => 'yii\rest\UrlRule',
+                'controller' => 'api/comentario',
+                    'extraPatterns' => [
+                        'GET index' => 'index',
+                        'GET view' => 'view',
+                        'POST comentario' => 'create',
+                        'PUT comentario' => 'update',
+                        'DELETE comentario' => 'delete',
+                    ],
+                    'pluralize' => false, // Evitar o plural
+            ]
 
 
             ], //End rules

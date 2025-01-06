@@ -51,7 +51,7 @@
                     ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank'],
                     ['label' => 'Promoções e vendas', 'header' => true],
                     ['label' => 'Gerir metodos de pagamento', 'url' => ['metodopagamento/index'], 'iconStyle' => 'far'],
-                    ['label' => 'Gerir Promoções'],
+                    ['label' => 'Gerir Promoções' ],
                     [
                         'label' => 'Relatórios e estatísticas',
                         'items' => [
@@ -59,7 +59,7 @@
                             ['label' => 'Estatisticas de vendas', 'iconStyle' => 'far']
                         ]
                     ],
-                    ['label' => 'Gerir Encomendas'],
+                    ['label' => 'Gerir Encomendas' , 'url' => ['fatura/index']],
                     ['label' => 'Erros e problemas', 'header' => true],
                     ['label' => 'Erros criticos', 'iconStyle' => 'far', 'iconClassAdded' => 'text-danger'],
                     ['label' => 'Erros médios', 'iconClass' => 'nav-icon far fa-circle text-warning'],

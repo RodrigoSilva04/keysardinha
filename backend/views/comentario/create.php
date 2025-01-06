@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var common\models\Comentario $model */
 
-$this->title = 'Create Comentario';
+$this->title = 'Create ComentarioController';
 $this->params['breadcrumbs'][] = ['label' => 'Comentarios', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

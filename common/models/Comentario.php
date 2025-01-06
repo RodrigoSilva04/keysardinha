@@ -13,6 +13,9 @@ use Yii;
  * @property string|null $datacriacao
  * @property int|null $produto_id
  * @property int|null $utilizadorperfil_id
+ *
+ * @property Produto $produto
+ * @property Utilizadorperfil $utilizadorperfil
  */
 class Comentario extends \yii\db\ActiveRecord
 {
@@ -30,11 +33,11 @@ class Comentario extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
-            [['id', 'avaliacao', 'produto_id', 'utilizadorperfil_id'], 'integer'],
+            [['avaliacao', 'produto_id', 'utilizadorperfil_id'], 'integer'],
             [['datacriacao'], 'safe'],
             [['descricao'], 'string', 'max' => 255],
-            [['id'], 'unique'],
+            [['produto_id'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::class, 'targetAttribute' => ['produto_id' => 'id']],
+            [['utilizadorperfil_id'], 'exist', 'skipOnError' => true, 'targetClass' => Utilizadorperfil::class, 'targetAttribute' => ['utilizadorperfil_id' => 'id']],
         ];
     }
 
@@ -51,5 +54,25 @@ class Comentario extends \yii\db\ActiveRecord
             'produto_id' => 'Produto ID',
             'utilizadorperfil_id' => 'Utilizadorperfil ID',
         ];
+    }
+
+    /**
+     * Gets query for [[Produto]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProduto()
+    {
+        return $this->hasOne(Produto::class, ['id' => 'produto_id']);
+    }
+
+    /**
+     * Gets query for [[Utilizadorperfil]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUtilizadorperfil()
+    {
+        return $this->hasOne(Utilizadorperfil::class, ['id' => 'utilizadorperfil_id']);
     }
 }

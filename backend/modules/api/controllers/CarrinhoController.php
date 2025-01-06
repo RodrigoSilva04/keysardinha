@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\api\controllers;
+namespace backend\modules\api\controllers;
 
 use backend\modules\api\components\CustomAuth;
 use common\models\Carrinho;
@@ -11,6 +11,8 @@ use common\models\Linhacarrinho;
 use common\models\Linhafatura;
 use common\models\Metodopagamento;
 use common\models\Produto;
+use common\models\User;
+use common\models\Utilizadorperfil;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 use yii\rest\ActiveController;
@@ -27,44 +29,56 @@ class CarrinhoController extends ActiveController
         ];
         return $behaviors;
     }
-    public function actionIndex()
+    public function actionFindCarrinho()
     {
-        // Obter carrinho do utilizador
-        $carrinho = Carrinho::findOne(['utilizadorperfil_id' => Yii::$app->user->id]);
+        $user = Yii::$app->user;
 
-        // Verifica se o utilizador tem algum produto no carrinho
+        if (!$user) {
+            return Yii::$app->response->setStatusCode(401)->data = [
+                'status' => 'error',
+                'message' => 'Token inválido ou usuário não autenticado.',
+            ];
+        }
+
+        // Obter o carrinho do usuário autenticado
+        $carrinho = Carrinho::findOne(['utilizadorperfil_id' => $user->id]);
+
         if (!$carrinho) {
-            // Cria carrinho se não existir
+            //Cria um carrinho vazio para o utilizador
             $carrinho = new Carrinho();
-            $carrinho->utilizadorperfil_id = Yii::$app->user->id;
+            $carrinho->utilizadorperfil_id = $user->id;
             $carrinho->data_criacao = date('Y-m-d H:i:s');
-
             if (!$carrinho->save()) {
-                // Retorna erro em formato JSON
-                Yii::error("Erro ao criar carrinho: " . json_encode($carrinho->errors), __METHOD__);
+                Yii::error('Erro ao criar o carrinho para o utilizador ID: ' . $user->id . '. Erros: ' . json_encode($carrinho->errors), __METHOD__);
                 return Yii::$app->response->setStatusCode(400)->data = [
                     'status' => 'error',
                     'message' => 'Erro ao criar o carrinho.',
-                    'errors' => $carrinho->errors
+                    'errors' => $carrinho->errors,
                 ];
             }
+            return Yii::$app->response->setStatusCode(404)->data = [
+                'status' => 'success',
+                'message' => 'O utilizador nao tinha um carrinho mas foi criado um.',
+            ];
         }
 
         // Buscar as linhas do carrinho associado
         $linhasCarrinho = Linhacarrinho::find()->where(['carrinho_id' => $carrinho->id])->all();
 
-        // Retorna sucesso com os dados do carrinho em formato JSON
+        // Retornar os dados do carrinho
         return Yii::$app->response->setStatusCode(200)->data = [
             'status' => 'success',
-            'message' => 'Carrinho recuperado com sucesso.',
+            'message' => 'Carrinho recuperado com sucesso para o usuário ID: ' . $user->id,
             'carrinho' => $carrinho,
             'linhasCarrinho' => $linhasCarrinho,
         ];
     }
 
-    public function actionView($id)
+
+    public function actionView()
     {
         // Busca o modelo do carrinho com base no ID
+        $id = Yii::$app->request->get('id');
         $carrinho = Carrinho::findOne($id);
 
         if (!$carrinho) {
@@ -104,60 +118,43 @@ class CarrinhoController extends ActiveController
     }
 
 
-    public function actionCreate()
+    public function actionUpdate()
     {
-        $model = new Carrinho();
+        // Obtém o produto ID da requisição POST
+        $produtoID = Yii::$app->request->post('produto_id');
 
-        if (Yii::$app->request->isPost) {
-            // Carregar os dados enviados via POST
-            $data = Yii::$app->request->post();
+        // Encontra o carrinho do utilizador
+        $carrinho = Carrinho::findOne(['utilizadorperfil_id' => Yii::$app->user->id]);
 
-            if ($model->load($data, '') && $model->save()) {
-                return Yii::$app->response->setStatusCode(201)->data = [
-                    'status' => 'success',
-                    'message' => 'Carrinho criado com sucesso.',
-                    'data' => $model,
-                ];
-            } else {
-                // Se houver erro ao salvar, retorna os erros
-                return Yii::$app->response->setStatusCode(400)->data = [
-                    'status' => 'error',
-                    'message' => 'Erro ao criar carrinho.',
-                    'errors' => $model->errors,
-                ];
-            }
-        } else {
-            // Caso a requisição não seja POST
-            return Yii::$app->response->setStatusCode(400)->data = [
+        // Verifica se o carrinho foi encontrado
+        if (!$carrinho) {
+            return Yii::$app->response->setStatusCode(404)->data = [
                 'status' => 'error',
-                'message' => 'Método inválido. Apenas POST é permitido.',
+                'message' => 'Carrinho não encontrado.',
             ];
         }
-    }
 
-    public function actionUpdate($id)
-    {
-        // Encontra o carrinho com o ID fornecido
-        $model = $this->findModel($id);
-
-        // Verifica se a requisição é POST e carrega os dados
+        // Verifica se a requisição é POST
         if (Yii::$app->request->isPost) {
             // Carrega os dados da requisição no modelo
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                // Se a atualização for bem-sucedida, retorna um status de sucesso
-                return Yii::$app->response->setStatusCode(200)->data = [
-                    'status' => 'success',
-                    'message' => 'Carrinho atualizado com sucesso.',
-                    'data' => $model,
-                ];
-            } else {
-                // Se ocorrer um erro ao salvar, retorna os erros em formato JSON
-                Yii::error("Erro ao atualizar o carrinho: " . json_encode($model->errors), __METHOD__);
-                return Yii::$app->response->setStatusCode(400)->data = [
-                    'status' => 'error',
-                    'message' => 'Erro ao atualizar o carrinho.',
-                    'errors' => $model->errors,
-                ];
+            if ($carrinho->load(Yii::$app->request->post())) {
+                // Verifica se o carrinho foi salvo corretamente
+                if ($carrinho->save()) {
+                    // Se a atualização for bem-sucedida, retorna um status de sucesso
+                    return Yii::$app->response->setStatusCode(200)->data = [
+                        'status' => 'success',
+                        'message' => 'Carrinho atualizado com sucesso.',
+                        'data' => $carrinho,
+                    ];
+                } else {
+                    // Se ocorrer um erro ao salvar, retorna os erros em formato JSON
+                    Yii::error("Erro ao atualizar o carrinho: " . json_encode($carrinho->errors), __METHOD__);
+                    return Yii::$app->response->setStatusCode(400)->data = [
+                        'status' => 'error',
+                        'message' => 'Erro ao atualizar o carrinho.',
+                        'errors' => $carrinho->errors,
+                    ];
+                }
             }
         }
 
@@ -168,10 +165,11 @@ class CarrinhoController extends ActiveController
         ];
     }
 
-    public function actionDelete($id)
+
+    public function actionDelete()
     {
-        // Busca o modelo com o ID fornecido
-        $carrinho = $this->findModel($id);
+        // Busca o carrinho com o ID fornecido pelo post
+        $carrinho = Carrinho::findOne(Yii::$app->request->post('id'));
 
         // Se o modelo não for encontrado, retornamos uma resposta de erro
         if (!$carrinho) {
@@ -201,7 +199,7 @@ class CarrinhoController extends ActiveController
     }
 
     // Adicionar item ao carrinho
-    public function actionAddToCart($IdProduto)
+    public function actionAddToCart()
     {
         $userId = Yii::$app->user->id; // ID do utilizador autenticado
 
@@ -220,6 +218,9 @@ class CarrinhoController extends ActiveController
                 ];
             }
         }
+
+        //Ir buscar o id do produto a adicionar
+        $IdProduto = Yii::$app->request->post('produto_id');
 
         // Verificar se o produto existe
         $produto = Produto::findOne($IdProduto);
@@ -278,14 +279,17 @@ class CarrinhoController extends ActiveController
 
 
     // Remover item do carrinho
-    public function actionRemove($id)
+    public function actionRemove()
     {
+        // Obter o ID do produto a ser removido
+        $id = Yii::$app->request->post('produto_id');
+
         // Obter o carrinho do utilizador
         $carrinho = Carrinho::findOne(['utilizadorperfil_id' => Yii::$app->user->id]);
 
         // Verificar se o carrinho existe
         if (!$carrinho) {
-            Yii::error("Carrinho não encontrado para o usuário ID: " . Yii::$app->user->id, __METHOD__);
+            Yii::error("Carrinho não encontrado para o utilizador ID: " . Yii::$app->user->id, __METHOD__);
             return Yii::$app->response->setStatusCode(404)->data = [
                 'status' => 'error',
                 'message' => 'Carrinho não encontrado.',
@@ -415,9 +419,13 @@ class CarrinhoController extends ActiveController
     }
 
     // Concluir a compra
-    public function actionFinalizarCompra($metodopagamento_id)
+    public function actionFinalizarCompra()
     {
         $idUtilizador = Yii::$app->user->id;
+
+
+        // Obter o metodo de pagamento da requisição
+        $metodopagamento_id = Yii::$app->request->post('metodopagamento_id');
 
         // Verificar se o utilizador tem carrinho ativo
         $carrinho = Carrinho::findOne(['utilizadorperfil_id' => $idUtilizador]);
@@ -491,27 +499,37 @@ class CarrinhoController extends ActiveController
                 $linhaFatura->iva_id = $linha->produto->iva_id;
                 $linhaFatura->produto_id = $linha->produto_id;
 
-                // Verifica se tem stock de chaves
-                $chaveDigital = Chavedigital::find()->where(['produto_id' => $linha->produto_id, 'estado' => 'nao usada'])->one();
-                if ($chaveDigital) {
-                    $linhaFatura->chavedigital_id = $chaveDigital->id;
-                    $chaveDigital->estado = 'usada';
-                    $chaveDigital->datavenda = date('Y-m-d H:i:s');
-                    $chaveDigital->save();
+                // Verifica se tem stock de chaves digitais
+                $chavesDigitaisDisponiveis = Chavedigital::find()
+                    ->where(['produto_id' => $linha->produto_id, 'estado' => 'nao usada'])
+                    ->limit($linha->quantidade)
+                    ->all();
+
+                if (count($chavesDigitaisDisponiveis) >= $linha->quantidade) {
+                    foreach ($chavesDigitaisDisponiveis as $chave) {
+                        // Atribui chave digital a cada linha da fatura
+                        $linhaFatura->chavedigital_id = $chave->id;
+                        $chave->estado = 'usada';
+                        $chave->datavenda = date('Y-m-d H:i:s');
+                        $chave->save();
+
+                        // Salva cada linha de fatura
+                        if (!$linhaFatura->save()) {
+                            return Yii::$app->response->setStatusCode(500)->data = [
+                                'status' => 'error',
+                                'message' => 'Erro ao salvar linha de fatura: ' . json_encode($linhaFatura->errors),
+                            ];
+                        }
+                    }
                 } else {
+                    // Caso não haja chaves suficientes, retorna erro
                     return Yii::$app->response->setStatusCode(400)->data = [
                         'status' => 'error',
-                        'message' => 'O produto ' . $produto->nome . ' não tem chaves disponíveis. Por favor, contacta o suporte.',
+                        'message' => 'O produto ' . $produto->nome . ' não tem chaves digitais disponíveis suficientes. Por favor, contacte o suporte.',
                     ];
                 }
 
-                if (!$linhaFatura->save()) {
-                    return Yii::$app->response->setStatusCode(500)->data = [
-                        'status' => 'error',
-                        'message' => 'Erro ao salvar linha de fatura: ' . json_encode($linhaFatura->errors),
-                    ];
-                }
-
+                // Atualiza o stock do produto
                 $produto->stockdisponivel -= $linha->quantidade;
                 $produto->save();
             }
@@ -540,6 +558,7 @@ class CarrinhoController extends ActiveController
                 'message' => 'Erro ao criar a fatura.',
             ];
         }
+
     }
 
 
