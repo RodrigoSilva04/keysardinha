@@ -13,7 +13,7 @@
                 <img src="<?=$assetDir?>/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                    <a href="#" class="d-block"><?= \Yii::$app->user->identity->username .'('. Yii::$app->user->identity->getRole() .')'?> </a><!-- Vai buscar o nome de utilizador e mostra -->
+                    <a href="#" id="nick-utilizador" class="d-block"><?= \Yii::$app->user->identity->username .'('. Yii::$app->user->identity->getRole() .')'?> </a><!-- Vai buscar o nome de utilizador e mostra -->
             </div>
         </div>
 

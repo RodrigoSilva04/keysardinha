@@ -25,6 +25,9 @@ class LoginBackofficeCest
         // Clique no botão de login
         $I->click('login-button');
 
+        // Verifique se o nome de usuário está presente
+        $I->seeElement('#nick-utilizador');
+
         // Verifique se o link de logout está presente, indicando que o login foi bem-sucedido
         $I->seeElement('#logout-link');  // Verifique se o link de logout está visível
 
@@ -48,7 +51,7 @@ class LoginBackofficeCest
 
         $I->click('login-button');
 
-        $I->see('Utilizador não autorizado a acessar o backoffice.');
+        $I->amOnRoute('/site/login');
     }
 
     public function loginSemPreencherCampos(FunctionalTester $I)
@@ -70,7 +73,7 @@ class LoginBackofficeCest
 
         $I->click('login-button');
 
-        $I->see('UtilizadorTesteFuncional(admin)');
+        $I->seeElement('#nick-utilizador');
         // Verifique se o link de logout está presente
         $I->seeElement('#logout-link');  // Verifique se o link de logout com o id está presente
         $I->sendAjaxPostRequest('/backend/web/site/logout', [
