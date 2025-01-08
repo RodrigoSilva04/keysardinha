@@ -41,10 +41,10 @@ class CupaoTest extends \Codeception\Test\Unit
 
         $this->assertTrue($cupao->validate());
     }
-    /* public function testValorVazio()
+     public function testValorVazio()
     {
         $cupao = new Cupao();
         $cupao->valor = null;
         $this->assertFalse($cupao->validate(['valor']));
-    }*/
+    }
 }
