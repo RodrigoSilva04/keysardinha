@@ -2,8 +2,10 @@
 
 namespace frontend\controllers;
 
+use common\models\Carrinho;
 use common\models\Categoria;
 use common\models\Favoritos;
+use common\models\Linhacarrinho;
 use common\models\Produto;
 use common\models\Utilizadorperfil;
 use frontend\models\ResendVerificationEmailForm;
@@ -81,11 +83,23 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+
         // Obter os jogos mais jogados e criar produtos no banco de dados
         $jogosmaisjogados = $this->obterJogosMaisJogadosSteamAPI();
 
         // Buscar os produtos criados no banco de dados
         $produtos = Produto::find()->all();
+
+        //Procurar o gta
+        $gta = Produto::find()->where(['nome' => 'Grand Theft Auto V'])->one();
+
+        //Calcular preço com desconto
+        if ($gta->desconto_id != null) {
+            $desconto = $gta->desconto->percentagem;
+            $preco = $gta->preco;
+            $precofinal = $preco - ($preco * $desconto / 100);
+            $gta->preco = $precofinal;
+        }
 
         $produtostendencias = Produto::find()
             ->select(['produto.*', new Expression('SUM(linhafatura.quantidade) AS total_comprado')]) // Inclui colunas do modelo e soma quantidades
@@ -105,7 +119,8 @@ class SiteController extends Controller
             'categorias' => $categorias,
             'top3categorias' => $top3categorias,
             'jogosmaisjogados' => $jogosmaisjogados,
-            'produtostendencias' => $produtostendencias
+            'produtostendencias' => $produtostendencias,
+            'gta' => $gta,
         ]);
     }
 
@@ -382,7 +397,11 @@ class SiteController extends Controller
 
             if ($produto) {
                 // Se encontrado, redireciona para a página de detalhes
-                return $this->redirect(['produtos/view', 'id' => $produto->id]);
+                return $this->redirect(['produto/view', 'id' => $produto->id]);
+            }else {
+                //Set flash
+                Yii::$app->session->setFlash('error', 'Produto não encontrado.');
+                return $this->redirect(['produto/index']);
             }
         }
 

@@ -176,6 +176,33 @@ class UserController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionBloquear($id)
+    {
+        $user = $this->findModel($id);
+
+        if ($user->id == Yii::$app->user->id) {
+            Yii::$app->session->setFlash('error', 'Não pode bloquear o seu próprio utilizador.');
+            return $this->redirect(['index']);
+        }
+
+        if($user->role == 'admin'){
+            Yii::$app->session->setFlash('error', 'Não pode bloquear um administrador.');
+            return $this->redirect(['index']);
+        }
+
+        if ($user->status == User::STATUS_ACTIVE) {
+            $user->status = User::STATUS_BLOCKED;
+            $user->save();
+            Yii::$app->session->setFlash('success', 'Utilizador bloqueado com sucesso.');
+        } else {
+            $user->status = User::STATUS_ACTIVE;
+            $user->save();
+            Yii::$app->session->setFlash('success', 'Utilizador desbloqueado com sucesso.');
+
+        }
+        return $this->redirect(['index']);
+    }
+
     /**
      * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

@@ -9,16 +9,37 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Chavedigitals';
+$this->title = 'Gerir Chaves de jogos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="chavedigital-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
 
+
+    <div>
     <p>
         <?= Html::a('Create Chavedigital', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::beginForm(['chavedigital/limpar-chaves-usadas'], 'post') ?>
+        <?= Html::submitButton('Limpar Chaves Usadas', [
+            'class' => 'btn btn-danger', // Classe de estilo para o botão (pode ser 'btn-warning', 'btn-danger', etc.)
+            'data' => [
+                'confirm' => 'Tem certeza de que deseja eliminar todas as chaves digitais usadas?',
+                'method' => 'post',
+            ],
+        ]) ?>
+        <?= Html::endForm() ?>
     </p>
+    </div>
+    <div class="sincronizar-stocks">
+        <?= Html::a('Sincronizar Stocks', ['sincronizar-stocks'], [
+            'class' => 'btn btn-primary', // Estilo do botão
+            'data' => [
+                'confirm' => 'Tem certeza que deseja sincronizar os stocks?', // Confirmação antes de executar
+                'method' => 'post', // Tipo de requisição será POST
+            ],
+        ]) ?>
+    </div>
+
 
 
     <?= GridView::widget([
@@ -43,6 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
+
 
 
 </div>

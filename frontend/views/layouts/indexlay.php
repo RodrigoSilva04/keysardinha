@@ -4,11 +4,13 @@
 /** @var string $content */
 
 
+use common\models\Linhacarrinho;
 use frontend\assets\AppAsset;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
@@ -59,7 +61,20 @@ AppAsset::register($this);
 </head>
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
+<?php
 
+$carrinhoQuantidade = 0;
+
+// Obter o número de itens no carrinho
+if (!Yii::$app->user->isGuest) {
+    $carrinho = common\models\Carrinho::findOne(['utilizadorperfil_id' => Yii::$app->user->id]);
+    if ($carrinho) {
+        $carrinhoQuantidade = LinhaCarrinho::find()
+            ->where(['carrinho_id' => $carrinho->id])
+            ->sum('quantidade') ?? 0;
+    }
+}
+?>
 <?php
 $flashes = Yii::$app->session->getAllFlashes();
 $js = '';
@@ -86,16 +101,29 @@ if (!empty($js)) {
                     ) ?>
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Menu Start ***** -->
-                    <ul class="nav">
+                    <!-- Menu -->
+                    <ul class="nav d-flex justify-content-center align-items-center">
                         <li><?= Html::a('Home', ['/site/index'], ['class' => 'active']) ?></li>
                         <li><?= Html::a('Catálogo', ['/produto/index']) ?></li>
                         <li><?= Html::a('Favoritos', ['/favoritos/index']) ?></li>
-                        <li><?= Html::a('Contacto', ['/site/contact']) ?></li>
+                        <li><?= Html::a('Contact Us', ['/site/contact']) ?></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= Url::to(['carrinho/index']) ?>">
+                                <i class="fas fa-shopping-cart"></i>
+                                <?php if ($carrinhoQuantidade > 0): ?>
+                                    <span class="badge badge-pill badge-primary ">
+                                <?= $carrinhoQuantidade > 9 ? '9+' : $carrinhoQuantidade ?>
+                            </span>
+                                <?php endif; ?>
+                            </a>
+                        </li>
                         <?php if (Yii::$app->user->isGuest): ?>
-                            <li><?= Html::a('Sign In', ['/site/signup']) ?></li>
+                            <li><?= Html::a('<i class="fas fa-sign-in-alt"></i> Sign In', ['/site/signup']) ?></li>
                         <?php else: ?>
-                            <li><?= Html::a('Logout (' . Yii::$app->user->identity->username . ')', ['/site/logout'], ['data-method' => 'post']) ?></li>
+                            <li><?= Html::a('Meu Perfil', ['/perfil/index']) ?></li>
+                            <li><?= Html::a('<i class="fas fa-sign-out-alt"></i> Logout (' . Yii::$app->user->identity->username . ')', ['/site/logout'], ['data-method' => 'post' , 'id' => 'botao-logout']) ?></li>
                         <?php endif; ?>
+
                     </ul>
                     <a class="menu-trigger">
                         <span>Menu</span>

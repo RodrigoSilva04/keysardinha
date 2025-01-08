@@ -1,7 +1,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
-        <img src="../web/logokeysardinha.webp" alt="Keysardinha Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+    <a href="../../../frontend/web/site/index" class="brand-link">
+        <img src="<?= Yii::getAlias('@web') ?>/logokeysardinha.webp" alt="Keysardinha Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">KeySardinha</span>
     </a>
 
@@ -51,7 +51,7 @@
                     ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank'],
                     ['label' => 'Promoções e vendas', 'header' => true],
                     ['label' => 'Gerir metodos de pagamento', 'url' => ['metodopagamento/index'], 'iconStyle' => 'far'],
-                    ['label' => 'Gerir Promoções' ],
+                    ['label' => 'Gerir Promoções' , 'url' => ['descontos/index']],
                     [
                         'label' => 'Relatórios e estatísticas',
                         'items' => [

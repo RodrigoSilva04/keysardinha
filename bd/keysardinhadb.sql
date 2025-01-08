@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Tempo de geração: 06-Jan-2025 às 19:01
--- Versão do servidor: 8.3.0
--- versão do PHP: 8.1.28
+-- Tempo de geração: 08-Jan-2025 às 23:08
+-- Versão do servidor: 8.2.0
+-- versão do PHP: 8.1.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -42,10 +42,15 @@ CREATE TABLE IF NOT EXISTS `auth_assignment` (
 
 INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
 ('admin', '12', 1735924070),
+('admin', '13', 1736361110),
+('admin', '14', 1736365120),
+('admin', '15', 1736375087),
 ('admin', '2', 1733413428),
 ('client', '11', 1733757148),
+('client', '17', 1736375723),
 ('client', '3', 1733413428),
-('collaborator', '1', 1733413428);
+('collaborator', '1', 1733413428),
+('collaborator', '16', 1736375673);
 
 -- --------------------------------------------------------
 
@@ -244,31 +249,19 @@ CREATE TABLE IF NOT EXISTS `chavedigital` (
   `datavenda` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `produto_id` (`produto_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Extraindo dados da tabela `chavedigital`
 --
 
 INSERT INTO `chavedigital` (`id`, `chaveativacao`, `estado`, `produto_id`, `datavenda`) VALUES
-(1, '7U9OM7RWLK', 'usada', 40, NULL),
-(2, 'LO8F4LPTN9', 'usada', 3, '2025-01-03'),
-(3, '09GMJU99BJ', 'usada', 2, '2025-01-06'),
-(4, 'QW3BFL2RKC', 'usada', 40, '2024-12-28'),
-(5, 'D10LB4C4A7', 'usada', 40, '2024-12-29'),
-(6, 'ARNVRPRQNU', 'usada', 40, '2025-01-02'),
-(7, 'ARNVRPRQNU', 'usada', 40, '2025-01-02'),
-(8, 'UA7MPSVR53', 'usada', 40, '2025-01-02'),
-(9, 'Z50D9YJZWN', 'usada', 40, '2025-01-02'),
-(10, 'D4KNC7KI54', 'usada', 40, '2025-01-02'),
-(11, 'IGN4OW3LAE', 'nao usada', 40, NULL),
-(12, '1TLG2O6JUF', 'usada', 3, '2025-01-03'),
-(13, 'ASTQDLU52F', 'usada', 3, '2025-01-03'),
-(14, '6H1H95YJID', 'nao usada', 3, NULL),
-(15, 'TJ6LM2FMTV', 'usada', 4, '2025-01-03'),
-(16, '2C9M58FA7Z', 'usada', 4, '2025-01-03'),
-(17, 'P43IO5AJUF', 'usada', 4, '2025-01-03'),
-(18, 'FXIX46A38V', 'usada', 2, '2025-01-06');
+(5, 'D10LB4C4A7', 'nao usada', 2, '2024-12-29'),
+(11, 'IGN4OW3LAE', 'nao usada', 5, NULL),
+(19, '8TF43OV3HQ', 'nao usada', 2, NULL),
+(20, 'AFSA9LWI3S', 'nao usada', 2, NULL),
+(21, 'BFQQ1UOXVO', 'nao usada', 2, NULL),
+(23, 'L0FAOE9NNG', 'nao usada', 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -387,7 +380,7 @@ CREATE TABLE IF NOT EXISTS `fatura` (
   KEY `metodopagamento_id` (`metodopagamento_id`),
   KEY `desconto_id` (`desconto_id`),
   KEY `cupao_id` (`cupao_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Extraindo dados da tabela `fatura`
@@ -406,7 +399,13 @@ INSERT INTO `fatura` (`id`, `datafatura`, `totalciva`, `subtotal`, `valor_total`
 (23, '2025-01-03 18:13:58', 0.00, 0, 0.00, 'pago', 0, '2025-01-03 18:13:58', 12, 2, NULL, NULL),
 (24, '2025-01-03 18:17:09', 6.90, 30, 30.00, 'pago', 0, '2025-01-03 18:17:09', 12, 2, NULL, NULL),
 (25, '2025-01-06 18:50:10', 0.00, 0, 0.00, 'pago', 0, '2025-01-06 18:50:10', 12, 2, NULL, NULL),
-(26, '2025-01-06 18:53:30', 0.00, 0, 0.00, 'pago', 0, '2025-01-06 18:53:30', 12, 2, NULL, NULL);
+(26, '2025-01-06 18:53:30', 0.00, 0, 0.00, 'pago', 0, '2025-01-06 18:53:30', 12, 2, NULL, NULL),
+(27, '2025-01-08 20:00:42', 20.70, 90, 90.00, 'pago', 0, '2025-01-08 20:00:42', 12, 1, NULL, NULL),
+(28, '2025-01-08 20:04:05', 6.90, 30, 30.00, 'pago', 0, '2025-01-08 20:04:05', 12, 1, NULL, NULL),
+(29, '2025-01-08 20:39:25', 6.90, 30, 30.00, 'pago', 0, '2025-01-08 20:39:25', 12, 2, NULL, NULL),
+(30, '2025-01-08 20:39:46', 6.90, 30, 30.00, 'pago', 0, '2025-01-08 20:39:46', 12, 2, NULL, NULL),
+(31, '2025-01-08 20:50:53', 6.90, 30, 30.00, 'pago', 0, '2025-01-08 20:50:53', 12, 2, NULL, NULL),
+(32, '2025-01-08 20:52:19', 6.90, 30, 30.00, 'pago', 0, '2025-01-08 20:52:19', 12, 2, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -422,14 +421,15 @@ CREATE TABLE IF NOT EXISTS `favoritos` (
   PRIMARY KEY (`id`),
   KEY `utilizadorperfil_id` (`utilizadorperfil_id`),
   KEY `produto_id` (`produto_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Extraindo dados da tabela `favoritos`
 --
 
 INSERT INTO `favoritos` (`id`, `utilizadorperfil_id`, `produto_id`) VALUES
-(17, 11, 40);
+(17, 11, 40),
+(18, 13, 2);
 
 -- --------------------------------------------------------
 
@@ -485,7 +485,14 @@ CREATE TABLE IF NOT EXISTS `linhacarrinho` (
   PRIMARY KEY (`id`),
   KEY `carrinho_id` (`carrinho_id`),
   KEY `produto_id` (`produto_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Extraindo dados da tabela `linhacarrinho`
+--
+
+INSERT INTO `linhacarrinho` (`id`, `quantidade`, `preco_unitario`, `carrinho_id`, `produto_id`) VALUES
+(78, 1, 0.00, 3, 2);
 
 -- --------------------------------------------------------
 
@@ -510,7 +517,7 @@ CREATE TABLE IF NOT EXISTS `linhafatura` (
   KEY `produto_id` (`produto_id`),
   KEY `iva_id` (`iva_id`),
   KEY `chavedigital_id` (`chavedigital_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Extraindo dados da tabela `linhafatura`
@@ -528,7 +535,10 @@ INSERT INTO `linhafatura` (`id`, `quantidade`, `precounitario`, `subtotal`, `fat
 (23, 1, 0.00, 0.00, 23, 2, 4, 1, 17),
 (24, 1, 30.00, 30.00, 24, 2, 3, 1, 2),
 (25, 1, 0.00, 0.00, 25, 1, 2, 1, 18),
-(26, 1, 0.00, 0.00, 26, 1, 2, 1, 3);
+(26, 1, 0.00, 0.00, 26, 1, 2, 1, 3),
+(27, 1, 30.00, 30.00, 28, 2, 3, 1, 14),
+(28, 1, 30.00, 30.00, 31, 2, 3, 1, 1),
+(29, 1, 30.00, 30.00, 32, 2, 3, 1, 22);
 
 -- --------------------------------------------------------
 
@@ -617,21 +627,28 @@ CREATE TABLE IF NOT EXISTS `produto` (
   KEY `categoria_id` (`categoria_id`),
   KEY `desconto_id` (`desconto_id`),
   KEY `iva_id` (`iva_id`)
-) ;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Extraindo dados da tabela `produto`
 --
 
 INSERT INTO `produto` (`id`, `nome`, `descricao`, `preco`, `imagem`, `datalancamento`, `stockdisponivel`, `categoria_id`, `desconto_id`, `iva_id`) VALUES
-(1, 'Pai natal teste', 'dsadsa', 20.00, 'imagem_2025-01-02_173714123-removebg-preview.png', '2013-04-03', 10, 12, 1, 1),
-(2, 'Counter-Strike 2', 'Jogo popular na Steam', 0.00, 'cs2.png', NULL, 0, 1, 1, 1),
-(3, 'PUBG: BATTLEGROUNDS', 'Jogo popular na Steam', 30.00, 'imagemdefault.jpg', '2013-04-03', 10, 5, 2, 1),
-(4, 'Marvel Rivals', 'Jogo popular na Steam', 0.00, 'imagemdefault.jpg', '2013-04-03', 0, 10, 2, 1),
-(5, 'Dota 2', 'Jogo popular na Steam', 0.00, 'imagemdefault.jpg', NULL, 0, 1, 1, 1),
-(6, 'Wallpaper Engine', 'Jogo popular na Steam', 0.00, 'imagemdefault.jpg', NULL, 0, 1, 1, 1),
-(7, 'Path of Exile 2', 'Jogo popular na Steam', 0.00, 'imagemdefault.jpg', NULL, 0, 1, 1, 1),
-(12, 'Pai natal teste2321', '321321', 312312.00, 'codbo6.png', '2013-04-03', 10, 1, 1, 1);
+(2, 'Counter-Strike 2', 'Jogo popular na Steam', 10.00, 'cs2.png', '2023-09-27', 4, 1, 1, 1),
+(3, 'PUBG: BATTLEGROUNDS', 'Jogo popular na Steam', 30.00, 'pubg.png', '2013-04-03', 1, 5, 2, 1),
+(4, 'Marvel Rivals', 'Jogo popular na Steam', 0.00, 'marvelrivals.jpg', '2013-04-03', 0, 5, 2, 1),
+(5, 'Dota 2', 'Jogo popular na Steam', 10.00, 'dota2.jpg', '2013-07-09', 1, 1, 1, 1),
+(6, 'Wallpaper Engine', 'Jogo popular na Steam', 0.00, 'imagemdefault.jpg', '2016-10-10', 0, 8, 1, 1),
+(7, 'Path of Exile 2', 'Jogo popular na Steam', 0.00, 'pathexile2.jpg', '2024-12-06', 0, 6, 1, 1),
+(16, 'FarCry 3', 'Jogo popular de 2013', 30.00, 'farcry3.jpg', '2012-11-28', 0, 7, 1, 1),
+(17, 'The Witcher 3: Wild Hunt', 'Jogo de RPG de ação com um mundo aberto vasto e detalhado.', 59.99, 'witcher3.png', '2015-05-19', 0, 11, 2, 1),
+(18, 'Minecraft', 'Jogo de construção e exploração em um mundo aberto com blocos.', 19.99, 'minecraft.jpg', '2011-11-18', 0, 6, 2, 1),
+(19, 'Cyberpunk 2077', 'Jogo de RPG de ação no futuro distópico de Night City.', 69.99, 'cyberpunk77.jpg', '2020-12-10', 0, 1, 1, 1),
+(20, 'Red Dead Redemption 2', 'Jogo de ação e aventura no Velho Oeste, com gráficos realistas.', 59.99, 'rdr2.jpg', '2018-10-26', 0, 6, 2, 1),
+(21, 'FIFA 23', 'Jogo de futebol com realismo e modos de jogo diversificados.', 49.99, 'fifa23.jpg', '2022-09-30', 0, 4, 2, 1),
+(22, 'Call of Duty: Modern Warfare 2', 'Jogo de tiro em primeira pessoa, com intensa ação e modos multiplayer.', 59.99, 'codmw2.jpg', '2022-10-28', 0, 5, 2, 1),
+(23, 'Assassin\'s Creed Valhalla', 'Jogo de ação e aventura baseado na mitologia nórdica, com jogabilidade de mundo aberto.', 59.99, 'acvalhalla.jpg', '2020-11-10', 0, 1, 2, 1),
+(24, 'Grand Theft Auto V', 'O famoso gta 5', 30.00, 'gtav.jpg', '2013-10-03', 0, 12, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -655,7 +672,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `password_reset_token` (`password_reset_token`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Extraindo dados da tabela `user`
@@ -665,12 +682,17 @@ INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `password_res
 (1, 'exter', 'LppKrsgB_KrjbRPdtE2ntpX2gv4kfFfw', '$2y$13$MsyiN.B6707iikEOrYyMFu7w1hgpXggDksI2WU.LVbjS3s37OgHKm', NULL, 'exter@gmail.com', 10, 1730134030, 1730134030, 'BCytMqWfnWDvnIUGvd1DxoHcIhVDanuS_1730134030'),
 (2, 'rodrigo', 'ha89F14s796FEI8TL6Qt_w7jtCzkIF3q', '$2y$13$uo0CEi2SSvoghcAsfQXe5.I1Wu7UA.NdVzUSTt0Zpg8B.dYiCH2EG', NULL, 'roncas61@gmail.com', 10, 1731336149, 1731336149, 'sSDw8gYdxTxVEVPLaCOfTmMHXR4WGL_1_1731336149'),
 (5, 'Henrique', 'uHOM1LygvkzurOd--Zk_mQ8BclV4bi1G', '$2y$13$pGtH2pd.e44cjNs5D6czx.uAtkH8bSXNciGJA5p5QtoAGVsYy1FaC', NULL, 'henrique@gmail.com', 9, 1731342999, 1731342999, 'qd36kyR9_uJ7O5bKzpqWzV9UkmEnKvip_1731342999'),
-(7, 'fabiocigano', 'wzeEg9gtRmlYAm7Z1DZnldnUGiuJjgsD', '$2y$13$oXr2f3eC0AB05WeRcih4oOY1RUwzZPM5fskH8c2QSqDsEvve9Hd/S', NULL, 'ciganao@gmail.com', 10, 1731346534, 1731346534, 'UwJTF99MTI0mtvPB8Z_BZ7pS-zka1A8G_1731346534'),
-(8, 'admin', 'uETxhEOxShGzNuVjxPGDTovZ6sYYVj9A', '$2y$13$W3VoHTl7tfxLwpgSjvk.cO4ndOUiDLxezkP08DXGgvDSmMfj0xmJG', NULL, 'admin@gmail.com', 10, 1731347815, 1731347815, 'ZMJAr-aeaX3TyjUJWsGeXX6yDkb1jSWs_1731347815'),
+(7, 'fabiocigano', 'wzeEg9gtRmlYAm7Z1DZnldnUGiuJjgsD', '$2y$13$oXr2f3eC0AB05WeRcih4oOY1RUwzZPM5fskH8c2QSqDsEvve9Hd/S', NULL, 'ciganao@gmail.com', 11, 1731346534, 1736376182, 'UwJTF99MTI0mtvPB8Z_BZ7pS-zka1A8G_1731346534'),
+(8, 'admin', 'uETxhEOxShGzNuVjxPGDTovZ6sYYVj9A', '$2y$13$W3VoHTl7tfxLwpgSjvk.cO4ndOUiDLxezkP08DXGgvDSmMfj0xmJG', NULL, 'admin@gmail.com', 11, 1731347815, 1736376294, 'ZMJAr-aeaX3TyjUJWsGeXX6yDkb1jSWs_1731347815'),
 (9, 'Henrique1', 'qXd2dAC_fD7QqGTZBj6JFiA4xDO1cjYX', '$2y$13$Si4CSdM93HHVbqBwQFr4ZOf60l1Ktt1h0AS/dU9Ga2qjhuHIq3no6', NULL, 'henriquecigano@gmail.com', 10, 1731412566, 1731412566, 'VJtb8lTN7_K1ttS4skCHWtS8oSUdQGNC_1731412566'),
 (10, 'ricardo1', 'S2f6bt1cYvWXF-DOG9KGXEh1E5VIDqZJ', '$2y$13$KdHLihIcMo/IMy09W1.s5.4lgsWYRkkwYYkml.5OlEcCtpUB0IB/e', NULL, 'roberto@gmail.com', 10, 1731671125, 1731671125, 'Bf9lbheA-nEPost1sHANE-vuaE3A6J0d_1731671125'),
 (11, 'roberto1', 'P-sXUKQLnMoYMyd41i8DC87KZxPHuSog', '$2y$13$4.swPvAAskOKujYehdixh.ZBmsX7ApHOrDmP6kXPFu9t3ABzIFZ/y', NULL, 'roberto1@gmail.com', 10, 1733757148, 1733757148, 'tdRW4zHnic8aECaUyz2XvHCooY-5s8kH_1733757148'),
-(12, 'UtilizadorTesteFuncional', 'iBLY4qs9CkyH-6zF1RnLzbKT0CkC0mxU', '$2y$13$PQe9cT0MgsFhBpQc9nAfbeBE/.X7Qjr.rKu2/YeNpurF/MZjB2KDK', NULL, 'UtilizadorTesteFuncional@gmail.com', 10, 1735924070, 1735924070, 'q2O499wZ2hbnYRjinKTEBLYB1DQvxqxW_1735924070');
+(12, 'UtilizadorTesteFuncional', 'iBLY4qs9CkyH-6zF1RnLzbKT0CkC0mxU', '$2y$13$PQe9cT0MgsFhBpQc9nAfbeBE/.X7Qjr.rKu2/YeNpurF/MZjB2KDK', NULL, 'UtilizadorTesteFuncional@gmail.com', 10, 1735924070, 1735924070, 'q2O499wZ2hbnYRjinKTEBLYB1DQvxqxW_1735924070'),
+(13, 'igreja', '_rRBb0ldAXD4llOeMxCt7CaLnZswliHJ', '$2y$13$awgjmtJLs3kuQ29ByfpysOa0dpcoq8Kra/sGiUFbR7udsBU2RGLb2', NULL, 'igreja@gmail.com', 10, 1736361671, 1736361671, 'hiWPqn3Xl-CuvaGQhBlajFabCm3KKCYh_1736361671'),
+(14, 'testeFuncionalSemAcesso', 'FP91T8eWY09ov-1-wSmSrLWRLCh5SrTV', '$2y$13$hzu9E../tSPSFw72zMA1IuLD4qksUHhN3hDp4LTh5wRgHPBS.lEOC', NULL, 'random@gmail.com', 10, 1736365120, 1736365120, 'K2cBqTKxJhEUrmi_Y_EvOSrrMMagAUzN_1736365120'),
+(15, 'defesaAdmin', 'ZTVRP3y9egM5faWCUkD-bAz0ietGdis6', '$2y$13$WT8urkp/5YjLdy6nEo1kpOQqIuk7fZaeK2wM74eT0TDah6jpLgrcS', NULL, 'defesaadmin@gmail.com', 10, 1736375087, 1736375087, '7oo6j35dPxMpyOQGPJH0gJHWHUY9Cd6F_1736375087'),
+(16, 'defesaColaborador', '2g8zcn6_jjRrjMonQIm6DwElvxn5dTlK', '$2y$13$i4xMxi3VWcEe13lnn6g2hOWSL9xn9A8bwgjljc21JPTyNoJvaXetq', NULL, 'defesacolaborador@gmail.com', 10, 1736375673, 1736375673, 'z8KWtwPYUPNTsXPLAHfTIQmY80xBGkGU_1736375673'),
+(17, 'defesaClient', 'XrNB6adhHQLcNsEhrfMXnByIyXhjudKU', '$2y$13$OFGJMU9Eigwpf5w.gKkJL.TtbUTdTJ.8kxNdvthOXbFbdFg.6FlWu', NULL, 'defesaclient@gmail.com', 10, 1736375723, 1736375723, 'dtogaH-fMkxdGTVuevfcrOodf0MaNO81_1736375723');
 
 -- --------------------------------------------------------
 
@@ -687,7 +709,7 @@ CREATE TABLE IF NOT EXISTS `utilizadorperfil` (
   `carrinho_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `carrinho_id` (`carrinho_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Extraindo dados da tabela `utilizadorperfil`
@@ -701,7 +723,12 @@ INSERT INTO `utilizadorperfil` (`id`, `nome`, `dataregisto`, `pontosacumulados`,
 (9, NULL, '2024-11-12 11:56:06', 0, NULL),
 (10, NULL, '2024-11-15 11:45:25', 0, NULL),
 (11, NULL, '2024-12-09 15:12:28', 0, NULL),
-(12, NULL, '2025-01-03 17:07:50', 0, NULL);
+(12, 'Ricardo', '2025-01-03 17:07:50', 6, NULL),
+(13, NULL, '2025-01-08 18:31:50', 0, NULL),
+(14, NULL, '2025-01-08 19:38:40', 0, NULL),
+(15, NULL, '2025-01-08 22:24:47', 0, NULL),
+(16, NULL, '2025-01-08 22:34:33', 0, NULL),
+(17, NULL, '2025-01-08 22:35:23', 0, NULL);
 
 --
 -- Restrições para despejos de tabelas
@@ -734,12 +761,6 @@ ALTER TABLE `carrinho`
   ADD CONSTRAINT `carrinho_ibfk_2` FOREIGN KEY (`utilizadorperfil_id`) REFERENCES `utilizadorperfil` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Limitadores para a tabela `chavedigital`
---
-ALTER TABLE `chavedigital`
-  ADD CONSTRAINT `chavedigital_ibfk_1` FOREIGN KEY (`produto_id`) REFERENCES `produto` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Limitadores para a tabela `fatura`
 --
 ALTER TABLE `fatura`
@@ -747,38 +768,6 @@ ALTER TABLE `fatura`
   ADD CONSTRAINT `fatura_ibfk_3` FOREIGN KEY (`metodopagamento_id`) REFERENCES `metodopagamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fatura_ibfk_4` FOREIGN KEY (`utilizadorperfil_id`) REFERENCES `utilizadorperfil` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fatura_ibfk_5` FOREIGN KEY (`cupao_id`) REFERENCES `cupao` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Limitadores para a tabela `favoritos`
---
-ALTER TABLE `favoritos`
-  ADD CONSTRAINT `favoritos_ibfk_1` FOREIGN KEY (`produto_id`) REFERENCES `produto` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  ADD CONSTRAINT `favoritos_ibfk_2` FOREIGN KEY (`utilizadorperfil_id`) REFERENCES `utilizadorperfil` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
---
--- Limitadores para a tabela `linhacarrinho`
---
-ALTER TABLE `linhacarrinho`
-  ADD CONSTRAINT `linhacarrinho_ibfk_1` FOREIGN KEY (`carrinho_id`) REFERENCES `carrinho` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `linhacarrinho_ibfk_2` FOREIGN KEY (`produto_id`) REFERENCES `produto` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Limitadores para a tabela `linhafatura`
---
-ALTER TABLE `linhafatura`
-  ADD CONSTRAINT `linhafatura_ibfk_2` FOREIGN KEY (`fatura_id`) REFERENCES `fatura` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `linhafatura_ibfk_3` FOREIGN KEY (`iva_id`) REFERENCES `iva` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `linhafatura_ibfk_4` FOREIGN KEY (`produto_id`) REFERENCES `produto` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `linhafatura_ibfk_5` FOREIGN KEY (`desconto_id`) REFERENCES `desconto` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `linhafatura_ibfk_6` FOREIGN KEY (`chavedigital_id`) REFERENCES `chavedigital` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Limitadores para a tabela `produto`
---
-ALTER TABLE `produto`
-  ADD CONSTRAINT `produto_ibfk_1` FOREIGN KEY (`desconto_id`) REFERENCES `desconto` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `produto_ibfk_2` FOREIGN KEY (`categoria_id`) REFERENCES `categoria` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `produto_ibfk_3` FOREIGN KEY (`iva_id`) REFERENCES `iva` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

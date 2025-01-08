@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var common\models\Fatura $fatura */
 
-$this->title = $fatura->id;
+$this->title = 'Fatura';
 $this->params['breadcrumbs'][] = ['label' => 'Faturas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -16,7 +16,7 @@ $this->registerCssFile('@web/css/fatura-index.css');
 
 <div class="fatura-view">
 
-    <h1 class="text-center"><?= Html::encode($this->title) ?></h1>
+    <h1 class="text-center">Obrigado pela tua Compra!</h1>
 
     <div class="card">
         <div class="row justify-content-center">

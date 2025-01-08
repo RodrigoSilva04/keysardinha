@@ -462,6 +462,16 @@ class CarrinhoController extends Controller
 
 
         if ($fatura->save()) {
+            //Adiciona agora pontos fideliade ao utilizador pela compra
+            $pontosganhos = $valorTotal * 0.2;
+            $utilizador = Utilizadorperfil::findOne($idUtilizador);
+            $utilizador->pontosacumulados += $pontosganhos;
+            if ($utilizador->save()) {
+                Yii::$app->session->setFlash('success', 'Pontos de fidelidade adicionados com sucesso! Ganhou ' . $pontosganhos . ' pontos.');
+            } else {
+                Yii::$app->session->setFlash('error', 'Erro ao adicionar pontos de fidelidade.');
+            }
+
             // Agora atribui as linhas fatura
             foreach ($linhasCarrinho as $linha) {
                 $produto = Produto::findOne($linha->produto_id);

@@ -27,8 +27,8 @@ $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
                 <div class="col-lg-4 offset-lg-2">
                     <div class="right-image">
                         <img src="../imagensjogos/gtav.jpg" alt="">
-                        <span class="price">30€</span>
-                        <span class="offer">-40%</span>
+                        <span class="price"><?=$gta->preco?></span>
+                        <span class="offer"><?= $gta->desconto ? round($gta->desconto->percentagem) : 'Sem desconto' ?>%</span> <!-- Acessa a propriedade 'percentagem' -->
                     </div>
                 </div>
             </div>
