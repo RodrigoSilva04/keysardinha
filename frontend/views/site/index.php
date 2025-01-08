@@ -93,22 +93,30 @@ $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
                 </div>
                 <div class="col-lg-6">
                     <div class="main-button">
-                        <a href="shop.html">Ver todos</a>
+                        <a href="<?= \yii\helpers\Url::to(['produto/index']) ?>">Ver todos</a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="item">
-                        <div class="thumb">
-                            <a href="product-details.html"><img src="assets/images/trending-01.jpg" alt=""></a>
-                            <span class="price"><em>$28</em>$20</span>
-                        </div>
-                        <div class="down-content">
-                            <span class="category">Action</span>
-                            <h4>Assasin Creed</h4>
-                            <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
+                <?php foreach ($produtostendencias as $produto): ?>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="item">
+                            <div class="thumb">
+                                <a href="<?= \yii\helpers\Url::to(['produto/view', 'id' => $produto->id]) ?>">
+                                    <?= // Se a imagem estiver null, mostra uma imagem padrão
+                                    $produto->imagem == null ? Html::img('@web/imagensjogos/imagemdefault.jpg', ['alt' => 'Imagem do produto']) :
+                                        Html::img('@web/imagensjogos/' . $produto->imagem, ['alt' => 'Imagem do produto']) ?>
+                                </a>
+                                <span class="price"><?= $produto->preco ?>€</span>
+                            </div>
+                            <div class="down-content">
+                                <span class="category"><?= $produto->categoria->nome ?></span> <!-- A categoria pode ser um campo do modelo -->
+                                <h4><?= $produto->nome ?></h4>
+                                <a href="<?= \yii\helpers\Url::to(['carrinho/add-to-cart', 'IdProduto' => $produto->id]) ?>">
+                                    <i class="fa fa-shopping-bag"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>
@@ -201,7 +209,7 @@ $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
                                 </div>
                                 <p>Explora o nosso catálogo de jogos</p>
                                 <div class="main-button">
-                                    <a href="shop.html">Compre agora</a>
+                                    <a href="<?= \yii\helpers\Url::to(['produto/index']) ?>">Compre agora</a>
                                 </div>
                             </div>
                         </div>
@@ -228,15 +236,3 @@ $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
             </div>
         </div>
     </div>
-
-    <!-- Scripts -->
-    <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/isotope.min.js"></script>
-    <script src="assets/js/owl-carousel.js"></script>
-    <script src="assets/js/counter.js"></script>
-    <script src="assets/js/custom.js"></script>
-
-    </body>
-    </html>

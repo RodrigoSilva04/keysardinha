@@ -259,5 +259,64 @@ a.desc:after {
     margin-right: 0;
     width: 100%;   /* Faz com que ocupe toda a largura */
 }
+.toast {
+    font-family: Arial, sans-serif; /* Altere a fonte */
+    font-size: 16px; /* Tamanho da fonte */
+    border-radius: 8px; /* Bordas arredondadas */
+    padding: 15px; /* Adicionar preenchimento interno */
+}
+
+/* Estilo para notificações de sucesso */
+.toast-success {
+    background-color: #28a745 !important; /* Cor de fundo verde */
+    color: #fff; /* Cor do texto */
+
+}
+
+/* Estilo para notificações de erro */
+.toast-error {
+    background-color: #dc3545 !important; /* Cor de fundo vermelha */
+    color: #fff; /* Cor do texto */
+
+}
+
+/* Estilo para notificações informativas */
+.toast-info {
+    background-color: #17a2b8 !important; /* Cor de fundo azul */
+    color: #fff; /* Cor do texto */
+
+}
+
+/* Estilo para notificações de alerta */
+.toast-warning {
+    background-color: #ffc107 !important; /* Cor de fundo amarela */
+    color: #212529; /* Cor do texto escuro */
+
+}
+
+/* Estilo para o botão de fechar (close) */
+.toast-close-button {
+    color: #fff; /* Cor do botão de fechar */
+    font-size: 20px; /* Tamanho da fonte do botão */
+    opacity: 0.8;
+}
+
+.toast-close-button:hover {
+    opacity: 1; /* Opacidade do botão de fechar ao passar o mouse */
+}
+#rating {
+    display: flex;
+    cursor: pointer;
+}
+
+.star {
+    font-size: 24px;
+    color: #ddd; /* Cor inicial das estrelas */
+    margin-right: 5px;
+}
+
+.star.selected {
+    color: #FFD700; /* Cor das estrelas selecionadas */
+}
 
 

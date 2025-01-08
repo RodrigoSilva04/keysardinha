@@ -27,6 +27,7 @@ use Yii;
  */
 class Produto extends \yii\db\ActiveRecord
 {
+    private $_total_comprado;
 
     public $imagemFile;
     /**
@@ -83,6 +84,24 @@ class Produto extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Categoria::class, ['id' => 'categoria_id']);
     }
+    /**
+     * Gets query for [[Chavedigitals]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getChavedigitals()
+    {
+        return $this->hasMany(Chavedigital::class, ['produto_id' => 'id']);
+    }
+    /**
+     * Gets query for [[Comentarios]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getComentarios()
+    {
+        return $this->hasMany(Comentario::class, ['produto_id' => 'id']);
+    }
 
     /**
      * Gets query for [[Desconto]].
@@ -122,6 +141,16 @@ class Produto extends \yii\db\ActiveRecord
     public function getLinhacarrinhos()
     {
         return $this->hasMany(Linhacarrinho::class, ['produto_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Linhafaturas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLinhafaturas()
+    {
+        return $this->hasMany(Linhafatura::class, ['produto_id' => 'id']);
     }
     public function uploadImagem()
     {
@@ -211,5 +240,15 @@ class Produto extends \yii\db\ActiveRecord
             $mqtt->close();
         }
         else { file_put_contents("debug.output","Time out!"); }
+    }
+
+    public function getTotalComprado()
+    {
+        return $this->_total_comprado;
+    }
+
+    public function setTotalComprado($value)
+    {
+        $this->_total_comprado = $value;
     }
 }

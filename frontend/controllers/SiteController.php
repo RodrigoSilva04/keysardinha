@@ -8,6 +8,7 @@ use common\models\Produto;
 use common\models\Utilizadorperfil;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
+use yii\db\Expression;
 use yii\httpclient\Client;
 use Yii;
 use yii\base\InvalidArgumentException;
@@ -86,6 +87,14 @@ class SiteController extends Controller
         // Buscar os produtos criados no banco de dados
         $produtos = Produto::find()->all();
 
+        $produtostendencias = Produto::find()
+            ->select(['produto.*', new Expression('SUM(linhafatura.quantidade) AS total_comprado')]) // Inclui colunas do modelo e soma quantidades
+            ->innerJoin('linhafatura', 'produto.id = linhafatura.produto_id') // Relaciona com a tabela `linhafatura`
+            ->groupBy('produto.id') // Agrupa por ID do produto
+            ->orderBy(['total_comprado' => SORT_DESC]) // Ordena pelos mais comprados
+            ->limit(4) // Limita aos 4 primeiros
+            ->all(); // Retorna objetos do modelo Produto
+
         $categorias = Categoria::find()->all();
         $top3categorias = Categoria::find()->limit(3)->all();
 
@@ -95,7 +104,8 @@ class SiteController extends Controller
             'produtos' => $produtos,
             'categorias' => $categorias,
             'top3categorias' => $top3categorias,
-            'jogosmaisjogados' => $jogosmaisjogados
+            'jogosmaisjogados' => $jogosmaisjogados,
+            'produtostendencias' => $produtostendencias
         ]);
     }
 
@@ -114,7 +124,9 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            //Vai para site/index
+            Yii::$app->session->setFlash('success', 'Operação concluída com sucesso!');
+            return $this->redirect(['site/index']);
         }
 
         $model->password = '';
@@ -133,7 +145,7 @@ class SiteController extends Controller
     {
         Yii::$app->user->logout();
 
-        return $this->goHome();
+        return $this->redirect(['site/index']);
     }
 
     /**
@@ -178,8 +190,8 @@ class SiteController extends Controller
     {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
-            return $this->goHome();
+            Yii::$app->session->setFlash('success', 'Obrigado pelo teu registo. Verifica a tua caixa de entrada do email.');
+            return $this->redirect(['site/index']);
         }
 
         return $this->render('signup', [
@@ -199,7 +211,7 @@ class SiteController extends Controller
             if ($model->sendEmail()) {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
 
-                return $this->goHome();
+                return $this->redirect(['site/index']);
             }
 
             Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
@@ -228,7 +240,7 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
             Yii::$app->session->setFlash('success', 'New password saved.');
 
-            return $this->goHome();
+            return $this->redirect(['site/index']);
         }
 
         return $this->render('resetPassword', [

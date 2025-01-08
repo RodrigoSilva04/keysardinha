@@ -8,6 +8,7 @@ use common\models\Produto;
 use common\models\Categoria;
 use backend\models\UploadForm;
 
+use yii\filters\AccessControl;
 use yii\web\UploadedFile;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -28,10 +29,24 @@ class ProdutoController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['index', 'view', 'create', 'update', 'delete'], // Ações protegidas
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'actions' => ['index', 'view', 'create', 'update', 'delete'], // Permitir acesso às ações 'index' e 'view'
+                            'roles' => ['@'], // Apenas para usuários autenticados
+                        ],
+                        [
+                            'allow' => false, // Bloquear todas as outras tentativas de acesso
+                        ],
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
-                        'delete' => ['POST'],
+                        'delete' => ['POST'], // Apenas POST permitido para 'delete'
                     ],
                 ],
             ]
