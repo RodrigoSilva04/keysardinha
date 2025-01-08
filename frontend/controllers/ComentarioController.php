@@ -4,11 +4,48 @@ namespace frontend\controllers;
 
 use common\models\Comentario;
 use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 
 class ComentarioController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['checkout', 'finalizarcompra', 'verificar-cupao', 'remover-carrinho'], // Ações protegidas
+                    'rules' => [
+                        // Regra para utilizadores autenticados
+                        [
+                            'allow' => true,
+                            'actions' => ['create'], // Ações restritas
+                            'roles' => ['@'], // Apenas para utilizadores autenticados
+                        ],
+                        [
+                            'allow' => false, // Bloquear todas as outras tentativas de acesso
+                            'roles' => ['?'] // Bloquear utilizadores não autenticados
+                        ],
+                    ],
+                ],
+                'verbs' => [
+                    'class' => VerbFilter::class,
+                    'actions' => [
+                        'delete' => ['POST'], // Apenas POST permitido para 'delete'
+                    ],
+                ],
+            ]
+        );
+    }
     public function actionCreate()
     {
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->session->setFlash('error', 'Você precisa de dar login para comentar.');
+            return $this->redirect(['site/login']);
+        }
+
         $comentario = new Comentario();
 
         // Carrega os dados do formulário no modelo

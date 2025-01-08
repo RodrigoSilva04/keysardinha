@@ -125,7 +125,7 @@ if (!empty($js)) {
                             <li><?= Html::a('<i class="fas fa-sign-in-alt"></i> Sign In', ['/site/signup']) ?></li>
                         <?php else: ?>
                             <li><?= Html::a('Meu Perfil', ['/perfil/index']) ?></li>
-                            <li><?= Html::a('<i class="fas fa-sign-out-alt"></i> Logout (' . Yii::$app->user->identity->username . ')', ['/site/logout'], ['data-method' => 'post']) ?></li>
+                            <li><?= Html::a('<i class="fas fa-sign-out-alt"></i> Logout (' . Yii::$app->user->identity->username . ')', ['/site/logout'], ['data-method' => 'post' , 'id' => 'botao-logout']) ?></li>
                         <?php endif; ?>
 
                     </ul>

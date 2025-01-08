@@ -31,8 +31,8 @@ class ProdutoCest
         $I->wait(2);
 
         $I->amOnPage('produto/index');
-
-        $I->seeElement('a', ['href' => '/frontend/web/site/logout']); // Verify the logout link exists
+        $I->wait(3);
+        $I->seeElement('#botao-logout'); // Verify the logout link exists
     }
 
     public function testeCompraProdutoComStock(AcceptanceTester $I){
@@ -41,23 +41,24 @@ class ProdutoCest
         $I->wait(3);
         // 2. Verifique se a página de produtos foi carregada corretamente
         $I->see('Produtos');  // Ajuste de acordo com o título ou elemento da página
-
+        $I->wait(2);
         // 3. Selecione o produto (ajuste para o nome ou ID correto do produto)
         $I->seeElement('#add-to-cart-Produto-3');
         $I->click('#add-to-cart-Produto-3');  // Clique no link do produto
-        $I->wait(1);
+        $I->wait(2);
         $I->see('✔ Em Stock');
 
         $I->click('Checkout');
-
+        $I->wait(2);
         $I->amOnPage('carrinho/checkout');
-        $I->wait(1);
+        $I->wait(2);
 
         $I->click('#current-payment');
 
+        $I->wait(2);
         $I->click('li[data-method="1"]'); //
 
-        $I->wait(1);
+        $I->wait(2);
 
         $I->fillField('#paypal-email', 'email@teste.com');
 

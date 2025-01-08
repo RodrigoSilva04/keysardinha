@@ -6,11 +6,41 @@ use common\models\Fatura;
 use common\models\User;
 use Yii;
 use common\models\Utilizadorperfil;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 class PerfilController extends Controller
 {
+    public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['index', 'update'], // Ações protegidas
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'actions' => ['index','update'], // Permitir acesso às ações 'index' e 'view'
+                            'roles' => ['@'], // Apenas para utilizadores autenticados
+                        ],
+                        [
+                            'allow' => false, // Bloquear todas as outras tentativas de acesso
+                        ],
+                    ],
+                ],
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'], // Apenas POST permitido para 'delete'
+                    ],
+                ],
+            ]
+        );
+    }
     public function actionIndex()
     {
         // Obter o ID do utilizador logado

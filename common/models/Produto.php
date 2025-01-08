@@ -47,7 +47,7 @@ class Produto extends \yii\db\ActiveRecord
             [['nome'], 'required'],
             [['descricao'], 'string'],
             [['preco'], 'number'],
-            [['datalancamento'], 'safe'],
+            [['datalancamento'], 'date', 'format' => 'yyyy-MM-dd'],
             [['stockdisponivel', 'categoria_id', 'desconto_id', 'iva_id'], 'integer'],
             [['nome', 'imagem'], 'string', 'max' => 255],
             [['desconto_id'], 'exist', 'skipOnError' => true, 'targetClass' => Desconto::class, 'targetAttribute' => ['desconto_id' => 'id']],
