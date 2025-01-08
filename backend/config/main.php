@@ -84,9 +84,7 @@ return [
                     'controller' => 'api/fatura',
                     'extraPatterns' => [
                         'GET findfatura' => 'findfatura',// Ver todas as faturas do utilizador
-                        'GET {id}' => 'view', // Ver detalhes de uma fatura específica.                        'PUT update/{id}' => 'update', // Atualizar item no carrinho
-                        'POST create' => 'create',         // Criar uma nova fatura.
-                        'PUT update/{id}' => 'update',     // Atualizar uma fatura existente.
+                        'GET {id}' => 'view', // Ver detalhes de uma fatura específica.
                         'DELETE delete/{id}' => 'delete', // Apagar uma fatura.
                     ],
                     'pluralize' => false, // Evitar o plural
@@ -154,11 +152,6 @@ return [
                     'extraPatterns' => [
                         'GET view' => 'view',
                         'POST cupao' => 'create',
-                        'PUT cupao' => 'update',
-                        'DELETE cupao' => 'delete',
-                        'GET count' => 'count',
-                        'GET search' => 'search',
-                        'GET {id}/detalhes' => 'detalhes',
                     ],
                     'pluralize' => false, // Evitar o plural
                 ],
