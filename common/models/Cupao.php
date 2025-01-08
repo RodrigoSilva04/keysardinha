@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string|null $datavalidade
- * @property int|null $valor
+ * @property int $valor
  * @property int|null $ativo
  * @property string|null $codigo
  *
@@ -33,6 +33,7 @@ class Cupao extends \yii\db\ActiveRecord
     {
         return [
             [['datavalidade'], 'safe'],
+            [['valor'], 'required'],
             [['valor', 'ativo'], 'integer'],
             [['codigo'], 'string', 'max' => 10],
         ];

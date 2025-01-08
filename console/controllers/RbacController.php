@@ -166,45 +166,42 @@ class RbacController extends Controller
         $auth->addChild($client, $checkout); // Permissão para realizar checkout
         $auth->addChild($client, $applyDiscount); // Permissão para aplicar descontos
 
-// Permissões para o Colaborador
-        $auth->addChild($collaborator, $createGame);
-        $auth->addChild($collaborator, $readGame);
-        $auth->addChild($collaborator, $updateGame);
-        $auth->addChild($collaborator, $deleteGame);
+        // Permissões para o Colaborador
+        $auth->addChild($collaborator, $createGame); // Colaborador pode adicionar jogos
+        $auth->addChild($collaborator, $readGame); // Colaborador pode ver jogos
+        $auth->addChild($collaborator, $updateGame); // Colaborador pode atualizar jogos
+        $auth->addChild($collaborator, $deleteGame); // Colaborador pode remover jogos
 
-        $auth->addChild($collaborator, $createGameKey);
-        $auth->addChild($collaborator, $readGameKey);
-        $auth->addChild($collaborator, $updateGameKey);
-        $auth->addChild($collaborator, $deleteGameKey);
+        $auth->addChild($collaborator, $createGameKey); // Colaborador pode adicionar chaves digitais
+        $auth->addChild($collaborator, $readGameKey); // Colaborador pode ver chaves digitais
+        $auth->addChild($collaborator, $updateGameKey); // Colaborador pode atualizar chaves digitais
+        $auth->addChild($collaborator, $deleteGameKey); // Colaborador pode remover chaves digitais
 
-        $auth->addChild($collaborator, $createCategory);
-        $auth->addChild($collaborator, $readCategory);
-        $auth->addChild($collaborator, $updateCategory);
-        $auth->addChild($collaborator, $deleteCategory);
+        $auth->addChild($collaborator, $createCategory); // Colaborador pode adicionar categorias
+        $auth->addChild($collaborator, $readCategory); // Colaborador pode ver categorias
+        $auth->addChild($collaborator, $updateCategory); // Colaborador pode atualizar categorias
+        $auth->addChild($collaborator, $deleteCategory); // Colaborador pode remover categorias
 
-        $auth->addChild($collaborator, $viewSalesStatistics); // Permissão para visualizar estatísticas de vendas
+        $auth->addChild($collaborator, $viewSalesStatistics); // Permissão para ver as estatísticas de vendas
         $auth->addChild($collaborator, $acessBackend); // Acesso ao backend
 
         // Permissões para o Administrador
-        $auth->addChild($admin, $createUser);
-        $auth->addChild($admin, $readUser);
-        $auth->addChild($admin, $updateUser);
-        $auth->addChild($admin, $deleteUser);
+        $auth->addChild($admin, $createUser); // Administrador pode adicionar utilizadores
+        $auth->addChild($admin, $readUser); // Administrador pode ver utilizadores
+        $auth->addChild($admin, $updateUser); // Administrador pode atualizar utilizadores
+        $auth->addChild($admin, $deleteUser); // Administrador pode remover utilizadores
 
-        $auth->addChild($admin, $viewOrders); // Permissão para visualizar pedidos
+        $auth->addChild($admin, $viewOrders); // Permissão para ver pedidos
 
-        $auth->addChild($admin, $createPaymentMethod);
-        $auth->addChild($admin, $readPaymentMethod);
-        $auth->addChild($admin, $updatePaymentMethod);
-        $auth->addChild($admin, $deletePaymentMethod);
+        $auth->addChild($admin, $createPaymentMethod); // Administrador pode adicionar métodos de pagamento
+        $auth->addChild($admin, $readPaymentMethod); // Administrador pode ver métodos de pagamento
+        $auth->addChild($admin, $updatePaymentMethod); // Administrador pode atualizar métodos de pagamento
+        $auth->addChild($admin, $deletePaymentMethod); // Administrador pode remover métodos de pagamento
 
-        $auth->addChild($admin, $generateReports); // Permissão para gerar relatórios
+        $auth->addChild($admin, $generateReports); // Permissão para fazer relatórios
         $auth->addChild($admin, $collaborator); // Administrador herda permissões do colaborador
 
-
-        // Limpar todas as atribuições
-
-        // Atribuir roles aos utilizadores. 1 e 2 são IDs retornados por IdentityInterface::getId()
+        // Atribuir roles aos utilizadores. 1 e 2 e 3 são IDs retornados por IdentityInterface::getId()
         $auth->assign($collaborator, 1); // Atribuindo a role Collaborator ao usuário com ID 1
         $auth->assign($admin, 2); // Atribuindo a role Administrator ao usuário com ID 2
         $auth->assign($client, 3); // Atribuindo a role Client ao usuário com ID 3
