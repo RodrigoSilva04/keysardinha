@@ -28,8 +28,7 @@ class Desconto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['percentagem'], 'number'],
-        ];
+            ['percentagem', 'number', 'min' => 0, 'message' => 'Percentagem não pode ser negativa.'],        ];
     }
 
     /**
