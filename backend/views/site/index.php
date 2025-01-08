@@ -52,22 +52,7 @@ $this->registerJsFile('@web/js/graficos.js', [
                     </div>
                 </div>
             </div>
-
-            <h2>Gráfico de Vendas por Data</h2>
-
-            <!-- Contêiner para o gráfico -->
-            <canvas id="myChart" width="400" height="200"></canvas>
-
-            <!-- Passando os dados de vendas e datas para o JavaScript -->
-            <div id="grafico"
-                 data-datas="<?= json_encode($datas) ?>"
-                 data-vendas="<?= json_encode($vendas) ?>">
-                <?= json_encode($datas) ?>
-                <?= json_encode($vendas) ?>
-            </div>
-
-
-
+            
         </div>
 
     </div>
