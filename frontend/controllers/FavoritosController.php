@@ -6,6 +6,7 @@ use common\models\Favoritos;
 use common\models\Utilizadorperfil;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -23,10 +24,27 @@ class FavoritosController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['checkout', 'finalizarcompra', 'verificar-cupao', 'remover-carrinho'], // Ações protegidas
+                    'rules' => [
+                        // Regra para utilizadores autenticados
+                        [
+                            'allow' => true,
+                            'actions' => ['create','update' ,'delete'], // Ações restritas
+                            'roles' => ['@'], // Apenas para utilizadores autenticados
+                        ],
+                        // Regra para utilizadores não autenticados
+                        [
+                            'allow' => false, // Bloquear não autenticados
+
+                        ],
+                    ],
+                ],
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
-                        'delete' => ['POST'],
+                        'delete' => ['POST'], // Apenas POST permitido para 'delete'
                     ],
                 ],
             ]
@@ -84,6 +102,10 @@ class FavoritosController extends Controller
      */
     public function actionCreate($idProduto)
     {
+        if(Yii::$app->user->isGuest){
+            return $this->redirect(['site/login']);
+        }
+
         $model = new Favoritos();
 
         $model->utilizadorperfil_id = Yii::$app->user->id;

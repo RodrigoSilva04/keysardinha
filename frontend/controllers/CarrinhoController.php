@@ -15,6 +15,7 @@ use common\models\Utilizadorperfil;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\conditions\ExistsConditionBuilder;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -32,15 +33,40 @@ class CarrinhoController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['checkout', 'finalizarcompra', 'verificar-cupao', 'remover-carrinho'], // Ações protegidas
+                    'rules' => [
+                        // Regra para utilizadores autenticados
+                        [
+                            'allow' => true,
+                            'actions' => ['checkout', 'finalizarcompra'], // Ações restritas
+                            'roles' => ['@'], // Apenas para utilizadores autenticados
+                        ],
+                        // Regra para utilizadores não autenticados
+                        [
+                            'allow' => false, // Bloquear não autenticados
+                            'actions' => ['checkout', 'finalizarcompra'], // Bloqueia o acesso a essas ações
+                            'roles' => ['?'], // Aplicado para não autenticados
+                        ],
+                        // Regras adicionais para ações específicas que podem ser acessadas por todos
+                        [
+                            'allow' => true,
+                            'actions' => ['verificar-cupao', 'remover-carrinho'], // Estas ações podem ser acessadas por todos
+                            'roles' => ['@', '?'], // Tanto autenticados como não autenticados
+                        ],
+                    ],
+                ],
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
-                        'delete' => ['POST'],
+                        'delete' => ['POST'], // Apenas POST permitido para 'delete'
                     ],
                 ],
             ]
         );
     }
+
 
     /**
      * Lists all Carrinho models.

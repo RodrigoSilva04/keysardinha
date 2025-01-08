@@ -2,8 +2,8 @@
 
 namespace common\models;
 
+
 use Bluerhinos\phpMQTT;
-use Yii;
 
 /**
  * This is the model class for table "fatura".

@@ -29,7 +29,7 @@ class CategoriaController extends Controller
                         [
                             'allow' => true,
                             'actions' => ['index', 'view', 'create', 'update', 'delete'], // Permitir acesso às ações 'index' e 'view'
-                            'roles' => ['@'], // Apenas para usuários autenticados
+                            'roles' => ['@'], // Apenas para utilizadores autenticados
                         ],
                         [
                             'allow' => false, // Bloquear todas as outras tentativas de acesso
