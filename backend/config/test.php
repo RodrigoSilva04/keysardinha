@@ -14,6 +14,9 @@ return [
         'db' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=localhost;dbname=keysardinhadb',
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
         ],
     ],
 ];
