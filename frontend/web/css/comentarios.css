@@ -1,0 +1,129 @@
+.navbar-nav {
+    width: 100%;
+}
+
+@media (min-width: 568px) {
+    .end {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    #post {
+        width: 100%;
+    }
+}
+
+#clicked {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    text-align: center;
+    width: 100%;
+    background-color: #ADD8E6; /* Azul Claro */
+    border-color: #5F9EA0; /* Azul Verde */
+    color: white;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 13px;
+}
+
+#profile {
+    background-color: unset;
+}
+
+#post {
+    margin: 10px;
+    padding: 6px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-align: center;
+    background-color: #ADD8E6; /* Azul Claro */
+    border-color: #5F9EA0; /* Azul Verde */
+    color: white;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 13px;
+    width: 50%;
+}
+
+body {
+    background-color: #0171f9; /* Azul Escuro */
+}
+
+#nav-items li a, #profile {
+    text-decoration: none;
+    color: #E0FFFF; /* Azul Claro */
+    background-color: #2F4F4F; /* Azul Escuro */
+}
+
+.comments {
+    margin-top: 5%;
+    margin-left: 20px;
+}
+
+.darker {
+    border: 1px solid #ADD8E6; /* Azul Claro */
+    background-color: #2F4F4F; /* Azul Escuro */
+    float: right;
+    border-radius: 5px;
+    padding-left: 40px;
+    padding-right: 30px;
+    padding-top: 10px;
+}
+
+.comment {
+    border: 1px solid rgba(16, 46, 46, 1);
+    background-color: rgb(1, 113, 249);
+    float: left;
+    border-radius: 5px;
+    padding-left: 40px;
+    padding-right: 30px;
+    padding-top: 10px;
+}
+
+.comment h4, .comment span, .darker h4, .darker span {
+    display: inline;
+}
+
+.comment p, .comment span, .darker p, .darker span {
+    color: #E0FFFF; /* Azul Claro */
+}
+
+h1, h4 {
+    color: white;
+    font-weight: bold;
+}
+
+label {
+    color: #E0FFFF; /* Azul Claro */
+}
+
+#align-form {
+    margin-top: 20px;
+}
+
+.form-group p a {
+    color: white;
+}
+
+#checkbx {
+    background-color: #2F4F4F; /* Azul Escuro */
+}
+
+#darker img {
+    margin-right: 15px;
+    position: static;
+}
+
+.form-group input, .form-group textarea {
+    background-color: #2F4F4F; /* Azul Escuro */
+    border: 1px solid rgba(16, 46, 46, 1);
+    border-radius: 12px;
+}
+
+#form-comment {
+    border: 1px solid rgba(16, 46, 46, 1);
+    background-color: rgba(135, 236, 236, 0.97);
+    border-radius: 5px;
+    padding: 20px;
+}

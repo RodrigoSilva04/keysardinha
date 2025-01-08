@@ -41,7 +41,8 @@
         "codeception/verify": "^3.0 || ^2.2",
         "symfony/browser-kit": "^6.0 || >=2.7 <=4.2.4",
         "codeception/module-phpbrowser": "*",
-        "codeception/codeception": "^5.1"
+        "codeception/codeception": "^5.1",
+        "codeception/module-webdriver": "^3.2"
     },
     "autoload-dev": {
         "psr-4": {

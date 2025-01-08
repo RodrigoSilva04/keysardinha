@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Comentario;
 use common\models\Produto;
 use common\models\Categoria;
 use yii\data\ActiveDataProvider;
@@ -70,9 +71,20 @@ class ProdutoController extends Controller
      */
     public function actionView($id)
     {
+        $comentarios = Comentario::find()->where(['produto_id' => $id])->all();
+
+
+
+        $comentario = new Comentario();
+
         $produto = Produto::findOne(['id' => $id]);
+
+        $produtosrelacionados = Produto::find()->where(['categoria_id' => $produto->categoria_id])->limit(4)->all();
         return $this->render('view', [
             'produto' => $produto,
+            'comentarios' => $comentarios,
+            'comentario' => $comentario,
+            'produtosrelacionados' => $produtosrelacionados,
         ]);
     }
 

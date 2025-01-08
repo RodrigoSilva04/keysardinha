@@ -3,7 +3,6 @@
 /** @var \yii\web\View $this */
 /** @var string $content */
 
-use common\widgets\Alert;
 use frontend\assets\AppAsset;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
@@ -32,7 +31,31 @@ AppAsset::register($this);
     <link rel="stylesheet" href="<?= Yii::getAlias('@web/assetslayout/css/templatemo-lugx-gaming.css') ?>">
     <link rel="stylesheet" href="<?= Yii::getAlias('@web/assetslayout/css/owl.css') ?>">
     <link rel="stylesheet" href="<?= Yii::getAlias('@web/assetslayout/css/animate.css') ?>">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+    <!-- CSS do Toastr -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+    <!-- JS do Toastr sem dependência de jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right", // Posição
+            "preventDuplicates": true,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000", // 5 segundos
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    </script>
+
 
     <?php $this->head() ?>
 </head>
@@ -53,6 +76,20 @@ AppAsset::register($this);
         }
     }
 ?>
+<?php
+$flashes = Yii::$app->session->getAllFlashes();
+$js = '';
+foreach ($flashes as $type => $message) {
+    // Escapa as mensagens para evitar XSS
+    $message = Html::encode($message);
+    $js .= "toastr.{$type}('{$message}');";
+}
+if (!empty($js)) {
+    $this->registerJs($js, \yii\web\View::POS_READY);
+}
+?>
+
+
 
 <!-- Header -->
 <header class="header-area header-sticky">
@@ -115,7 +152,6 @@ AppAsset::register($this);
 </div>
 <main role="main" class="section trending">
     <div class="container-fluid">
-        <?= Alert::widget() ?>
         <?= $content ?>
     </div>
 </main>

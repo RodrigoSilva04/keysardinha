@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Comentario;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -21,10 +22,24 @@ class ComentarioController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['index', 'view', 'create', 'update', 'delete'], // Ações protegidas
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'actions' => ['index', 'view', 'create', 'update', 'delete'], // Permitir acesso às ações 'index' e 'view'
+                            'roles' => ['@'], // Apenas para usuários autenticados
+                        ],
+                        [
+                            'allow' => false, // Bloquear todas as outras tentativas de acesso
+                        ],
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
-                        'delete' => ['POST'],
+                        'delete' => ['POST'], // Apenas POST permitido para 'delete'
                     ],
                 ],
             ]
