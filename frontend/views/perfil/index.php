@@ -48,6 +48,9 @@ $this->registerJsFile('@web/js/perfil.js');
                     <div class="mt-3">
                         <button id="view-invoices-btn" class="btn btn-primary" type="button">Ver Faturas</button>
                     </div>
+                    <div class="mt-3">
+                        <button id="view-cupoes-btn" class="btn btn-primary" type="button">Ver Cupões</button>
+                    </div>
                 </div>
             </div>
             <div class="col-md-8">
@@ -90,7 +93,7 @@ $this->registerJsFile('@web/js/perfil.js');
                     </div>
                 </div>
                 <div class="order-table-container" style="max-height: 400px; overflow-y: auto;">
-                    <!-- Seção das faturas (oculta inicialmente) -->
+                    <!-- Faturas -->
                     <div id="invoice-details" style="display: none;">
                         <div class="tab-pane fade show active" id="invoices" role="tabpanel" aria-labelledby="invoices-tab">
                             <?php if (!empty($faturas)): ?>
@@ -106,7 +109,7 @@ $this->registerJsFile('@web/js/perfil.js');
                                     <?php foreach ($faturas as $fatura): ?>
                                         <tr>
                                             <td><?= Html::encode($fatura->datafatura) ?></td>
-                                            <td>€<?= number_format($fatura->valor_total) ?></td>
+                                            <td>€<?= number_format($fatura->valor_total, 2) ?></td>
                                             <td><?= Html::encode($fatura->estado) ?></td>
                                             <td>
                                                 <?= Html::a(
@@ -123,9 +126,40 @@ $this->registerJsFile('@web/js/perfil.js');
                                 <p>Nenhuma fatura encontrada.</p>
                             <?php endif; ?>
                         </div>
+                        <button id="back-to-profile-btn-invoice" class="btn btn-secondary mt-3" type="button">Voltar</button>
+                    </div>
 
+
+                    <!-- Cupões -->
+                    <div id="coupon-details" style="display: none;">
+                        <div class="tab-pane fade show active" id="coupons" role="tabpanel" aria-labelledby="coupons-tab">
+                            <?php if (!empty($cupoes)): ?>
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Valor</th>
+                                        <th>Código</th>
+                                        <th>Data de Validade</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php foreach ($cupoes as $cupao): ?>
+                                        <?php if ($cupao->ativo == 1): ?>
+                                            <tr>
+                                                <td>€<?= number_format($cupao->valor, 2) ?></td>
+                                                <td><?= Html::encode($cupao->codigo) ?></td>
+                                                <td><?= Html::encode($cupao->datavalidade) ?></td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            <?php else: ?>
+                                <p>Nenhum cupão encontrado.</p>
+                            <?php endif; ?>
+                        </div>
                         <!-- Botão para voltar aos detalhes do perfil -->
-                        <button id="back-to-profile-btn" class="btn btn-secondary mt-3" type="button">Voltar</button>
+                        <button id="back-to-profile-btn-coupon" class="btn btn-secondary mt-3" type="button">Voltar</button>
                     </div>
                 </div>
             </div>

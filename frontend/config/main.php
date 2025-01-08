@@ -1,4 +1,4 @@
-<?php
+    <?php
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -9,7 +9,7 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'defaultRoute' => 'site/index',
+    'defaultRoute' => '/site/index',
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'layout' => 'main',

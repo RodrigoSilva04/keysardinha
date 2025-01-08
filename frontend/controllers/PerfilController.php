@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Cupao;
 use common\models\Fatura;
 use common\models\User;
 use Yii;
@@ -44,6 +45,8 @@ class PerfilController extends Controller
     public function actionIndex()
     {
         // Obter o ID do utilizador logado
+        $cupoes = Cupao::findAll(['ativo' => 1]);
+
         $userId = Yii::$app->user->identity->id;
 
         // Encontrar o perfil e o utilizador
@@ -59,6 +62,7 @@ class PerfilController extends Controller
             'perfil' => $perfil,
             'user' => $user,
             'faturas' => $faturas,
+            'cupoes' => $cupoes
         ]);
     }
 
