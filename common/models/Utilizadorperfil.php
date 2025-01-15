@@ -66,4 +66,10 @@ class Utilizadorperfil extends \yii\db\ActiveRecord
         return $this->hasMany(Favoritos::class, ['utilizadorperfil_id' => 'id'])
             ->joinWith('produto'); // Carregar dados dos produtos relacionados;
     }
+
+    public function getTarefa()
+    {
+        return $this->hasMany(Tarefa::class, ['user_id' => 'id'])
+            ->joinWith('user'); // Carregar dados das tarefas;
+    }
 }

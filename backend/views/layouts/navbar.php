@@ -28,6 +28,9 @@ use yii\helpers\Html;
         <li class="nav-item d-none d-sm-inline-block">
             <a href="<?= \yii\helpers\Url::to(['iva/index']) ?>" class="nav-link">IVA</a>
         </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="<?= \yii\helpers\Url::to(['tarefa/index']) ?>" class="nav-link">Tarefa</a>
+        </li>
         <li class="nav-item dropdown">
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Promoções</a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
