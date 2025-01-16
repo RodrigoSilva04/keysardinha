@@ -46,8 +46,8 @@ class ProdutoController extends ActiveController
             ];
         }
     }
-
-    public function actionIndex()
+    
+    public function actionListarJogos()
     {
         // Obter todos os produtos da base de dados
         $produtos = Produto::find()->all();
@@ -68,19 +68,13 @@ class ProdutoController extends ActiveController
                 'id' => $produto->id,
                 'nome' => $produto->nome,
                 'descricao' => $produto->descricao,
+                'categoria' => $produto->categoria,
                 'preco' => $produto->preco,
                 'stockdisponivel' => $produto->stockdisponivel,
-                'imagem' => $produto->imagem,
+                'imagem' => Yii::getAlias('@frontend/web/imagensjogos/') . '/' . $produto->imagem,
             ];
         }
-
-        // Retornar os produtos formatados
-        Yii::$app->response->statusCode = 200; // Sucesso
-        return [
-            'status' => 'success',
-            'message' => 'Produtos recuperados com sucesso.',
-            'data' => $produtosFormatados,
-        ];
+        return $produtosFormatados;
     }
 
     //Mostrar todos os produtos
@@ -102,6 +96,7 @@ class ProdutoController extends ActiveController
             'data' => [
                 'id' => $produto->id,
                 'nome' => $produto->nome,
+                'categoria' => $produto->categoria,
                 'descricao' => $produto->descricao,
                 'preco' => $produto->preco,
                 'stockdisponivel' => $produto->stockdisponivel,
@@ -173,10 +168,19 @@ class ProdutoController extends ActiveController
 
         return [
             'status' => 'success',
-            'message' => 'Detalhes do produto encontrados.',
-            'produto' => $produto->toArray(),
+            'message' => 'Produto recuperado com sucesso.',
+            'data' => [
+                'id' => $produto->id,
+                'nome' => $produto->nome,
+                'categoria' => $produto->categoria,
+                'descricao' => $produto->descricao,
+                'preco' => $produto->preco,
+                'stockdisponivel' => $produto->stockdisponivel,
+                'imagem' => Yii::getAlias('@frontend/web/imagensjogos/') . '/' . $produto->imagem,
+            ],
         ];
     }
+
     public function actionCount()
     {
         $count = $this->modelClass::find()->count();

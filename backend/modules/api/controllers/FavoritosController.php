@@ -21,31 +21,56 @@ class FavoritosController extends ActiveController
         return $behaviors;
     }
 
-    public function actionIndex()
-    {
-        $idUser = Yii::$app->user->id;
+    public function actionListaFavoritos()
+{
+    $idUser = Yii::$app->user->id;
 
-        if (!$idUser) {
-            return Yii::$app->response->setStatusCode(401)
-                ->data = [
-                'status' => 'error',
-                'message' => 'Usuário não autenticado.',
-            ];
-        }
-
-        $favoritos = Favoritos::find()
-            ->where(['utilizadorperfil_id' => $idUser])
-            ->joinWith('produto') // Carregar dados dos produtos relacionados
-            ->asArray()
-            ->all();
-
-        return Yii::$app->response->setStatusCode(200)
-            ->data = [
-            'status' => 'success',
-            'message' => 'Favoritos recuperados com sucesso.',
-            'data' => $favoritos,
+    // Verificando se o usuário está autenticado
+    if (!$idUser) {
+        Yii::$app->response->statusCode = 401; // Código HTTP para não autorizado
+        return [
+            'status' => 'error',
+            'message' => 'Usuário não autenticado.',
         ];
     }
+
+    // Recuperando os favoritos com os dados dos produtos relacionados
+    $favoritos = Favoritos::find()->where(['utilizadorperfil_id' => $idUser])->all();
+
+    // Verificando se existem favoritos
+    if (empty($favoritos)) {
+        Yii::$app->response->statusCode = 404; // Código HTTP para não encontrado
+        return [
+            'status' => 'error',
+            'message' => 'Nenhum favorito encontrado.',
+        ];
+    }
+
+    // Preparando a resposta com a categoria
+    $produtosFavoritos = [];
+    foreach ($favoritos as $favorito) {
+        $produtosFavoritos[] = [
+            'id' => $favorito->produto->id,
+            'nome' => $favorito->produto->nome,
+            'descricao' => $favorito->produto->descricao,
+            'preco' => $favorito->produto->preco,
+            'imagem' => $favorito->produto->imagem,
+            'datalancamento' => $favorito->produto->datalancamento,
+            'stockdisponivel' => $favorito->produto->stockdisponivel,
+            'categoria' => $favorito->produto->categoria->nome, // Aqui está o nome da categoria
+            'desconto' => $favorito->produto->desconto->percentagem,
+            'iva' => $favorito->produto->iva->taxa,
+        ];
+    }
+
+    // Preparando a resposta com os dados dos produtos favoritos
+    return [
+        'status' => 'success',
+        'message' => 'Favoritos recuperados com sucesso.',
+        'data' => $produtosFavoritos, // Retorna a lista de produtos favoritos
+    ];
+}
+
 
 
     // adicionar produto aos favoritos

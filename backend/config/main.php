@@ -5,6 +5,9 @@ $params = array_merge(
     require __DIR__ . '/params.php',
     require __DIR__ . '/params-local.php'
 );
+// Definindo um alias para a pasta 'frontend/web'
+Yii::setAlias('@frontend', dirname(dirname(__DIR__)) . '/frontend');
+Yii::setAlias('@frontend/web/imagensjogos/', 'http://172.22.21.216/keysardinha/frontend/web/imagensjogos/');
 
 return [
     'id' => 'app-backend',
@@ -50,15 +53,15 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/produto', // Controlador de produtos
                 'extraPatterns' => [
-                    'GET index' => 'index', //Lista todos os produtos
-                    'GET view' => 'view', // Mostra todos os produtos
+                    'GET listar-jogos' => 'listar-jogos', //Lista todos os produtos
+                    'GET view/{id}' => 'view', // Mostra o produto
                     'POST produto' => 'create',// Cria produto
                     'PUT produto' => 'update', // Atualiza produto
                     'DELETE produto' => 'delete',    // apagar produto
                     'GET count' => 'count',  // Conta quanto jogos há
                     'GET search' => 'search', // Pesquisar jogos.
                     'GET filter' => 'filter',  // Filtrar por categoria.
-                    'GET {id}/detalhes' => 'detalhes', // Ver detalhes de um jogo
+                    'GET detalhes/{id}' => 'detalhes', // Ver detalhes de um jogo
                     ],
                     'pluralize' => false, // Evitar o plural
                 ],
@@ -95,7 +98,7 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/favoritos',
                     'extraPatterns' => [
-                        'GET index' => 'index', //Lista todos os favoritos do user
+                        'GET lista-favoritos' => 'lista-favoritos', //Lista todos os favoritos do user
                         'POST add' => 'add', // Adicionar aos favoritos.
                         'DELETE remove/{id}' => 'remove',  // Remover dos favoritos.
                         'GET offline' => 'offline',  // Gerir favoritos offline.

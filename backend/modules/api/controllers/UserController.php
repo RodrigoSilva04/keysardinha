@@ -16,7 +16,7 @@ class UserController extends ActiveController
 
     public function actionLogin()
     {
-        $data = Yii::$app->request->post(); // Recebe as credenciais do usuário via POST
+        $data = json_decode(file_get_contents("php://input"), true); // Captura o JSON enviado
 
         // Verifica se as credenciais foram fornecidas
         if (empty($data['email']) || empty($data['password'])) {
@@ -46,25 +46,26 @@ class UserController extends ActiveController
 
     public function actionSignUp()
     {
-        $data = Yii::$app->request->post(); // Recebe as credenciais do usuário via POST
+        $data = json_decode(file_get_contents("php://input"), true); // Recebe as credenciais do usuário via POST
 
         // Verifica se as credenciais foram fornecidas
-        if (empty($data['email']) || empty($data['password'])) {
-            throw new BadRequestHttpException('Email e senha são obrigatórios');
+        if (empty($data['email']) || empty($data['password']) ||empty($data['username']) ) {
+            throw new BadRequestHttpException('Email,senha e username são obrigatórios');
         }
 
         $user = new User();
-        $user->username = $data->username;
-        $user->email = $data->email;
-        $user->setPassword($data->password); // Define a senha
+        $user->username = $data['username'];  
+        $user->email = $data['email'];        
+        $user->setPassword($data['password']); // Define a senha
         $user->generateAuthKey(); // Gera a chave de autenticação
         $user->generateEmailVerificationToken(); // Gera o token de verificação de e-mail
+
 
         // Tenta salvar o utilizador
         if ($user->save()) {
             // Cria o perfil do usuário
             $utilizadorPerfil = new UtilizadorPerfil();
-            $utilizadorPerfil->user_id = $user->id; // Associa o perfil ao ID do usuário
+            $utilizadorPerfil->id = $user->id; // Associa o perfil ao ID do usuário
             $utilizadorPerfil->nome = null; // Nome será fornecido posteriormente
             $utilizadorPerfil->dataregisto = date('Y-m-d H:i:s'); // Data de registro
             $utilizadorPerfil->pontosacumulados = 0; // Inicia os pontos acumulados como 0
@@ -83,7 +84,7 @@ class UserController extends ActiveController
             }
 
             // Salva o perfil e envia o e-mail de verificação
-            if ($utilizadorPerfil->save() && $this->sendEmail($user)) {
+            if ($utilizadorPerfil->save()) {
                 return Yii::$app->response->setStatusCode(201)->data = [
                     'status' => 'success',
                     'message' => 'Utilizador criado com sucesso.',
@@ -96,8 +97,8 @@ class UserController extends ActiveController
             } else {
                 return Yii::$app->response->setStatusCode(400)->data = [
                     'status' => 'error',
-                    'message' => 'Erro ao criar o perfil ou enviar o e-mail de verificação.',
-                    'errors' => $utilizadorPerfil->errors,
+                    'message' => 'Erro ao criar o utilizador.',
+                    'errors' => $user->errors,  // Adicione erros específicos para identificar o campo com problema
                 ];
             }
         }
