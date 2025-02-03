@@ -89,6 +89,7 @@ return [
                     'extraPatterns' => [
                         'GET findfatura' => 'findfatura',// Ver todas as faturas do utilizador
                         'GET {id}' => 'view', // Ver detalhes de uma fatura específica.
+                        'GET detalhes/{id}' => 'detalhes',
                         'DELETE delete/{id}' => 'delete', // Apagar uma fatura.
                     ],
                     'pluralize' => false, // Evitar o plural
@@ -161,6 +162,16 @@ return [
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/mensagem',
+                    'extraPatterns' => [
+                        'POST mensagem' => 'send-message',
+                        'GET contador-mensagem/{id}' => 'contador-mensagem',
+                        'GET mostrar-mensagens/{id}' => 'mostrar-mensagens',
+                    ],
+                    'pluralize' => false, // Evitar o plural
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/metodopagamento',
                     'extraPatterns' => [
                         'GET index' => 'index',
@@ -190,6 +201,7 @@ return [
                         'DELETE comentario' => 'delete',
                     ],
                     'pluralize' => false, // Evitar o plural
+
             ]
 
 

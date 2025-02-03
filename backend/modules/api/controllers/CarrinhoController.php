@@ -30,49 +30,84 @@ class CarrinhoController extends ActiveController
         return $behaviors;
     }
     public function actionFindCarrinho()
-    {
-        $user = Yii::$app->user;
+{
+    $user = Yii::$app->user;
 
-        if (!$user) {
-            return Yii::$app->response->setStatusCode(401)->data = [
-                'status' => 'error',
-                'message' => 'Token inválido ou usuário não autenticado.',
-            ];
-        }
-
-        // Obter o carrinho do usuário autenticado
-        $carrinho = Carrinho::findOne(['utilizadorperfil_id' => $user->id]);
-
-        if (!$carrinho) {
-            //Cria um carrinho vazio para o utilizador
-            $carrinho = new Carrinho();
-            $carrinho->utilizadorperfil_id = $user->id;
-            $carrinho->data_criacao = date('Y-m-d H:i:s');
-            if (!$carrinho->save()) {
-                Yii::error('Erro ao criar o carrinho para o utilizador ID: ' . $user->id . '. Erros: ' . json_encode($carrinho->errors), __METHOD__);
-                return Yii::$app->response->setStatusCode(400)->data = [
-                    'status' => 'error',
-                    'message' => 'Erro ao criar o carrinho.',
-                    'errors' => $carrinho->errors,
-                ];
-            }
-            return Yii::$app->response->setStatusCode(404)->data = [
-                'status' => 'success',
-                'message' => 'O utilizador nao tinha um carrinho mas foi criado um.',
-            ];
-        }
-
-        // Buscar as linhas do carrinho associado
-        $linhasCarrinho = Linhacarrinho::find()->where(['carrinho_id' => $carrinho->id])->all();
-
-        // Retornar os dados do carrinho
-        return Yii::$app->response->setStatusCode(200)->data = [
-            'status' => 'success',
-            'message' => 'Carrinho recuperado com sucesso para o usuário ID: ' . $user->id,
-            'carrinho' => $carrinho,
-            'linhasCarrinho' => $linhasCarrinho,
+    if (!$user) {
+        return Yii::$app->response->setStatusCode(401)->data = [
+            'status' => 'error',
+            'message' => 'Token inválido ou usuário não autenticado.',
         ];
     }
+
+    // Obter o carrinho do usuário autenticado
+    $carrinho = Carrinho::findOne(['utilizadorperfil_id' => $user->id]);
+
+    if (!$carrinho) {
+        // Cria um carrinho vazio para o utilizador
+        $carrinho = new Carrinho();
+        $carrinho->utilizadorperfil_id = $user->id;
+        $carrinho->data_criacao = new \yii\db\Expression('NOW()'); 
+        if (!$carrinho->save()) {
+            Yii::error('Erro ao criar o carrinho para o utilizador ID: ' . $user->id . '. Erros: ' . json_encode($carrinho->errors), __METHOD__);
+            return Yii::$app->response->setStatusCode(400)->data = [
+                'status' => 'error',
+                'message' => 'Erro ao criar o carrinho.',
+                'errors' => $carrinho->errors,
+            ];
+        }
+        return Yii::$app->response->setStatusCode(201)->data = [
+            'status' => 'success',
+            'message' => 'O utilizador não tinha um carrinho, mas foi criado um.',
+        ];
+    }
+
+    // Buscar as linhas do carrinho associado
+    $linhasCarrinho = Linhacarrinho::find()
+        ->where(['carrinho_id' => $carrinho->id])
+        ->with('produto')  // Assuming you have a relation defined with 'produto'
+        ->all();
+
+    // Calcular o total do carrinho
+    $total = 0;
+    foreach ($linhasCarrinho as $linha) {
+        $total += $linha->quantidade * $linha->preco_unitario;
+    }
+
+    // Retornar os dados do carrinho
+    return Yii::$app->response->setStatusCode(200)->data = [
+        'status' => 'success',
+        'message' => 'Carrinho recuperado com sucesso para o usuário ID: ' . $user->id,
+        'carrinho' => [
+            'id' => $carrinho->id,
+            'data_criacao' => $carrinho->data_criacao,
+            'cupao_id' => $carrinho->cupao_id,
+            'utilizadorperfil_id' => $carrinho->utilizadorperfil_id,
+            'total' => number_format($total, 2),  // Formatar o total como moeda
+        ],
+        'linhasCarrinho' => array_map(function ($linha) {
+            return [
+                'id' => $linha->id,
+                'quantidade' => $linha->quantidade,
+                'preco_unitario' => $linha->preco_unitario,
+                'preco_total' => $linha->quantidade * $linha->preco_unitario,
+                'produto_id' => $linha->produto_id,
+                'produto' => [
+                    'id' => $linha->produto->id,
+                    'nome' => $linha->produto->nome,
+                    'categoria' => $linha->produto->categoria->nome,
+                    'descricao' => $linha->produto->descricao,
+                    'preco' => $linha->produto->preco,
+                    'stockdisponivel' => $linha->produto->stockdisponivel,
+                    'imagem' => Yii::getAlias('@frontend/web/imagensjogos/') . '/' . $linha->produto->imagem,
+                    'datalancamento' => $linha->produto->datalancamento,
+                    'desconto' => $linha->produto->desconto->percentagem,
+                    'iva' => $linha->produto->iva->taxa,
+                ],
+            ];
+        }, $linhasCarrinho),
+    ];
+}
 
 
     public function actionView()
@@ -201,8 +236,20 @@ class CarrinhoController extends ActiveController
     // Adicionar item ao carrinho
     public function actionAddToCart()
     {
+
+        $data = json_decode(file_get_contents("php://input"), true); // Captura o JSON enviado
+
+        // Verifica se as credenciais foram fornecidas
+        if (empty($data['produto_id'])) {
+            return Yii::$app->response->setStatusCode(404)->data = [
+                'status' => 'error',
+                'message' => 'Produto_id não encontrado : ',
+            ];
+        }
+
         $userId = Yii::$app->user->id; // ID do utilizador autenticado
 
+        
         // Obter ou criar o carrinho do utilizador
         $carrinho = Carrinho::findOne(['utilizadorperfil_id' => $userId]);
         if (!$carrinho) {
@@ -218,9 +265,11 @@ class CarrinhoController extends ActiveController
                 ];
             }
         }
+        // Verificar se o produto existe
+        $produto = Produto::findOne(['id' => $data['produto_id']]);
+        $IdProduto= $produto->id;
 
-        //Ir buscar o id do produto a adicionar
-        $IdProduto = Yii::$app->request->post('produto_id');
+    
 
         // Verificar se o produto existe
         $produto = Produto::findOne($IdProduto);
@@ -281,9 +330,18 @@ class CarrinhoController extends ActiveController
     // Remover item do carrinho
     public function actionRemove()
     {
-        // Obter o ID do produto a ser removido
-        $id = Yii::$app->request->post('produto_id');
+        $data = json_decode(file_get_contents("php://input"), true); // Captura o JSON enviado
 
+        // Verifica se as credenciais foram fornecidas
+        if (empty($data['produto_id'])) {
+            return Yii::$app->response->setStatusCode(404)->data = [
+                'status' => 'error',
+                'message' => 'Produto_id não encontrado : ',
+            ];
+        }
+        
+
+        
         // Obter o carrinho do utilizador
         $carrinho = Carrinho::findOne(['utilizadorperfil_id' => Yii::$app->user->id]);
 
@@ -297,14 +355,16 @@ class CarrinhoController extends ActiveController
         }
 
         // Verificar se o produto existe
-        $produto = Produto::findOne($id);
-        if (!$produto) {
-            Yii::error("Produto não encontrado com ID: $id", __METHOD__);
-            return Yii::$app->response->setStatusCode(404)->data = [
-                'status' => 'error',
-                'message' => 'Produto não encontrado.',
-            ];
-        }
+        $produto = Produto::findOne(['id' => $data['produto_id']]);
+        $id= $produto->id;
+
+        // Verificar se o id foi recebido corretamente
+        if ($produto->id === null || $produto->id === 0) {
+        return Yii::$app->response->setStatusCode(404)->data = [
+            'status' => 'error',
+            'message' => 'Produto_id não encontrado.',
+        ];
+    }
 
         // Verificar se o produto já está no carrinho
         $linhaCarrinho = Linhacarrinho::findOne(['carrinho_id' => $carrinho->id, 'produto_id' => $id]);
@@ -424,8 +484,18 @@ class CarrinhoController extends ActiveController
         $idUtilizador = Yii::$app->user->id;
 
 
-        // Obter o metodo de pagamento da requisição
-        $metodopagamento_id = Yii::$app->request->post('metodopagamento_id');
+        $data = json_decode(file_get_contents("php://input"), true); // Captura o JSON enviado
+
+        // Verifica se as credenciais foram fornecidas
+        if (empty($data['metodopagamento_id'])) {
+            return Yii::$app->response->setStatusCode(404)->data = [
+                'status' => 'error',
+                'message' => 'metodopagamento_id não encontrado : ',
+            ];
+        }
+        // Verificar se o produto existe
+        $metodoPagamento = Metodopagamento::findOne(['id' => $data['metodopagamento_id']]);
+        $metodopagamento_id= $metodoPagamento->id;
 
         // Verificar se o utilizador tem carrinho ativo
         $carrinho = Carrinho::findOne(['utilizadorperfil_id' => $idUtilizador]);

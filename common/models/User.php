@@ -235,4 +235,8 @@ class User extends ActiveRecord implements IdentityInterface
         return Utilizadorperfil::findOne(['id' => $this->id]);
     }
 
+    public function getMensagems()
+    {
+        return $this->hasMany(Mensagem::class, ['user_id' => 'id']);
+    }
 }

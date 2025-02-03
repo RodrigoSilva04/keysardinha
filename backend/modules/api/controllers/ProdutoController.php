@@ -19,7 +19,16 @@ class ProdutoController extends ActiveController
     public $modelClass = 'common\models\Produto';
 
 
-
+    public function behaviors()
+    {
+        Yii::$app->params['id'] = 0;
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => CustomAuth::className(),
+            //only=> ['index'], //Apenas para o GET
+        ];
+        return $behaviors;
+    }
     public function actionCreate()
     {
         $produto = new Produto();
@@ -43,10 +52,6 @@ class ProdutoController extends ActiveController
         // Obter todos os produtos da base de dados
         $produtos = Produto::find()->all();
 
-
-        $perfilutilizador_id = Yii::$app->user->id;
-
-
         // Verificar se há produtos
         if (empty($produtos)) {
             Yii::$app->response->statusCode = 404; // Nenhum produto encontrado
@@ -67,16 +72,12 @@ class ProdutoController extends ActiveController
                 'preco' => $produto->preco,
                 'stockdisponivel' => $produto->stockdisponivel,
                 'imagem' => Yii::getAlias('@frontend/web/imagensjogos/') . '/' . $produto->imagem,
+                'datalancamento' => $produto->datalancamento,
                 'desconto' => $produto->desconto->percentagem,
                 'iva' => $produto->iva->taxa,
             ];
         }
-        return [
-            'status' => 'success',
-            'message' => 'Jogos recuperados com sucesso.',
-            'data' => $produtosFormatados,
-            'perfilutilizador_id' => $perfilutilizador_id,
-        ];
+        return $produtosFormatados;
     }
 
     //Mostrar todos os produtos
@@ -174,11 +175,14 @@ class ProdutoController extends ActiveController
             'data' => [
                 'id' => $produto->id,
                 'nome' => $produto->nome,
-                'categoria' => $produto->categoria,
+                'categoria' => $produto->categoria->nome,
                 'descricao' => $produto->descricao,
                 'preco' => $produto->preco,
                 'stockdisponivel' => $produto->stockdisponivel,
                 'imagem' => Yii::getAlias('@frontend/web/imagensjogos/') . '/' . $produto->imagem,
+                'datalancamento' => $produto->datalancamento,
+                'desconto' => $produto->desconto->percentagem,
+                'iva' => $produto->iva->taxa,
             ],
         ];
     }
