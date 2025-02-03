@@ -41,7 +41,7 @@ $this->registerJsFile('@web/js/produtos.js', ['depends' => [\yii\web\JqueryAsset
                         <span class="category"><?= $produto->categoria != null ? $produto->categoria->nome : 'Sem categoria' ?></span>
                         <h4><?= $produto->nome ?></h4>
                         <a href="<?= \yii\helpers\Url::to(['carrinho/add-to-cart', 'IdProduto' => $produto->id]) ?>"
-                           class="btn btn-primary padding-1rem mb-3"
+                           class="button-addtocart padding-1rem mb-3"
                            id="add-to-cart-Produto-<?= $produto->id ?>">Adicionar ao carrinho</a>
 
                         <!-- Verifica se o produto já está nos favoritos -->
@@ -60,7 +60,7 @@ $this->registerJsFile('@web/js/produtos.js', ['depends' => [\yii\web\JqueryAsset
                             ) ?>
                         <?php else: ?>
                             <!-- Produto não está nos favoritos, mostrar opção para adicionar -->
-                            <a href="<?= \yii\helpers\Url::to(['favoritos/create', 'idProduto' => $produto->id]) ?>" class="btn btn-danger mb-3">
+                            <a href="<?= \yii\helpers\Url::to(['favoritos/create', 'idProduto' => $produto->id]) ?>" class=button-addtofavorite mb-3">
                                 Adicionar aos Favoritos
                             </a>
                         <?php endif; ?>

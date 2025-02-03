@@ -110,8 +110,8 @@ if (!empty($js)) {
                         <li><?= Html::a('Home', ['/site/index'], ['class' => 'active']) ?></li>
                         <li><?= Html::a('Catálogo', ['/produto/index']) ?></li>
                         <li><?= Html::a('Favoritos', ['/favoritos/index']) ?></li>
+                        <li><?= Html::a('Pontos', ['/cupao/index']) ?></li>
                         <li><?= Html::a('Contact Us', ['/site/contact']) ?></li>
-                        <li><?= Html::a('Tarefas', ['/tarefa/index']) ?></li>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= Url::to(['carrinho/index']) ?>">
                                 <i class="fas fa-shopping-cart"></i>

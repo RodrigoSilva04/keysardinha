@@ -292,10 +292,21 @@ class CarrinhoController extends Controller
             Yii::$app->session->setFlash('error', 'Cupão inativo.');
             return $this->redirect(['carrinho/index']);
         }
+
+        // Calcular o valor total do carrinho somando os valores das linhasCarrinho
+        $valorTotal = 0;
+        foreach ($carrinho->linhacarrinhos as $linha) {
+            $valorTotal += $linha->quantidade * $linha->preco_unitario; // Ajusta conforme os nomes das colunas
+        }
+
         // Aplicar o cupão ao carrinho
         $carrinho->cupao_id = $cupao->id;
         if ($carrinho->save()) {
-            Yii::$app->session->setFlash('success', 'Cupão aplicado com sucesso!');
+            if ($valorTotal < $cupao->valor) {
+                Yii::$app->session->setFlash('warning', 'Cupão aplicado com sucesso, mas o valor do carrinho é inferior ao valor do cupão.');
+            } else {
+                Yii::$app->session->setFlash('success', 'Cupão aplicado com sucesso!');
+            }
         } else {
             Yii::$app->session->setFlash('error', 'Erro ao aplicar o cupão. Tente novamente.');
         }

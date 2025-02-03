@@ -1675,3 +1675,31 @@ body {
 .conteudo-baixo {
   text-align: center;
 }
+.button-addtocart {
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+  background-color: #0171f9;
+  color: #fff;
+  font-size: 15px;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 0px 25px;
+  border: none;
+  border-radius: 25px;
+  transition: all .3s;
+}
+.button-addtofavorite {
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+  background-color: #ee626b;
+  color: #fff;
+  font-size: 15px;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 0px 25px;
+  border: none;
+  border-radius: 25px;
+  transition: all .3s;
+}
