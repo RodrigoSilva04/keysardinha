@@ -161,6 +161,16 @@ return [
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/mensagem',
+                    'extraPatterns' => [
+                        'POST mensagem' => 'send-message',
+                        'GET contador-mensagem/{id}' => 'contador-mensagem',
+                        'GET mostrar-mensagens/{id}' => 'mostrar-mensagens',
+                    ],
+                    'pluralize' => false, // Evitar o plural
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/metodopagamento',
                     'extraPatterns' => [
                         'GET index' => 'index',
@@ -182,6 +192,7 @@ return [
                         'DELETE comentario' => 'delete',
                     ],
                     'pluralize' => false, // Evitar o plural
+
             ]
 
 
