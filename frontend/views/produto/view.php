@@ -30,8 +30,18 @@ $this->registerCssFile('@web/css/comentarios.css');
                 </div>
             </div>
             <div class="col-lg-6 align-self-center">
-                <h4><?= $produto->nome?></h4>
-                <span class="price"><?=$produto->preco?>€</span>
+                <h4><?= $produto->nome ?></h4>
+                <span class="price">
+    <?php if ($produto->desconto && $produto->desconto->percentagem > 0): ?>
+        <span class="original-price" style="text-decoration: line-through;"><?= $produto->preco ?>€</span>
+        <span class="discounted-price">
+            <?= $produto->preco - ($produto->preco * $produto->desconto->percentagem / 100) ?>€
+        </span>
+    <?php else: ?>
+        <?= $produto->preco ?>€
+    <?php endif; ?>
+</span>
+
                 <ul>
                     <li><span>Data de Lançamento:</span><?= $produto->datalancamento?></li>
                 </ul>

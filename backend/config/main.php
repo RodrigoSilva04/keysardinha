@@ -77,6 +77,7 @@ return [
                         'DELETE remove/{id}' => 'remove',  // Remover item do carrinho.
                         'POST checkout' => 'checkout',  // Finalizar a compra.
                         'POST verificar-cupao' => 'verificar-cupao', // Aplicar cupao no carrinho.
+                        'GET calcular-total' => 'calcular-total', // Calcular total do carrinho.
                     ],
                     'pluralize' => false, // Evitar o plural
                 ],
@@ -167,6 +168,14 @@ return [
                         'POST create' => 'create',
                         'PUT update/{id}' => 'update',
                         'DELETE delete' => 'delete',
+                    ],
+                    'pluralize' => false, // Evitar o plural
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/matematica',
+                    'extraPatterns' => [
+                        'GET raizdois' => 'raizdois',
                     ],
                     'pluralize' => false, // Evitar o plural
                 ],

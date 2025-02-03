@@ -438,10 +438,17 @@ class CarrinhoController extends Controller
         // Vai buscar as linhas carrinho
         $linhasCarrinho = $carrinho->linhacarrinhos;
 
-        // Calcula o subtotal
         foreach ($linhasCarrinho as $linha) {
-            $subtotal += $linha->produto->preco * $linha->quantidade;
-            $valorIVA += ($linha->produto->preco * $linha->produto->iva->taxa / 100) * $linha->quantidade;
+            // Verifica se o produto tem desconto
+            $precoComDesconto = $linha->produto->desconto && $linha->produto->desconto->percentagem > 0
+                ? $linha->produto->preco - ($linha->produto->preco * $linha->produto->desconto->percentagem / 100)
+                : $linha->produto->preco;
+
+            // Calcula o subtotal considerando o desconto
+            $subtotal += $precoComDesconto * $linha->quantidade;
+
+            // Calcula o valor do IVA
+            $valorIVA += ($precoComDesconto * $linha->produto->iva->taxa / 100) * $linha->quantidade;
         }
 
         // Calcula o valor total com desconto
@@ -478,10 +485,15 @@ class CarrinhoController extends Controller
                 $linhaFatura = new LinhaFatura();
 
                 if ($linha->quantidade == 1) {
-                    // Se a quantidade é 1, podemos proceder como estava
+                    // Verifica se há desconto no produto
+                    $precoComDesconto = $linha->produto->desconto && $linha->produto->desconto->percentagem > 0
+                        ? $linha->produto->preco - ($linha->produto->preco * $linha->produto->desconto->percentagem / 100)
+                        : $linha->produto->preco;
+
+                    // Preenche a linha da fatura
                     $linhaFatura->quantidade = 1;
-                    $linhaFatura->precounitario = $linha->produto->preco;
-                    $linhaFatura->subtotal = $linha->produto->preco * $linha->quantidade;
+                    $linhaFatura->precounitario = $precoComDesconto;
+                    $linhaFatura->subtotal = $precoComDesconto * $linha->quantidade;
                     $linhaFatura->fatura_id = $fatura->id;
                     $linhaFatura->desconto_id = $linha->produto->desconto_id;
                     $linhaFatura->iva_id = $linha->produto->iva_id;
@@ -504,7 +516,7 @@ class CarrinhoController extends Controller
                         }
 
                     } else {
-                        Yii::$app->session->setFlash('error', 'O produto ' . $produto->nome . ' não tem chaves disponíveis suficientes. Por favor, contacte o suporte.');
+                        Yii::$app->session->setFlash('error', 'O produto ' . $linha->produto->nome . ' não tem chaves disponíveis suficientes. Por favor, contacte o suporte.');
                         $fatura->estado = 'Erro';  // Marca a fatura como erro
                         break;  // Interrompe o processamento se não houver chave
                     }
@@ -517,11 +529,16 @@ class CarrinhoController extends Controller
 
                     if (count($chavesDigitaisDisponiveis) == $linha->quantidade) {
                         foreach ($chavesDigitaisDisponiveis as $chave) {
+                            // Verifica se há desconto no produto
+                            $precoComDesconto = $linha->produto->desconto && $linha->produto->desconto->percentagem > 0
+                                ? $linha->produto->preco - ($linha->produto->preco * $linha->produto->desconto->percentagem / 100)
+                                : $linha->produto->preco;
+
                             $linhaFatura = new LinhaFatura();
                             $linhaFatura->chavedigital_id = $chave->id;
                             $linhaFatura->quantidade = 1;
-                            $linhaFatura->precounitario = $linha->produto->preco;
-                            $linhaFatura->subtotal = $linha->produto->preco;
+                            $linhaFatura->precounitario = $precoComDesconto;
+                            $linhaFatura->subtotal = $precoComDesconto;
                             $linhaFatura->fatura_id = $fatura->id;
                             $linhaFatura->desconto_id = $linha->produto->desconto_id;
                             $linhaFatura->iva_id = $linha->produto->iva_id;
@@ -541,11 +558,12 @@ class CarrinhoController extends Controller
                             }
                         }
                     } else {
-                        Yii::$app->session->setFlash('error', 'O produto ' . $produto->nome . ' não tem chaves disponíveis suficientes. Por favor, contacte o suporte.');
+                        Yii::$app->session->setFlash('error', 'O produto ' . $linha->produto->nome . ' não tem chaves disponíveis suficientes. Por favor, contacte o suporte.');
                         $fatura->estado = 'Erro';  // Marca a fatura como erro
                         break;  // Interrompe o processo de fatura
                     }
                 }
+
 
                 // Atualiza o estoque do produto apenas uma vez, após processar todas as linhas
                 $produto->stockdisponivel -= $linha->quantidade;

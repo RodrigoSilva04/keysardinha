@@ -25,12 +25,16 @@ $this->registerJsFile('@web/assetslayout/js/sectionscatalogo.js');
                     </div>
                 </div>
                 <div class="col-lg-4 offset-lg-2">
+                    <a href="<?= \yii\helpers\Url::to(['produto/view', 'id' => $gta->id]) ?>" class="right-image-link">
+
                     <div class="right-image">
-                        <img src="../imagensjogos/gtav.jpg" alt="">
-                        <span class="price"><?=$gta->preco?></span>
-                        <span class="offer"><?= $gta->desconto ? round($gta->desconto->percentagem) : 'Sem desconto' ?>%</span> <!-- Acessa a propriedade 'percentagem' -->
-                    </div>
+                            <img src="../imagensjogos/gtav.jpg" alt="GTA V">
+                            <span class="price"><?=$gta->preco?>€</span>
+                            <span class="offer"><?= $gta->desconto ? round($gta->desconto->percentagem) : 'Sem desconto' ?>%</span>
+                        </div>
+                    </a>
                 </div>
+
             </div>
         </div>
     </div>

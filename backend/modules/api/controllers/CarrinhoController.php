@@ -632,6 +632,25 @@ class CarrinhoController extends ActiveController
             ];
         }
     }
+    public function actionCalcularTotal()
+    {
+        $carrinho = Carrinho::findOne(['utilizadorperfil_id' => Yii::$app->user->id]);
+
+        $linhascarrinho = Linhacarrinho::find()->where(['carrinho_id' => $carrinho->id])->all();
+
+        $total=0;
+
+        foreach ($linhascarrinho as $linha) {
+            $total += $linha->quantidade * $linha->preco_unitario;
+        }
+        return Yii::$app->response->setStatusCode(200)->data = [
+            'status' => 'success',
+            'message' => 'Total calculado com sucesso.',
+            'total' => $total,
+        ];
+
+
+    }
 
     protected function findModel($id)
     {
@@ -647,4 +666,5 @@ class CarrinhoController extends ActiveController
             'message' => 'Carrinho não encontrado.',
         ];
     }
+
 }

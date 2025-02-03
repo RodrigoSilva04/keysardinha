@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <!-- Set columns width -->
                             <th class="text-center py-3 px-4" style="min-width: 400px;">Nome do produto &amp; Detalhes</th>
                             <th class="text-right py-3 px-4" style="width: 100px;">Preço</th>
+                            <th class="text-right py-3 px-4" style="width: 100px;">Desconto</th>
                             <th class="text-center py-3 px-4" style="width: 120px;">Quantidade</th>
                             <th class="text-right py-3 px-4" style="width: 100px;">Subtotal</th>
                             <th class="text-center py-3 px-4" style="width: 100px;">Em Stock</th>
@@ -40,12 +41,14 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </a>
                             </th>
                         </tr>
-
                         </thead>
                         <tbody>
                         <?php $total = 0; ?>
                         <?php foreach ($linhasCarrinho as $linha): ?>
-                            <?php $subtotal = $linha->preco_unitario * $linha->quantidade; ?>
+                            <?php
+                            $subtotal = $linha->preco_unitario * $linha->quantidade;
+                            $desconto = $linha->produto->desconto ? $linha->produto->desconto->percentagem : 0;
+                            ?>
                             <tr>
                                 <td class="p-4">
                                     <div class="media align-items-center">
@@ -59,6 +62,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                     </div>
                                 </td>
                                 <td class="text-right font-weight-semibold align-middle p-4">€<?= number_format($linha->produto->preco, 2) ?></td>
+                                <td class="text-right font-weight-semibold align-middle p-4">
+                                    <?= $desconto > 0 ? $desconto . '%' : 'Sem desconto' ?>
+                                </td>
                                 <td class="align-middle p-4">
                                     <input type="text" class="form-control text-center" value="<?= $linha->quantidade ?>" readonly>
                                 </td>
@@ -80,8 +86,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             <?php $total += $subtotal; ?>
                         <?php endforeach; ?>
                         </tbody>
-
                     </table>
+
                 </div>
                 <!-- / Shopping cart table -->
                 <!-- Aplicar desconto, se houver -->

@@ -59,6 +59,14 @@ $this->registerCssFile('@web/css/fatura-index.css');
                                             </div>
                                         </li>
                                     <?php endforeach; ?>
+                                    <!-- Linha para exibir o total -->
+                                    <li class="table-row text-center" style="font-weight: bold; background-color: #f8f9fa;">
+                                        <div class="col col-1" data-label="Total"></div>
+                                        <div class="col col-2" data-label="Total"></div>
+                                        <div class="col col-3" data-label="Total">Total:</div>
+                                        <div class="col col-4" data-label="Total"><?= number_format($fatura->valor_total, 2, ',', '.') ?>&euro;</div>
+                                        <div class="col col-5" data-label="Total"></div>
+                                    </li>
                                 <?php else: ?>
                                     <li class="table-row">
                                         <div class="col" style="text-align: center;" colspan="6">
@@ -70,6 +78,7 @@ $this->registerCssFile('@web/css/fatura-index.css');
                         </div>
                     </ul>
                 </div>
+
                 <!-- Voltar para a loja -->
                 <div class="back-to-shop">
                     <a href="<?= Yii::$app->urlManager->createUrl(['produto/index']) ?>">&leftarrow;</a>
