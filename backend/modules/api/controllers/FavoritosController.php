@@ -4,6 +4,7 @@ namespace backend\modules\api\controllers;
 
 use backend\modules\api\components\CustomAuth;
 use common\models\Favoritos;
+use common\models\Produto;
 use common\models\Utilizadorperfil;
 use Yii;
 use yii\rest\ActiveController;
@@ -54,7 +55,7 @@ class FavoritosController extends ActiveController
             'nome' => $favorito->produto->nome,
             'descricao' => $favorito->produto->descricao,
             'preco' => $favorito->produto->preco,
-            'imagem' => $favorito->produto->imagem,
+            'imagem' => Yii::getAlias('@frontend/web/imagensjogos/') . '/' . $favorito->produto->imagem,
             'datalancamento' => $favorito->produto->datalancamento,
             'stockdisponivel' => $favorito->produto->stockdisponivel,
             'categoria' => $favorito->produto->categoria->nome, // Aqui está o nome da categoria
@@ -68,6 +69,7 @@ class FavoritosController extends ActiveController
         'status' => 'success',
         'message' => 'Favoritos recuperados com sucesso.',
         'data' => $produtosFavoritos, // Retorna a lista de produtos favoritos
+        'perfilutilizador_id' => $idUser
     ];
 }
 
@@ -76,15 +78,21 @@ class FavoritosController extends ActiveController
     // adicionar produto aos favoritos
     public function actionAdd()
     {
-        // Receber o produto_id do corpo da requisição POST
-        $produto_id = Yii::$app->request->post('produto_id');
+        $data = json_decode(file_get_contents("php://input"), true); // Captura o JSON enviado
 
-        if (!$produto_id) {
-            return [
+        // Verifica se as credenciais foram fornecidas
+        if (empty($data['produto_id'])) {
+            return Yii::$app->response->setStatusCode(404)->data = [
                 'status' => 'error',
-                'message' => 'Produto não especificado.',
+                'message' => 'Produto não especificado. ',
             ];
         }
+
+        // Verificar se o produto existe
+        $produto = Produto::findOne(['id' => $data['produto_id']]);
+        $produto_id= $produto->id;
+
+    
 
         // Verificar se o produto já está nos favoritos do utilizador
         $favoritoExistente = Favoritos::find()
@@ -125,16 +133,21 @@ class FavoritosController extends ActiveController
     // Remover produto dos favoritos
     public function actionRemove()
     {
-        // Receber o produto_id do corpo da requisição
-        $produto_id = Yii::$app->request->post('produto_id');
+        $data = json_decode(file_get_contents("php://input"), true); // Captura o JSON enviado
 
-        if (!$produto_id) {
-            return [
+        // Verifica se as credenciais foram fornecidas
+        if (empty($data['produto_id'])) {
+            return Yii::$app->response->setStatusCode(404)->data = [
                 'status' => 'error',
-                'message' => 'Produto não especificado.',
+                'message' => 'Produto não especificado. ',
             ];
         }
 
+        // Verificar se o produto existe
+        $produto = Produto::findOne(['id' => $data['produto_id']]);
+        $produto_id= $produto->id;
+
+    
         // Encontra o registo nos favoritos baseado no user autenticado e no produto
         $produtofavorito = Favoritos::find()
             ->where(['utilizadorperfil_id' => Yii::$app->user->id, 'produto_id' => $produto_id])

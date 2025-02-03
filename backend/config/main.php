@@ -88,6 +88,7 @@ return [
                     'extraPatterns' => [
                         'GET findfatura' => 'findfatura',// Ver todas as faturas do utilizador
                         'GET {id}' => 'view', // Ver detalhes de uma fatura específica.
+                        'GET detalhes/{id}' => 'detalhes',
                         'DELETE delete/{id}' => 'delete', // Apagar uma fatura.
                     ],
                     'pluralize' => false, // Evitar o plural

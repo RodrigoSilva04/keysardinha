@@ -68,10 +68,13 @@ class ProdutoController extends ActiveController
                 'id' => $produto->id,
                 'nome' => $produto->nome,
                 'descricao' => $produto->descricao,
-                'categoria' => $produto->categoria,
+                'categoria' => $produto->categoria->nome,
                 'preco' => $produto->preco,
                 'stockdisponivel' => $produto->stockdisponivel,
                 'imagem' => Yii::getAlias('@frontend/web/imagensjogos/') . '/' . $produto->imagem,
+                'datalancamento' => $produto->datalancamento,
+                'desconto' => $produto->desconto->percentagem,
+                'iva' => $produto->iva->taxa,
             ];
         }
         return $produtosFormatados;
@@ -172,11 +175,14 @@ class ProdutoController extends ActiveController
             'data' => [
                 'id' => $produto->id,
                 'nome' => $produto->nome,
-                'categoria' => $produto->categoria,
+                'categoria' => $produto->categoria->nome,
                 'descricao' => $produto->descricao,
                 'preco' => $produto->preco,
                 'stockdisponivel' => $produto->stockdisponivel,
                 'imagem' => Yii::getAlias('@frontend/web/imagensjogos/') . '/' . $produto->imagem,
+                'datalancamento' => $produto->datalancamento,
+                'desconto' => $produto->desconto->percentagem,
+                'iva' => $produto->iva->taxa,
             ],
         ];
     }
