@@ -5,9 +5,38 @@ namespace frontend\controllers;
 use common\models\Cupao;
 use common\models\Utilizadorperfil;
 use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 
 class CupaoController extends \yii\web\Controller
 {
+
+    public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['index', 'trocar'], // Ações protegidas
+                    'rules' => [
+                        // Regra para utilizadores autenticados
+                        [
+                            'allow' => true,
+                            'actions' => ['index', 'trocar'], // Ações restritas
+                            'roles' => ['@'], // Apenas para utilizadores autenticados
+                        ],
+                    ],
+                ],
+                'verbs' => [
+                    'class' => VerbFilter::class,
+                    'actions' => [
+                        'delete' => ['POST'], // Apenas POST permitido para 'delete'
+                    ],
+                ],
+            ]
+        );
+    }
     public function actionIndex()
     {
         $utilizadorperfil = Utilizadorperfil::find()->where(['id' => Yii::$app->user->id])->one();
