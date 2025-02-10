@@ -1,7 +1,7 @@
 <?php
 
 
-namespace frontend\tests\Acceptance;
+namespace frontend\tests\acceptance;
 
 use common\models\Fatura;
 use frontend\tests\AcceptanceTester;

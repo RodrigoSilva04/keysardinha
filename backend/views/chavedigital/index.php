@@ -14,8 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="chavedigital-index">
 
-
-
     <div>
     <p>
         <?= Html::a('Create Chavedigital', ['create'], ['class' => 'btn btn-success']) ?>

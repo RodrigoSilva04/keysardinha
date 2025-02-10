@@ -3,9 +3,10 @@ actor: AcceptanceTester
 modules:
     enabled:
         - WebDriver:
-            url: http://localhost/Projeto/keysardinha-master/frontend/web/
+            url: http://projeto/frontend/web/
             browser: chrome
         - Yii2:
+            configFile: 'config/test.php'
             part: [orm,fixtures]
-            cleanup: false
+            cleanup: true
             entryScript: index-test.php

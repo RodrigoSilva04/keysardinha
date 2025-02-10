@@ -15,8 +15,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="favoritos-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?= Html::a('Create Favoritos', ['create'], ['class' => 'btn btn-success']) ?>
     </p>

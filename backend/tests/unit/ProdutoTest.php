@@ -111,22 +111,22 @@ class ProdutoTest extends \Codeception\Test\Unit
 
     public function testProdutoUpdate()
     {
-        $produto = Produto::findOne(1); // Supondo que já exista um produto com ID 1
+        $produto = Produto::findOne(2); // Supondo que já exista um produto com ID 1
         $produto->preco = 60.00;
 
         $this->assertTrue($produto->save());
 
         // Verifica se o preço foi atualizado corretamente
-        $produtoUpdate = Produto::findOne(1);
+        $produtoUpdate = Produto::findOne(2);
         $this->assertEquals(60.00, $produtoUpdate->preco);
     }
     public function testProdutoDelete()
     {
-        $produto = Produto::findOne(1); // Supondo que o produto com ID 1 exista
+        $produto = Produto::findOne(2); // Supondo que o produto com ID 1 exista
         $this->assertTrue($produto->delete() > 0);
 
         // Verifica se o produto foi realmente deleted
-        $produtoDeleted = Produto::findOne(1);
+        $produtoDeleted = Produto::findOne(2);
         $this->assertNull($produtoDeleted);
     }
     public function testDataLancamentoValida()

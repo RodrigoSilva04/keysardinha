@@ -577,19 +577,19 @@ class CarrinhoController extends ActiveController
 
                 if (count($chavesDigitaisDisponiveis) >= $linha->quantidade) {
                     foreach ($chavesDigitaisDisponiveis as $chave) {
-                        // Atribui chave digital a cada linha da fatura
-                        $linhaFatura->chavedigital_id = $chave->id;
+                        $novaLinhaFatura = clone $linhaFatura; // Clona a linha para cada chave
+                        $novaLinhaFatura->chavedigital_id = $chave->id;
+
+                        if (!$novaLinhaFatura->save()) {
+                            return Yii::$app->response->setStatusCode(500)->data = [
+                                'status' => 'error',
+                                'message' => 'Erro ao salvar linha de fatura: ' . json_encode($novaLinhaFatura->errors),
+                            ];
+                        }
+
                         $chave->estado = 'usada';
                         $chave->datavenda = date('Y-m-d H:i:s');
                         $chave->save();
-
-                        // Salva cada linha de fatura
-                        if (!$linhaFatura->save()) {
-                            return Yii::$app->response->setStatusCode(500)->data = [
-                                'status' => 'error',
-                                'message' => 'Erro ao salvar linha de fatura: ' . json_encode($linhaFatura->errors),
-                            ];
-                        }
                     }
                 } else {
                     // Caso não haja chaves suficientes, retorna erro

@@ -14,8 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="metodopagamento-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?= Html::a('Create MetodopagamentoController', ['create'], ['class' => 'btn btn-success']) ?>
     </p>

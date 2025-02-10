@@ -23,10 +23,16 @@ class LoginBackofficeCest
         $I->fillField('#loginform-password', 'testefuncional');
 
         // Clique no botão de login
-        $I->click('login-button');
+
+        $I->seeElement('button[name="login-button"]');
+        $I->click(['name' => 'login-button']);
+        $I->dontSeeInSource('Incorrect username or password.'); // Mensagem típica de erro de login
+
+
 
         // Verifique se o nome de usuário está presente
-        $I->seeElement('#nick-utilizador');
+        $I->seeInSource('nick-utilizador'); // Verifica se o ID aparece no HTML
+
 
         // Verifique se o link de logout está presente, indicando que o login foi bem-sucedido
         $I->seeElement('#logout-link');  // Verifique se o link de logout está visível

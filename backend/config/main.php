@@ -103,7 +103,6 @@ return [
                         'GET lista-favoritos' => 'lista-favoritos', //Lista todos os favoritos do user
                         'POST add' => 'add', // Adicionar aos favoritos.
                         'DELETE remove/{id}' => 'remove',  // Remover dos favoritos.
-                        'GET offline' => 'offline',  // Gerir favoritos offline.
                     ],
                     'pluralize' => false, // Evitar o plural
                 ],
@@ -162,16 +161,6 @@ return [
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
-                    'controller' => 'api/mensagem',
-                    'extraPatterns' => [
-                        'POST mensagem' => 'send-message',
-                        'GET contador-mensagem/{id}' => 'contador-mensagem',
-                        'GET mostrar-mensagens/{id}' => 'mostrar-mensagens',
-                    ],
-                    'pluralize' => false, // Evitar o plural
-                ],
-                [
-                    'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/metodopagamento',
                     'extraPatterns' => [
                         'GET index' => 'index',
@@ -179,14 +168,6 @@ return [
                         'POST create' => 'create',
                         'PUT update/{id}' => 'update',
                         'DELETE delete' => 'delete',
-                    ],
-                    'pluralize' => false, // Evitar o plural
-                ],
-                [
-                    'class' => 'yii\rest\UrlRule',
-                    'controller' => 'api/matematica',
-                    'extraPatterns' => [
-                        'GET raizdois' => 'raizdois',
                     ],
                     'pluralize' => false, // Evitar o plural
                 ],
