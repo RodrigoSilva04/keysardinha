@@ -1,3 +1,3 @@
 Link PSI: https://github.com/RodrigoSilva04/keysardinha
-Credenciais: Utilizador - defesaAdmin
-              Password - defesaadmin
+Credenciais: Email - projeto@gmail.com
+              Password - projeto
