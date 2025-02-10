@@ -9,10 +9,24 @@ use Yii;
 use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\UnauthorizedHttpException;
+
 
 class UserController extends ActiveController
 {
     public $modelClass = 'common\models\User';
+
+    public function behaviors()
+    {
+        Yii::$app->params['id'] = 0;
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => CustomAuth::className(),
+            'only'=> ['atualizar-user'], //Apenas para o GET
+        ];
+        return $behaviors;
+    }
 
     public function actionLogin()
     {
@@ -36,11 +50,14 @@ class UserController extends ActiveController
             $user->save(); // Salva o auth_key no banco de dados
         }
 
+        $username = $user->username;
+
         // Retorna o token como resposta
         return [
             'status' => 'success',
             'message' => 'Login realizado com sucesso',
             'auth_key' => $user->auth_key,
+            'username' => $username,
         ];
     }
 
@@ -111,48 +128,66 @@ class UserController extends ActiveController
         ];
     }
 
-    public function actionUpdate($id)
-    {
-        $userModel = User::findOne($id);
-        $perfilModel = UtilizadorPerfil::findOne($id);  // Buscar o perfil existente
+    public function actionAtualizarUser()
+{
+    $usermodelID = Yii::$app->user->id; // Obtém o ID do usuário autenticado
 
-        if ($this->request->isPost && $userModel->load($this->request->post())) {
+    if (!$usermodelID) {
+        throw new UnauthorizedHttpException('Usuário não autenticado.');
+    }
 
-            // Verificar se o campo de password não está vazio e, se sim, atualiza-a
-            if (!empty($userModel->password)) {
-                $userModel->setPassword($userModel->password);  // Definir a nova senha
+    $userModel = User::findOne($usermodelID);
+    $perfilModel = UtilizadorPerfil::findOne($usermodelID); // Buscar o perfil do usuário
+
+    if (!$perfilModel) {
+        throw new NotFoundHttpException('Perfil não encontrado.');
+    }
+
+    if (Yii::$app->request->isPut) {
+        $data = json_decode(file_get_contents("php://input"), true);
+
+
+        if (!isset($data['email']) && !isset($data['username'])) {
+            throw new BadRequestHttpException(
+                'Pelo menos o email ou username devem ser fornecidos. Dados recebidos: ' . print_r($data, true)
+            );
+        }
+
+        // Atualiza os dados somente se forem enviados e diferentes do atual
+        if (isset($data['email']) && $data['email'] !== $userModel->email) {
+            if (User::find()->where(['email' => $data['email']])->andWhere(['!=', 'id', $userModel->id])->exists()) {
+                throw new BadRequestHttpException('Este email já está em uso.');
             }
+            $userModel->email = $data['email'];
+        }
 
-            if ($userModel->save()){
-                // Atualizar o perfil
-                $perfilModel->load($this->request->post());
-                if ($perfilModel->save()) {
-                    return Yii::$app->response->setStatusCode(200)->data = [
-                        'status' => 'success',
-                        'message' => 'Perfil atualizado com sucesso.',
-                    ];
-                }else{
-                    return Yii::$app->response->setStatusCode(400)->data = [
-                        'status' => 'error',
-                        'message' => 'Erro ao atualizar o perfilutilizador.',
-                        'errors' => $perfilModel->errors,
-                    ];
+        if (isset($data['username'])) {
+            $userModel = User::findOne($usermodelID);
+            if (!$userModel) {
+                throw new NotFoundHttpException('Usuário não encontrado.');
+            }
+            if ($data['username'] !== $userModel->username) {
+                if (User::find()->where(['username' => $data['username']])->andWhere(['!=', 'id', $userModel->id])->exists()) {
+                    throw new BadRequestHttpException('Este nome de utilizador já está em uso.');
                 }
-            }else{
-                return Yii::$app->response->setStatusCode(400)->data = [
-                    'status' => 'error',
-                    'message' => 'Erro ao atualizar o perfil.',
-                    'errors' => $userModel->errors,
-                ];
+                $userModel->username = $data['username'];
             }
         }
 
-        return Yii::$app->response->setStatusCode(400)->data = [
-            'status' => 'error',
-            'message' => 'Erro ao atualizar o perfil. Post não enviado.',
-            'errors' => $userModel->errors,
-        ];
+        if ($userModel->save()) {
+            return ['status' => 'success', 'message' => 'Perfil atualizado com sucesso.'];
+        }
+        if (!$user->save()) {
+            throw new BadRequestHttpException('Erro ao atualizar perfil: ' . json_encode($user->errors, JSON_UNESCAPED_UNICODE));
+        }
+    
+
     }
+
+    throw new BadRequestHttpException('Método inválido. Use PUT.');
+}
+
+
 
     public function actionDelete($id)
     {

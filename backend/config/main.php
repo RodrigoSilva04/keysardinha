@@ -130,7 +130,7 @@ return [
                     'extraPatterns' => [
                         'GET view' => 'view',// Ver perfil do utilizador.
                         'POST user' => 'create',// Cria perfil
-                        'PUT user' => 'update', // Atualiza perfil
+                        'PUT user' => 'atualizar-user', // Atualiza perfil
                         'DELETE user' => 'delete',    // apagar perfil
                         'POST login' => 'login', // Ação de login
                         'POST signup' => 'signup', // Ação de signup
